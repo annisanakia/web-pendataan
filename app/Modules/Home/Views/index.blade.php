@@ -6,71 +6,21 @@
         <li class="breadcrumb-item active">Dashboard</li>
     </ol>
     <div class="row">
-        <div class="col-xl-4 col-md-4">
-            <div class="card bg-primary text-white mb-4 text-center" style="background-color: #4e88d0 !important;">
-                <div class="card-header"><b>Total Data Masuk Hari Ini</b></div>
-                <div class="card-body">2100</div>
+        <?php
+            $colors = ['#4e88d0', '#64b672', '#bc5959', '#d7834b', '#52c8c1'];
+        ?>
+        @foreach($districts as $key => $district)
+        <?php
+            $key = $key > 5? $key-5 : $key;
+        ?>
+        <div class="col-md">
+            <div class="card bg-primary text-white mb-4 text-center" style="background-color: {{ $colors[$key] ?? '#4e88d0' }} !important;">
+                <div class="card-header"><b>{{ $district->name }}</b></div>
+                <div class="card-body">2100 Data</div>
             </div>
         </div>
-        <div class="col-xl-4 col-md-4">
-            <div class="card bg-primary text-white mb-4 text-center" style="background-color: #64b672 !important;">
-                <div class="card-header"><b>Total Data Masuk Minggu Ini</b></div>
-                <div class="card-body">2100</div>
-            </div>
-        </div>
-        <div class="col-xl-4 col-md-4">
-            <div class="card bg-primary text-white mb-4 text-center" style="background-color: #bc5959 !important;">
-                <div class="card-header"><b>Total Data Masuk Bulan Ini</b></div>
-                <div class="card-body">2100</div>
-            </div>
-        </div>
+        @endforeach
     </div>
-    {{--
-    <div class="row">
-        <div class="col-xl-2 col-md-4">
-            <div class="card bg-primary text-white mb-4 text-center">
-                <div class="card-header"><b>Tebet</b></div>
-                <div class="card-body">2100</div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-4">
-            <div class="card bg-warning text-white mb-4 text-center">
-                <div class="card-header"><b>Mampang</b></div>
-                <div class="card-body">1170</div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-4">
-            <div class="card bg-success text-white mb-4 text-center">
-                <div class="card-header"><b>Pancoran</b></div>
-                <div class="card-body">1993</div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-6">
-            <div class="card bg-danger text-white mb-4 text-center">
-                <div class="card-header"><b>PASAR MINGGU</b></div>
-                <div class="card-body">2000</div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-6">
-            <div class="card bg-info text-white mb-4 text-center">
-                <div class="card-header"><b>Jagakarsa</b></div>
-                <div class="card-body">1100</div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-6">
-            <div class="card bg-info text-white mb-4 text-center">
-                <div class="card-header"><b>Cilandak</b></div>
-                <div class="card-body">1100</div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-md-6">
-            <div class="card bg-info text-white mb-4 text-center">
-                <div class="card-header"><b>Jagakarsa</b></div>
-                <div class="card-body">1100</div>
-            </div>
-        </div>
-    </div>
-    --}}
     <div class="row mb-4">
         <div class="col-md-6">
             <label class="form-label">Kecamatan</label>

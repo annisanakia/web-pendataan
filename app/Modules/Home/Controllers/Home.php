@@ -25,7 +25,9 @@ class Home extends Controller {
 
     public function index()
     {
-        $with = [];
+        $districts = \Models\district::all();
+        
+        $with['districts'] = $districts;
         return view($this->controller_name . '::index', $with);
     }
 }
