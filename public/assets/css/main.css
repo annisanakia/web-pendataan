@@ -1,0 +1,12 @@
+/* css custom */
+.bg-softblue{
+    background-color: #f4f4ff;
+}
+
+.nav-tabs .nav-link {
+    color: inherit;
+}
+
+.nav-tabs .nav-link.active{
+    color:#114da6
+}

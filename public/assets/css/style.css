@@ -892,11 +892,6 @@ progress {
   --bs-gutter-y: 3rem;
 }
 
-/* css custom */
-.bg-softblue{
-  background-color: #f4f4ff;
-}
-
 @media (min-width: 576px) {
   .col-sm {
     flex: 1 0 0%;

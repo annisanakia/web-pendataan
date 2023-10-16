@@ -18,10 +18,12 @@
     <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/plugins/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/plugins/fontawesome/css/all.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css')}}">
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
     @yield('styles')
 </head>
 
@@ -34,6 +36,7 @@
     <script src="{{ asset('assets/plugins/jquery-ui/jquery-ui.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/fontawesome/js/all.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.all.min.js')}}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="{{ asset('assets/demo/chart-area-demo.js') }}"></script>
