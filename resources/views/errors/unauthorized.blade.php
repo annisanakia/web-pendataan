@@ -7,7 +7,7 @@
             <h2>You have tried to access a page that you have no permission to view.</h2>
             <a class="btn" href="{{ url('/') }}">Back to home</a>
             <div class="credits mt-4 small-text">
-                © 2023 Nakia
+                © 2023 Smartrio
             </div>
         </section>
     </div>

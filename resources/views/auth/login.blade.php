@@ -6,8 +6,8 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                        <div class="d-flex justify-content-center py-4 logo">
-                            <img src="{{ asset('assets/images/templates/logo.png') }}" alt="">
+                        <div class="d-flex justify-content-center py-4 text-primary fs-1 fw-bold">
+                            Smartrio
                         </div>
                         <div class="card mb-3">
                             <div class="card-body">
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <div class="credits small-text">
-                            &copy; Copyright 2023 <strong>Pendataan</strong>. All Rights Reserved
+                            &copy; Copyright 2023 <strong>Smartrio</strong>. All Rights Reserved
                         </div>
                     </div>
                 </div>

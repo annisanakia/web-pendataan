@@ -7,7 +7,7 @@
     </ol>
     <div class="row">
         <?php
-            $colors = ['#4e88d0', '#64b672', '#bc5959', '#d7834b', '#52c8c1'];
+            $colors = ['#4e88d0', '#64b672', '#c05252', '#dd793c', '#52c8c1'];
         ?>
         @foreach($districts as $key => $district)
         <?php

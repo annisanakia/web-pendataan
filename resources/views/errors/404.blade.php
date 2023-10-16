@@ -7,7 +7,7 @@
             <h2>The page you are looking for doesn't exist.</h2>
             <a class="btn" href="{{ url('/') }}">Back to home</a>
             <div class="credits mt-4 small-text">
-                © 2023 Nakia
+                © 2023 Smartrio
             </div>
         </section>
     </div>
