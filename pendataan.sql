@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 16, 2023 at 03:16 AM
+-- Generation Time: Oct 17, 2023 at 03:46 AM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.7
 
@@ -34,7 +34,7 @@ CREATE TABLE `city` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `city`
@@ -56,14 +56,14 @@ CREATE TABLE `data_collection` (
   `disctrict_id` int DEFAULT NULL,
   `subdisctrict_id` varchar(100) DEFAULT NULL,
   `no_tps` int DEFAULT NULL,
-  `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `whatsapp` varchar(20) DEFAULT NULL,
   `photo` text,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -76,34 +76,34 @@ CREATE TABLE `data_reference` (
   `city_id` int DEFAULT NULL,
   `disctrict_id` int DEFAULT NULL,
   `subdisctrict_id` int DEFAULT NULL,
-  `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `disctrict`
+-- Table structure for table `district`
 --
 
-CREATE TABLE `disctrict` (
+CREATE TABLE `district` (
   `id` int NOT NULL,
   `city_id` int DEFAULT NULL,
-  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `disctrict`
+-- Dumping data for table `district`
 --
 
-INSERT INTO `disctrict` (`id`, `city_id`, `code`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `district` (`id`, `city_id`, `code`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 'TBT', 'Tebet', '2023-10-13 21:42:32', NULL, NULL),
 (2, 1, 'MPNG', 'Mampang', '2023-10-13 21:42:32', NULL, NULL),
 (3, 1, 'PCRN', 'Pancoran', '2023-10-13 21:42:32', NULL, NULL),
@@ -126,7 +126,7 @@ CREATE TABLE `election_results` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -154,24 +154,24 @@ INSERT INTO `groups` (`id`, `code`, `name`, `created_at`, `updated_at`, `deleted
 -- --------------------------------------------------------
 
 --
--- Table structure for table `subdisctrict`
+-- Table structure for table `subdistrict`
 --
 
-CREATE TABLE `subdisctrict` (
+CREATE TABLE `subdistrict` (
   `id` int NOT NULL,
-  `disctrict_id` int DEFAULT NULL,
-  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `district_id` int DEFAULT NULL,
+  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `subdisctrict`
+-- Dumping data for table `subdistrict`
 --
 
-INSERT INTO `subdisctrict` (`id`, `disctrict_id`, `code`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT INTO `subdistrict` (`id`, `district_id`, `code`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 'TBT_MD', 'Menteng Dalam', '2023-10-13 21:45:44', NULL, NULL),
 (2, 1, 'TBT_TB', 'Tebet Barat', '2023-10-13 21:45:44', NULL, NULL),
 (3, 1, 'TBT_TT', 'Tebet Timur', '2023-10-13 21:45:44', NULL, NULL),
@@ -217,6 +217,7 @@ CREATE TABLE `users` (
   `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone_no` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -229,9 +230,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `groups_id`, `subdisctrict_id`, `username`, `name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `deleted_at`, `status`) VALUES
-(1, 1, NULL, 'admin', 'Admin', NULL, '$2y$10$vm1CueaQyjJi1cCIgX1/6eK5KN3YKFajJbRlnx2rO.V9JRis7n0Vu', NULL, '2023-10-15 21:59:51', NULL, NULL, 1),
-(2, 2, NULL, 'coordinator', 'Coordinator', NULL, '$2y$10$vm1CueaQyjJi1cCIgX1/6eK5KN3YKFajJbRlnx2rO.V9JRis7n0Vu', NULL, '2023-10-15 21:59:51', NULL, NULL, 1);
+INSERT INTO `users` (`id`, `groups_id`, `subdisctrict_id`, `username`, `name`, `email`, `phone_no`, `password`, `remember_token`, `created_at`, `updated_at`, `deleted_at`, `status`) VALUES
+(1, 1, NULL, 'admin', 'Admin Smartrio', 'smartrio@gmail.com', '12345678910', '$2y$10$f4vlF/mosXKsxhmX.BzpjeSoxJ1WjCcwcm02I3iu.rASt0T2cq3PO', NULL, '2023-10-15 21:59:51', '2023-10-16 08:59:39', NULL, 1),
+(2, 2, NULL, 'coordinator', 'Coordinator', NULL, NULL, '$2y$10$vm1CueaQyjJi1cCIgX1/6eK5KN3YKFajJbRlnx2rO.V9JRis7n0Vu', NULL, '2023-10-15 21:59:51', NULL, NULL, 1);
 
 --
 -- Indexes for dumped tables
@@ -256,9 +257,9 @@ ALTER TABLE `data_reference`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `disctrict`
+-- Indexes for table `district`
 --
-ALTER TABLE `disctrict`
+ALTER TABLE `district`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -274,9 +275,9 @@ ALTER TABLE `groups`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `subdisctrict`
+-- Indexes for table `subdistrict`
 --
-ALTER TABLE `subdisctrict`
+ALTER TABLE `subdistrict`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -309,9 +310,9 @@ ALTER TABLE `data_reference`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `disctrict`
+-- AUTO_INCREMENT for table `district`
 --
-ALTER TABLE `disctrict`
+ALTER TABLE `district`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
@@ -327,9 +328,9 @@ ALTER TABLE `groups`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `subdisctrict`
+-- AUTO_INCREMENT for table `subdistrict`
 --
-ALTER TABLE `subdisctrict`
+ALTER TABLE `subdistrict`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --

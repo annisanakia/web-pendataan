@@ -16,11 +16,11 @@ function menuSidebar()
                         'name' => 'Daftar Wilayah',
                         'icon' => 'fa-solid fa-newspaper'
                     ],
-                    'disctrict' => [
+                    'district' => [
                         'name' => 'Daftar Kecamatan',
                         'icon' => 'fa-solid fa-newspaper'
                     ],
-                    'subdisctrict' => [
+                    'subdistrict' => [
                         'name' => 'Daftar Kelurahan',
                         'icon' => 'fa-solid fa-newspaper'
                     ]
