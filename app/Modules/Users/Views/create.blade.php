@@ -2,129 +2,108 @@
 
 @section('content')
 
-<div class="pagetitle">
-    <h1>Daftar Pengguna</h1>
-    <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ url('/'.$controller_name) }}">Daftar Pengguna</a></li>
-            <li class="breadcrumb-item active">Tambah Data</li>
-        </ol>
-    </nav>
-</div>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Daftar Pengguna</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">Daftar Pengguna</li>
+    </ol>
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
 
-<section class="section">
-    <div class="row">
-        <div class="col-lg-12">
-
-        <form method="POST" action="{{ route($controller_name.'.store') }}" class="form-validation" enctype="multipart/form-data">
-            @csrf
-            <div class="card">
-                <div class="card-body">
-                <h5 class="card-title">Tambah Data</h5>
-                <div class="d-grid gap-2 d-md-block my-2 text-end">
-                    @include('component.actions')
-                </div>
-                <!-- General Form Elements -->
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="mb-3">
-                            <label class="col-form-label">Name</label>
-                            <input name="name" type="text" class="form-control {{ $errors->has('name')? 'is-invalid' : '' }}" value="{{ old('name') }}">
-                            {!!$errors->first('name', ' <span class="invalid-feedback">:message</span>')!!}
+            <form method="POST" action="{{ route($controller_name.'.store') }}" class="form-validation" enctype="multipart/form-data">
+                @csrf
+                <div class="card">
+                    <div class="card-body">
+                    <h5 class="card-title">Tambah Data</h5>
+                    <div class="d-grid gap-2 d-md-block my-2 text-end">
+                        @include('component.actions')
+                    </div>
+                    <!-- General Form Elements -->
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Name</label>
+                                <input name="name" type="text" class="form-control {{ $errors->has('name')? 'is-invalid' : '' }}" value="{{ old('name') }}">
+                                {!!$errors->first('name', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Grup pengguna</label>
+                                <select name="groups_id" class="form-select {{ $errors->has('groups_id')? 'is-invalid' : '' }}">
+                                    <option value="" selected>-- Pilih --</option>
+                                    @foreach(\Models\groups::all() as $row)
+                                        <option value="{{ $row->id }}" data-code="{{ $row->code }}" {{ $row->id == old('groups_id')? 'selected' : '' }}>{{ $row->name }}</option>
+                                    @endforeach
+                                </select>
+                                {!!$errors->first('groups_id', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="mb-3">
-                            <label class="col-form-label">Email</label>
-                            <input name="email" type="text" class="form-control {{ $errors->has('email')? 'is-invalid' : '' }}" value="{{ old('email') }}">
-                            {!!$errors->first('email', ' <span class="invalid-feedback">:message</span>')!!}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Username</label>
+                                <input name="username" type="text" class="form-control {{ $errors->has('username')? 'is-invalid' : '' }}" value="{{ old('username') }}">
+                                {!!$errors->first('username', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Password</label>
+                                <input name="password" type="password" class="form-control {{ $errors->has('password')? 'is-invalid' : '' }}" value="{{ old('password') }}">
+                                {!!$errors->first('password', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="mb-3">
-                            <label class="col-form-label">Username</label>
-                            <input name="username" type="text" class="form-control {{ $errors->has('username')? 'is-invalid' : '' }}" value="{{ old('username') }}">
-                            {!!$errors->first('username', ' <span class="invalid-feedback">:message</span>')!!}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Email</label>
+                                <input name="email" type="text" class="form-control {{ $errors->has('email')? 'is-invalid' : '' }}" value="{{ old('email') }}">
+                                {!!$errors->first('email', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Nomor Telepon</label>
+                                <input name="phone_no" type="text" class="form-control {{ $errors->has('phone_no')? 'is-invalid' : '' }}" value="{{ old('phone_no') }}">
+                                {!!$errors->first('phone_no', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="mb-3">
-                            <label class="col-form-label">Password</label>
-                            <input name="password" type="password" class="form-control {{ $errors->has('password')? 'is-invalid' : '' }}" value="{{ old('password') }}">
-                            {!!$errors->first('password', ' <span class="invalid-feedback">:message</span>')!!}
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="mb-3">
-                            <label class="col-form-label">Grup pengguna</label>
-                            <select name="groups_id" class="form-select {{ $errors->has('groups_id')? 'is-invalid' : '' }}">
-                                <option value="" selected>-- Pilih --</option>
-                                @foreach(\Models\groups::all() as $row)
-                                    <option value="{{ $row->id }}" {{ $row->id == old('groups_id')? 'selected' : '' }}>{{ $row->name }}</option>
-                                @endforeach
-                            </select>
-                            {!!$errors->first('groups_id', ' <span class="invalid-feedback">:message</span>')!!}
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="mb-3 {{ in_array(old('groups_id'),[1,2])? '' : 'd-none' }} employee_code">
-                            <label class="col-form-label">Kode Pegawai</label>
-                            <input name="employee_code" type="text" class="form-control {{ $errors->has('employee_code')? 'is-invalid' : '' }}" value="{{ old('employee_code') }}">
-                            {!!$errors->first('employee_code', ' <span class="invalid-feedback">:message</span>')!!}
-                        </div>
-                        <div class="mb-3 {{ old('groups_id') == 3? '' : 'd-none' }} registration_code">
-                            <label class="col-form-label">Kode Registrasi</label>
-                            <input name="registration_code" type="text" class="form-control {{ $errors->has('registration_code')? 'is-invalid' : '' }}" value="{{ old('registration_code') }}">
-                            {!!$errors->first('registration_code', ' <span class="invalid-feedback">:message</span>')!!}
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label class="col-form-label">Foto Profil</label>
-                        <input name="url_photo" class="form-control {{ $errors->has('url_photo')? 'is-invalid' : '' }}" type="file">
-                        <div class="form-text">Upload file berformat JPEG, PNG, JPG.<br>Maksimal ukuran file 2 Mb.</div>
-                        {!!$errors->first('url_photo', ' <span class="invalid-feedback">:message</span>')!!}
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="mb-3">
-                            <label class="col-form-label">Nomor Telepon</label>
-                            <input name="phone_no" type="text" class="form-control {{ $errors->has('phone_no')? 'is-invalid' : '' }}" value="{{ old('phone_no') }}">
-                            {!!$errors->first('phone_no', ' <span class="invalid-feedback">:message</span>')!!}
-                        </div>
-                        <div class="mb-3">
-                            <label class="col-form-label">Status</label>
-                            <select name="status" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
-                                <option value="" selected>-- Pilih --</option>
-                                <option value="1" {{ 1 == (old('status') ?? 1)? 'selected' : '' }}>Aktif</option>
-                                <option value="2" {{ 2 == (old('status') ?? 1)? 'selected' : '' }}>Tidak Aktif</option>
-                            </select>
-                            {!!$errors->first('status', ' <span class="invalid-feedback">:message</span>')!!}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Status</label>
+                                <select name="status" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
+                                    <option value="" selected>-- Pilih --</option>
+                                    <option value="1" {{ 1 == (old('status') ?? 1)? 'selected' : '' }}>Aktif</option>
+                                    <option value="2" {{ 2 == (old('status') ?? 1)? 'selected' : '' }}>Tidak Aktif</option>
+                                </select>
+                                {!!$errors->first('status', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    </section>
 </div>
 @endsection
 
 @section('scripts')
 <script type="text/javascript">
-    $('select[name=groups_id]').on('change', function() {
-        val = $(this).val();
-        $('.employee_code').addClass('d-none');
-        $('.registration_code').addClass('d-none');
-        if(val == 3){
-            $('.registration_code').removeClass('d-none');
-        }else if(val != 3 && val != ''){
-            $('.employee_code').removeClass('d-none');
-        }
-    });
+    // $('select[name=groups_id]').on('change', function() {
+    //     val = $(this).val();
+    //     $('.employee_code').addClass('d-none');
+    //     $('.registration_code').addClass('d-none');
+    //     if(val == 3){
+    //         $('.registration_code').removeClass('d-none');
+    //     }else if(val != 3 && val != ''){
+    //         $('.employee_code').removeClass('d-none');
+    //     }
+    // });
 </script>
 @endsection

@@ -10,3 +10,9 @@
 .nav-tabs .nav-link.active{
     color:#114da6
 }
+
+#layoutSidenav_content footer{
+    font-size:14px;
+    padding-top:13px !important;
+    padding-bottom:13px !important
+}

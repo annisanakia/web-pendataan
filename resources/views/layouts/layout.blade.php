@@ -32,7 +32,7 @@
             </li>
         </ul>
     </nav>
-    <div id="layoutSidenav">
+    <div id="layoutSidenav" class="bg-light-subtle">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
@@ -73,9 +73,9 @@
             <main>
                 @yield('content')
             </main>
-            <footer class="py-3 bg-light mt-auto">
+            <footer class="py-3 bg-body-secondary mt-auto">
                 <div class="container-fluid px-4">
-                    <div class="text-muted text-center fs-6">Copyright &copy; Smartrio 2023</div>
+                    <div class="text-muted text-center">Copyright &copy; Smartrio 2023</div>
                 </div>
             </footer>
         </div>

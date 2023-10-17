@@ -51,6 +51,10 @@
                                     <div class="col-lg-3 col-md-4 label">Email</div>
                                     <div class="col-lg-9 col-md-8">{{ $data->email }}</div>
                                 </div>
+                                <div class="row my-2">
+                                    <div class="col-lg-3 col-md-4 label">Nomor Telepon</div>
+                                    <div class="col-lg-9 col-md-8">{{ $data->phone_no }}</div>
+                                </div>
                             </div>
                             <div class="tab-pane fade {{ Session::get('type') == 1? 'show active' : ''  }} profile-edit pt-3" id="profile-edit">
                                 <!-- Profile Edit Form -->
@@ -89,7 +93,7 @@
                                         </div>
                                     </div>
                                     <div class="d-grid gap-2 d-md-block my-2 text-end">
-                                        <button type="submit" class="btn btn-primary px-3 btn-submit">
+                                        <button type="submit" class="btn btn-success px-3 btn-submit">
                                             Simpan Perubahan
                                         </button>
                                     </div>
@@ -133,7 +137,7 @@
                                         </div>
                                     </div>
                                     <div class="d-grid gap-2 d-md-block my-2 text-end">
-                                        <button type="submit" class="btn btn-primary px-3 btn-submit">
+                                        <button type="submit" class="btn btn-success px-3 btn-submit">
                                             Simpan Password
                                         </button>
                                     </div>

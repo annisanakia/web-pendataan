@@ -1,17 +1,13 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="pagetitle">
-    <h1>Daftar Pengguna</h1>
-    <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-            <li class="breadcrumb-item active">Daftar Pengguna</li>
-        </ol>
-    </nav>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Daftar Pengguna</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">Daftar Pengguna</li>
+    </ol>
+    <section class="section">
+        @include(ucwords($controller_name).'::list')
+    </section>
 </div>
-
-<section class="section">
-    @include(ucwords($controller_name).'::list')
-</section>
 @endsection

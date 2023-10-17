@@ -70,7 +70,7 @@ class RESTful extends Controller
         $this->filter_string = http_build_query($request->all());
 
         if ($this->priv['add_priv'])
-            $this->actions[] = array('name' => 'Tambah Data', 'url' => strtolower($this->controller_name) . '/create', 'class' => 'btn btn-orange', 'icon' => 'fa-solid fa-plus');
+            $this->actions[] = array('name' => 'Tambah Data', 'url' => strtolower($this->controller_name) . '/create', 'class' => 'btn btn-primary', 'icon' => 'fa-solid fa-plus');
         
         $url_xls = '#';
         if ($this->enable_xls) {
@@ -176,8 +176,8 @@ class RESTful extends Controller
 
     public function create()
     {   
-        $action[] = array('name' => 'Batal', 'url' => strtolower($this->controller_name), 'class' => 'btn btn-outline-secondary px-3 ms-md-1');
-        $action[] = array('name' => 'Simpan', 'type' => 'submit', 'url' => '#', 'class' => 'btn btn-outline-success px-3 ms-md-1');
+        $action[] = array('name' => 'Batal', 'url' => strtolower($this->controller_name), 'class' => 'btn btn-secondary px-3 ms-md-1');
+        $action[] = array('name' => 'Simpan', 'type' => 'submit', 'url' => '#', 'class' => 'btn btn-success px-3 ms-md-1');
         $this->setAction($action);
 
         $content['actions'] = $this->actions;
@@ -209,10 +209,10 @@ class RESTful extends Controller
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }
 
-        $action[] = array('name' => 'Batal', 'url' => strtolower($this->controller_name), 'class' => 'btn btn-outline-secondary px-3 ms-md-1');
+        $action[] = array('name' => 'Batal', 'url' => strtolower($this->controller_name), 'class' => 'btn btn-secondary px-3 ms-md-1');
         if ($this->priv['delete_priv'])
-            $action[] = array('name' => 'Hapus', 'url' => strtolower($this->controller_name) . '/delete/' . $id, 'class' => 'btn btn-outline-danger px-3 ms-md-1 delete', 'attr' => 'ng-click=confirm($event) data-name='.($data->name ?? $data->code));
-        $action[] = array('name' => 'Simpan', 'type' => 'submit', 'url' => '#', 'class' => 'btn btn-outline-success px-3 ms-md-1');
+            $action[] = array('name' => 'Hapus', 'url' => strtolower($this->controller_name) . '/delete/' . $id, 'class' => 'btn btn-danger px-3 ms-md-1 delete', 'attr' => 'ng-click=confirm($event) data-name='.($data->name ?? $data->code));
+        $action[] = array('name' => 'Simpan', 'type' => 'submit', 'url' => '#', 'class' => 'btn btn-success px-3 ms-md-1');
 
         $this->setAction($action);
 

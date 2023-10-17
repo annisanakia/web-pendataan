@@ -22,7 +22,7 @@
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
-                    <th><input type="text" name="filter[detail_user]" value="{{ $param['filter']['detail_user'] ?? null }}" class="form-control"></th>
+                    <th><input type="text" name="filter[name]" value="{{ $param['filter']['name'] ?? null }}" class="form-control"></th>
                     <th>
                         <select name="filter[groups_id]" class="form-select">
                             <option value="" selected>-- Pilih --</option>
@@ -51,32 +51,14 @@
                     @foreach($datas as $data)
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
-                        <td>
-                            <table>
-                                <tr>
-                                    <td>
-                                        @if($data->url_photo != '')
-                                            <img src="{{ asset($data->url_photo) }}" class="object-fit-cover me-2 rounded" style="width: 70px; height: 90px;">
-                                        @else
-                                            <div class="color-dark-blue border bg-body-secondary position-relative me-2 rounded fs-4" style="width: 70px; height: 90px;">
-                                                <i class="fa-regular fa-user position-absolute top-50 start-50 translate-middle"></i>
-                                            </div>
-                                        @endif
-                                    </td>
-                                    <td class="align-top">
-                                        <b>{{ ($data->group->id ?? null) == 3? $data->registration_code : $data->employee_code }}</b><br>
-                                        {{ $data->name }}
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
+                        <td>{{ $data->name }}</td>
                         <td>{{ $data->group->name ?? null }}</td>
                         <td>{{ $data->status == 1? 'Aktif' : 'Tidak Aktif' }}</td>
                         <td class="action text-center" nowrap>
-                            <a class="btn btn-outline-primary" href="{{ url($controller_name.'/edit/'.$data->id) }}">
+                            <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>
-                            <a class="btn btn-outline-danger delete" data-name="{{ $data->name }}" href="{{ url($controller_name.'/delete/'.$data->id) }}">
+                            <a class="btn btn-danger px-2 py-1 delete" data-name="{{ $data->name }}" href="{{ url($controller_name.'/delete/'.$data->id) }}">
                                 <i class="fa-solid fa-trash"></i>
                             </a>
                         </td>
