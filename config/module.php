@@ -6,7 +6,7 @@ return [
         'Account_setting',
         'City',
         'District',
-        'Subdistrict'
-        // 'Users',
+        'Subdistrict',
+        'Users',
     ]
 ];
