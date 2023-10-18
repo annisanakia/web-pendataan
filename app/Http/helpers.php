@@ -40,12 +40,12 @@ function menuSidebar()
                 'name' => 'Home',
                 'icon' => 'fa-solid fa-house'
             ],
-            'test_attempt' => [
+            'collection_data' => [
                 'name' => 'Data Pendataan',
                 'icon' => 'fa-solid fa-file-pen'
             ],
-            'test_history' => [
-                'name' => 'Daftar Hasil Pemilu',
+            'election_results' => [
+                'name' => 'Data Hasil Pemilu',
                 'icon' => 'fa-solid fa-clipboard-list'
             ]
         ]
