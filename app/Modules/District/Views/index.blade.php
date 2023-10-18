@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Daftar Wilayah</h1>
+    <h1 class="mt-4">Daftar Kecamatan</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Daftar Wilayah</li>
+        <li class="breadcrumb-item active">Daftar Kecamatan</li>
     </ol>
     <section class="section">
         @include(ucwords($controller_name).'::list')
