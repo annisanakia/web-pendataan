@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class district extends Model {
+class city extends Model {
 
     use SoftDeletes;
 
-    protected $table = 'district';
+    protected $table = 'city';
     protected $guarded = ['id'];
     
     public static $rules = array(
@@ -24,7 +24,7 @@ class district extends Model {
     
     public function validate($data)
     {
-        $v = Validator::make($data, district::$rules, district::$customMessages);
+        $v = Validator::make($data, city::$rules, city::$customMessages);
         return $v;
     }
 }

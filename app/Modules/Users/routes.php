@@ -17,5 +17,4 @@ Route::group(['prefix' => 'users', 'namespace' => 'App\Modules\Users\Controllers
     Route::get('/edit/{id}', ['as' => 'users.edit', 'uses' => 'Users@edit']);
     Route::post('/update/{id}', ['as' => 'users.update', 'uses' => 'Users@update']);
     Route::post('/delete/{id}', ['as' => 'users.delete', 'uses' => 'Users@delete']);
-    Route::post('/delete_img/{id}', ['as' => 'users.delete_img', 'uses' => 'Users@delete_img']);
 });

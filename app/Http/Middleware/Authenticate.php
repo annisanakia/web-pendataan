@@ -26,7 +26,7 @@ class Authenticate extends Middleware
             return redirect()->guest('login');
         }else{
             $prefix = request()->route()->getPrefix() != ''? request()->route()->getPrefix() : 'home';
-            $prefix = in_array($prefix,['holland_question','ist_question'])? 'bank_question' : $prefix;
+            $prefix = in_array($prefix,['city','district','subdistrict'])? 'setting' : $prefix;
             if (!array_key_exists($prefix,menuSideBar()) && $prefix != 'account_setting') {
                 return response()->view('errors.unauthorized');
             }
