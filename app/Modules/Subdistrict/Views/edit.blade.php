@@ -3,9 +3,9 @@
 @section('content')
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Daftar Kecamatan</h1>
+    <h1 class="mt-4">Daftar Kelurahan</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Daftar Kecamatan</li>
+        <li class="breadcrumb-item active">Daftar Kelurahan</li>
     </ol>
     <section class="section">
         <div class="row">
