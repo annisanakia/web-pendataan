@@ -27,4 +27,9 @@ class subdistrict extends Model {
         $v = Validator::make($data, subdistrict::$rules, subdistrict::$customMessages);
         return $v;
     }
+
+    public function district()
+    {
+        return $this->belongsTo('Models\district', 'district_id', 'id');
+    }
 }

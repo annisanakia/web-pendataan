@@ -16,13 +16,22 @@
                 <tr>
                     <th width="5%" class="text-center">No</th>
                     <th>Name</th>
-                    <th width="28%">Kode</th>
+                    <th width="24%">Kode</th>
+                    <th width="28%">Kecamatan</th>
                     <th width="12%" class="text-center">Aksi</th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
                     <th><input type="text" name="filter[name]" value="{{ $param['filter']['name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[code]" value="{{ $param['filter']['code'] ?? null }}" class="form-control"></th>
+                    <th>
+                        <select name="filter[district_id]" class="form-select">
+                            <option value="" selected>-- Pilih --</option>
+                            @foreach(\Models\district::all() as $row)
+                                <option value="{{ $row->id }}" {{ $row->id == ($param['filter']['district_id'] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                    </th>
                     <th></th>
                 </tr>
             </thead>
@@ -38,6 +47,7 @@
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                         <td>{{ $data->name }}</td>
                         <td>{{ $data->code }}</td>
+                        <td>{{ $data->district->name ?? null }}</td>
                         <td class="action text-center" nowrap>
                             <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
                                 <i class="fa-solid fa-pencil"></i>

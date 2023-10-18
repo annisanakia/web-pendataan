@@ -36,6 +36,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Kecamatan</label>
+                                <select name="district_id" class="form-select {{ $errors->has('district_id')? 'is-invalid' : '' }}">
+                                    @foreach(\Models\district::all() as $row)
+                                        <option value="{{ $row->id }}" {{ $row->id == (old('district_id') ?? $data->district_id)? 'selected' : '' }}>{{ $row->name }}</option>
+                                    @endforeach
+                                </select>
+                                {!!$errors->first('district_id', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
