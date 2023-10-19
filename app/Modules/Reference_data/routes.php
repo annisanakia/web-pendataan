@@ -19,4 +19,6 @@ Route::group(['prefix' => 'reference_data', 'namespace' => 'App\Modules\Referenc
     Route::post('/delete/{id}', ['as' => 'reference_data.delete', 'uses' => 'Reference_data@delete']);
     Route::get('/filterDistrict', ['as' => 'reference_data.filterDistrict', 'uses' => 'Reference_data@filterDistrict']);
     Route::get('/filterSubdistrict', ['as' => 'reference_data.filterSubdistrict', 'uses' => 'Reference_data@filterSubdistrict']);
+    Route::get('/getListAsPdf', ['as' => 'reference_data.getListAsPdf', 'uses' => 'Reference_data@getListAsPdf']);
+    Route::get('/getListAsXls', ['as' => 'reference_data.getListAsXls', 'uses' => 'Reference_data@getListAsXls']);
 });

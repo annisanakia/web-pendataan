@@ -6,7 +6,7 @@ use Models\reference_data as reference_dataModel;
 use Lib\core\RESTful;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
-use File;
+use Barryvdh\DomPDF\PDF;
 
 class Reference_data extends RESTful {
 
@@ -15,6 +15,11 @@ class Reference_data extends RESTful {
         $controller_name = 'Reference_data';
         
         $this->table_name = 'reference_data';
+        $this->enable_xls = true;
+        $this->enable_pdf = true;
+        $this->enable_pdf_button = true;
+        $this->enable_xls_button = true;
+        $this->enable_import = true;
         parent::__construct($model, $controller_name);
     }
 
@@ -82,5 +87,20 @@ class Reference_data extends RESTful {
             ->withInput()
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
+    }
+    public function getListAsPdf()
+    {
+        $template = $this->controller_name . '::getListAsPdf';
+        $data = $this->getList(request());
+        $data['title_head_export'] = 'Data Referensi';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('legal', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Data Referensi ('.date('d-m-Y').').pdf');
     }
 }
