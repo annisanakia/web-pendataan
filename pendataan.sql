@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 17, 2023 at 06:19 AM
+-- Generation Time: Oct 19, 2023 at 04:44 AM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.7
 
@@ -46,38 +46,20 @@ INSERT INTO `city` (`id`, `code`, `name`, `created_at`, `updated_at`, `deleted_a
 -- --------------------------------------------------------
 
 --
--- Table structure for table `data_collection`
+-- Table structure for table `collection_data`
 --
 
-CREATE TABLE `data_collection` (
+CREATE TABLE `collection_data` (
   `id` int NOT NULL,
   `coordinator_id` int DEFAULT NULL,
   `city_id` int DEFAULT NULL,
   `disctrict_id` int DEFAULT NULL,
-  `subdisctrict_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subdisctrict_id` int DEFAULT NULL,
   `no_tps` int DEFAULT NULL,
   `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `whatsapp` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `photo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `data_reference`
---
-
-CREATE TABLE `data_reference` (
-  `id` int NOT NULL,
-  `city_id` int DEFAULT NULL,
-  `disctrict_id` int DEFAULT NULL,
-  `subdisctrict_id` int DEFAULT NULL,
-  `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -150,6 +132,33 @@ CREATE TABLE `groups` (
 INSERT INTO `groups` (`id`, `code`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'ADM', 'Administrator', '2023-10-13 21:38:07', NULL, NULL),
 (2, 'COR', 'Coordinator', '2023-10-13 21:38:07', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reference_data`
+--
+
+CREATE TABLE `reference_data` (
+  `id` int NOT NULL,
+  `city_id` int DEFAULT NULL,
+  `district_id` int DEFAULT NULL,
+  `subdistrict_id` int DEFAULT NULL,
+  `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `reference_data`
+--
+
+INSERT INTO `reference_data` (`id`, `city_id`, `district_id`, `subdistrict_id`, `nik`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(4, 1, 5, 28, '1234', 'nakia', '2023-10-18 20:39:47', '2023-10-18 20:39:47', NULL),
+(5, 1, 3, 15, '12345', 'Shakila', '2023-10-18 20:48:48', '2023-10-18 20:48:48', NULL),
+(6, 1, 3, 17, '12345678190', 'Annisa', '2023-10-18 20:56:29', '2023-10-18 20:56:29', NULL);
 
 -- --------------------------------------------------------
 
@@ -245,15 +254,9 @@ ALTER TABLE `city`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `data_collection`
+-- Indexes for table `collection_data`
 --
-ALTER TABLE `data_collection`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `data_reference`
---
-ALTER TABLE `data_reference`
+ALTER TABLE `collection_data`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -272,6 +275,12 @@ ALTER TABLE `election_results`
 -- Indexes for table `groups`
 --
 ALTER TABLE `groups`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `reference_data`
+--
+ALTER TABLE `reference_data`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -298,15 +307,9 @@ ALTER TABLE `city`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `data_collection`
+-- AUTO_INCREMENT for table `collection_data`
 --
-ALTER TABLE `data_collection`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `data_reference`
---
-ALTER TABLE `data_reference`
+ALTER TABLE `collection_data`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -326,6 +329,12 @@ ALTER TABLE `election_results`
 --
 ALTER TABLE `groups`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `reference_data`
+--
+ALTER TABLE `reference_data`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `subdistrict`
