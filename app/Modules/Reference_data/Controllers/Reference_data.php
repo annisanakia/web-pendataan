@@ -6,7 +6,7 @@ use Models\reference_data as reference_dataModel;
 use Lib\core\RESTful;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
-use Barryvdh\DomPDF\PDF;
+use PDF;
 
 class Reference_data extends RESTful {
 
