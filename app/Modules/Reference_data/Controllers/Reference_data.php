@@ -103,4 +103,21 @@ class Reference_data extends RESTful {
 
         return $pdf->download('Data Referensi ('.date('d-m-Y').').pdf');
     }
+
+    public function getListAsXls()
+    {
+        $template = $this->controller_name . '::getListAsXls';
+        $data = $this->getList(request());
+        $data['title_head_export'] = 'Data Referensi';
+        $data['title_col_sum'] = 5;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+        // return view($template, $data);
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Data Referensi ('.date('d-m-Y').').xls"');
+    }
 }
