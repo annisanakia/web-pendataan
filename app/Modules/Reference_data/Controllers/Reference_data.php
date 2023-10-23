@@ -14,6 +14,8 @@ class Reference_data extends RESTful {
         $model = new reference_dataModel;
         $controller_name = 'Reference_data';
         
+        $this->setExceptMiddleware(['filterDistrict', 'filterSubdistrict']);
+        
         $this->table_name = 'reference_data';
         $this->enable_xls = true;
         $this->enable_pdf = true;
@@ -25,7 +27,6 @@ class Reference_data extends RESTful {
 
     public function filterDistrict()
     {
-        $user = \Auth::user();
         $globalTools = new \Lib\core\globalTools();
 
         $q = request()->city_id;
@@ -42,7 +43,6 @@ class Reference_data extends RESTful {
 
     public function filterSubdistrict()
     {
-        $user = \Auth::user();
         $globalTools = new \Lib\core\globalTools();
 
         $q = request()->district_id;
@@ -88,6 +88,7 @@ class Reference_data extends RESTful {
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
     }
+    
     public function getListAsPdf()
     {
         $template = $this->controller_name . '::getListAsPdf';

@@ -8,6 +8,8 @@ return [
         'District',
         'Subdistrict',
         'Users',
-        'Reference_data'
+        'Reference_data',
+        'Collection_data',
+        'Election_results'
     ]
 ];
