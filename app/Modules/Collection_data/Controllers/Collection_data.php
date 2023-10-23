@@ -15,6 +15,10 @@ class Collection_data extends RESTful {
         $controller_name = 'Collection_data';
         
         $this->table_name = 'collection_data';
+        $this->enable_xls = true;
+        $this->enable_pdf = true;
+        $this->enable_pdf_button = true;
+        $this->enable_xls_button = true;
         parent::__construct($model, $controller_name);
     }
 
@@ -110,5 +114,38 @@ class Collection_data extends RESTful {
                 });
             }
         }
+    }
+    
+    public function getListAsPdf()
+    {
+        $template = $this->controller_name . '::getListAsPdf';
+        $data = $this->getList(request());
+        $data['title_head_export'] = 'Data Pendataan';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('legal', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Data Pendataan ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListAsXls()
+    {
+        $template = $this->controller_name . '::getListAsXls';
+        $data = $this->getList(request());
+        $data['title_head_export'] = 'Data Pendataan';
+        $data['title_col_sum'] = 9;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+        // return view($template, $data);
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Data Pendataan ('.date('d-m-Y').').xls"');
     }
 }

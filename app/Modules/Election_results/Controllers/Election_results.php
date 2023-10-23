@@ -50,7 +50,7 @@ class Election_results extends RESTful {
             return view($template, $data);
         }
 
-        return $pdf->download('Data Referensi ('.date('d-m-Y').').pdf');
+        return $pdf->download('Data Hasil Pemilu ('.date('d-m-Y').').pdf');
     }
 
     public function getListAsXls()
@@ -67,6 +67,6 @@ class Election_results extends RESTful {
 
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="' . 'Data Referensi ('.date('d-m-Y').').xls"');
+            ->header('Content-Disposition', 'attachment; filename="' . 'Data Hasil Pemilu ('.date('d-m-Y').').xls"');
     }
 }

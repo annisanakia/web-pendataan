@@ -18,4 +18,6 @@ Route::group(['prefix' => 'collection_data', 'namespace' => 'App\Modules\Collect
     Route::post('/update/{id}', ['as' => 'collection_data.update', 'uses' => 'Collection_data@update']);
     Route::post('/delete/{id}', ['as' => 'collection_data.delete', 'uses' => 'Collection_data@delete']);
     Route::post('/delete_img/{id}', ['as' => 'collection_data.delete_img', 'uses' => 'Collection_data@delete_img']);
+    Route::get('/getListAsPdf', ['as' => 'collection_data.getListAsPdf', 'uses' => 'Collection_data@getListAsPdf']);
+    Route::get('/getListAsXls', ['as' => 'collection_data.getListAsXls', 'uses' => 'Collection_data@getListAsXls']);
 });
