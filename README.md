@@ -3,7 +3,7 @@
 </p>
 
 ADMIN
-username : admin
+username : administrator
 Pass : 123456
 
 Coordinator
