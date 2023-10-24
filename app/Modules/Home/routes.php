@@ -12,5 +12,4 @@
 
 Route::group(['prefix' => 'home', 'namespace' => 'App\Modules\Home\Controllers', 'middleware' => ['web']], function () {
     Route::get('/', ['as' => 'home.index', 'uses' => 'Home@index']);
-    // Route::get('/recommendation_list', ['as' => 'home.recommendation_list', 'uses' => 'Home@recommendation_list']);
 });
