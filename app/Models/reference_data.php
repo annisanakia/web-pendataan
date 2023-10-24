@@ -13,12 +13,14 @@ class reference_data extends Model {
     public static $customMessages = array(
         'required' => 'Kolom ini wajib diisi.',
         'nik.unique' => 'NIK telah tersedia.',
+        'nik.max' => 'NIK harus berisikan 16 digit.',
+        'nik.min' => 'NIK harus berisikan 16 digit.'
     );
     
     public function validate($data)
     {
         $rules = array(
-            'nik' => 'required|unique:reference_data,nik,' . ($data['id'] ?? null) . ',id,deleted_at,NULL',
+            'nik' => 'required|min:16|max:16|unique:reference_data,nik,' . ($data['id'] ?? null) . ',id,deleted_at,NULL',
             'name' => 'required',
             'city_id' => 'required',
             'district_id' => 'required',

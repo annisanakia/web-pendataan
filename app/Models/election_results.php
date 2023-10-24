@@ -12,7 +12,7 @@ class election_results extends Model {
     
     public static $customMessages = array(
         'required' => 'Kolom ini wajib diisi.',
-        'nik.unique' => 'NIK telah tersedia.',
+        // 'nik.unique' => 'NIK telah tersedia.',
     );
     
     public function validate($data)
