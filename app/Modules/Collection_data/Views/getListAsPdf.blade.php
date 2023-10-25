@@ -25,9 +25,9 @@
                     <td>{{ ++$i }}</td>
                     <td>{{ $data->nik }}</td>
                     <td>{{ $data->name }}</td>
-                    <td>{{ $data->coordinator->name }}</td>
-                    <td>{{ $data->district->name }}</td>
-                    <td>{{ $data->subdistrict->name }}</td>
+                    <td>{{ $data->coordinator->name ?? null }}</td>
+                    <td>{{ $data->district->name ?? null }}</td>
+                    <td>{{ $data->subdistrict->name ?? null }}</td>
                     <td>{{ $data->no_tps }}</td>
                 </tr>
             @endforeach

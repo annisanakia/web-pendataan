@@ -1,43 +1,9 @@
 @include('component.header_xls')
-<style>
-    .table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    .table th,
-    .table td {
-        border: 1px solid #000;
-        padding: 4px;
-        white-space: nowrap;
-    }
-
-    .table thead tr {
-        background: #fcfcfd;
-    }
-
-    .bigheader {
-        font-size: 19px;
-        font-weight: bold;
-        color: black;
-        margin: 0px;
-    }
-
-    .subheader {
-        font-size: 16px;
-        margin: 0px;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-</style>
-
 <br>
 <?php $i = 0;?>
-<table class="table">
+<table border="1" style="border-collapse: collapse;">
     <thead>
-        <tr>
+        <tr style="background: #e5e5e5;">
             <th>No</th>
             <th>NIK</th>
             <th>Name</th>
@@ -56,8 +22,8 @@
                     <td>{{ ++$i }}</td>
                     <td>{{ $data->nik }}</td>
                     <td>{{ $data->name }}</td>
-                    <td>{{ $data->district->name }}</td>
-                    <td>{{ $data->subdistrict->name }}</td>
+                    <td>{{ $data->district->name ?? null }}</td>
+                    <td>{{ $data->subdistrict->name ?? null }}</td>
                 </tr>
             @endforeach
         @endif

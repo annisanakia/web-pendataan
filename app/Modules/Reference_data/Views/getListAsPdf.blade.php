@@ -23,9 +23,9 @@
                     <td>{{ ++$i }}</td>
                     <td>{{ $data->nik }}</td>
                     <td>{{ $data->name }}</td>
-                    <td>{{ $data->district->name }}</td>
-                    <td>{{ $data->subdistrict->name }}</td>
-            </tr>
+                    <td>{{ $data->district->name ?? null }}</td>
+                    <td>{{ $data->subdistrict->name ?? null }}</td>
+                </tr>
             @endforeach
         @endif
     </tbody>

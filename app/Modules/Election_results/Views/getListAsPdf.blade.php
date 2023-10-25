@@ -21,8 +21,8 @@
             @foreach ($datas as $data)
                 <tr>
                     <td>{{ ++$i }}</td>
-                    <td>{{ $data->district->name }}</td>
-                    <td>{{ $data->subdistrict->name }}</td>
+                    <td>{{ $data->district->name ?? null }}</td>
+                    <td>{{ $data->subdistrict->name ?? null }}</td>
                     <td>{{ $data->no_tps }}</td>
                     <td>{{ $data->total_result }}</td>
                 </tr>

@@ -115,7 +115,6 @@ class Reference_data extends RESTful {
         if (request()->has('print_view')) {
             return view($template, $data);
         }
-        // return view($template, $data);
 
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
@@ -128,22 +127,17 @@ class Reference_data extends RESTful {
         return view($this->controller_name . '::import', $with);
     }
 
-    
-
     public function getTemplateAsXls()
     {
         $template = $this->controller_name . '::getTemplateAsXls';
         $data = $this->getList(request());
-        $data['title_head_export'] = 'Template Import Data Referensi';
-        $data['title_col_sum'] = 5;
 
         if (request()->has('print_view')) {
             return view($template, $data);
         }
-        // return view($template, $data);
 
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="' . 'Template Import Data Referensi ('.date('d-m-Y').').xls"');
+            ->header('Content-Disposition', 'attachment; filename="' . 'Template Import Data Referensi.xls"');
     }
 }

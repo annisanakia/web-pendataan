@@ -1,43 +1,9 @@
 @include('component.header_xls')
-<style>
-    .table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    .table th,
-    .table td {
-        border: 1px solid #000;
-        padding: 4px;
-        white-space: nowrap;
-    }
-
-    .table thead tr {
-        background: #fcfcfd;
-    }
-
-    .bigheader {
-        font-size: 19px;
-        font-weight: bold;
-        color: black;
-        margin: 0px;
-    }
-
-    .subheader {
-        font-size: 16px;
-        margin: 0px;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-</style>
-
 <br>
 <?php $i = 0;?>
-<table class="table">
+<table border="1" style="border-collapse: collapse;">
     <thead>
-        <tr>
+        <tr style="background: #e5e5e5;">
             <th width="3%">No</th>
             <th width="27%">Kecamatan</th>
             <th width="27%">Kelurahan</th>
@@ -54,8 +20,8 @@
             @foreach ($datas as $data)
                 <tr>
                     <td>{{ ++$i }}</td>
-                    <td>{{ $data->district->name }}</td>
-                    <td>{{ $data->subdistrict->name }}</td>
+                    <td>{{ $data->district->name ?? null }}</td>
+                    <td>{{ $data->subdistrict->name ?? null }}</td>
                     <td>{{ $data->no_tps }}</td>
                     <td>{{ $data->total_result }}</td>
                 </tr>

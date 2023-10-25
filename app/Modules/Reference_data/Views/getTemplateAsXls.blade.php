@@ -1,26 +1,6 @@
-<style>
-    .table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    .table th,
-    .table td {
-        border: 1px solid #000;
-        padding: 4px;
-        white-space: nowrap;
-    }
-
-    .table thead tr {
-        background: #d9e7f2;
-    }
-    .str {
-        mso-number-format: \@;
-    }
-</style>
 <table>
     <tr>
-        <td class="red-text" colspan="11"><b><u>Mohon diperhatikan</u></b></td>
+        <td class="red-text" colspan="10"><b><u>Mohon diperhatikan</u></b></td>
     </tr>
     <tr>
         <td></td>
@@ -41,19 +21,21 @@
         <td colspan="10"></td>
     </tr>
 </table>
-<table class="table">
+<table border="1" style="border-collapse: collapse;">
     <thead>
-        <tr>
+        <tr style="background: #e5e5e5;">
             <th width="10px">No</th>
             <th>NIK</th>
             <th>Nama</th>
             <th>Wilayah</th>
             <th>Kecamatan</th>
             <th>Kelurahan</th>
+            <th>Koordinator</th>
         </tr>
     </thead>
     <tbody>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
