@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Name</label>
+                                <label class="col-form-label">Nama</label>
                                 <input name="name" type="text" class="form-control {{ $errors->has('name')? 'is-invalid' : '' }}" value="{{ old('name') }}">
                                 {!!$errors->first('name', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
