@@ -68,6 +68,13 @@
                                 {!!$errors->first('subdistrict_id', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Nomor TPS</label>
+                                <input name="no_tps" type="text" class="form-control {{ $errors->has('no_tps')? 'is-invalid' : '' }}" value="{{ old('no_tps') }}">
+                                {!!$errors->first('no_tps', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
