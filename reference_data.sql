@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 23, 2023 at 04:59 AM
+-- Generation Time: Oct 26, 2023 at 05:01 AM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.7
 
@@ -32,8 +32,17 @@ CREATE TABLE `reference_data` (
   `city_id` int DEFAULT NULL,
   `district_id` int DEFAULT NULL,
   `subdistrict_id` int DEFAULT NULL,
+  `religion_id` int DEFAULT NULL,
+  `no_tps` int DEFAULT NULL,
   `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gender` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pob` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `job_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `rw` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rt` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
