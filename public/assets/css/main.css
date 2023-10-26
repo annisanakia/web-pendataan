@@ -54,10 +54,20 @@
 .asterisk{
     position: relative;
 }
+
 .asterisk:after {
     content: "*";
     color: #ca173f;
     font-size: 15px;
     position: absolute;
     top: -3px;
+}
+
+.bootstrap-select .btn.dropdown-toggle {
+    border: 1px solid #ced4da;
+    background: #fff;
+}
+
+.bootstrap-select .bs-actionsbox .btn-group{
+    width:100%
 }

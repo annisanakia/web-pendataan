@@ -27,6 +27,7 @@ class User extends Authenticatable
         'email',
         'phone_no',
         'status',
+        'subdistrict_id'
     ];
 
     /**
@@ -71,6 +72,9 @@ class User extends Authenticatable
             'phone_no' => 'numeric|nullable|min_digits:10',
             'status' => 'required'
         );
+        if($data['groups_id'] == 2){
+            $rules['subdistrict_ids'] = 'required|array';
+        }
         if(!array_key_exists('id',$data)){
             $rules['password'] = 'required|min:6';
         }

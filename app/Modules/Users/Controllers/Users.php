@@ -23,9 +23,25 @@ class Users extends RESTful {
         $input = Request()->all();
         $validation = $this->model->validate($input);
 
+        unset($input['subdistrict_ids']);
+
         if ($validation->passes()) {
             $input['password'] = \Hash::make($input['password']);
             $data = $this->model->create($input);
+
+            $model = new \Models\users_subdistrict();
+            $users_subdistrict_ids = [];
+            if($data->groups_id == 2){
+                $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+                $input_subdistrict['user_id'] = $data->id;
+                foreach($subdistrict_ids as $subdistrict_id){
+                    $input_subdistrict['subdistrict_id'] = $subdistrict_id;
+                    $users_subdistrict = $model->create($input_subdistrict);
+                    $users_subdistrict_ids[] = $users_subdistrict->id;
+                }
+            }
+            $users_subdistrict_delete = $model->where('user_id',$data->id)
+                    ->whereNotIn('id',$users_subdistrict_ids)->delete();
 
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }
@@ -42,6 +58,7 @@ class Users extends RESTful {
         $input['id'] = $id;
 
         $validation = $this->model->validate($input);
+        // unset($input['subdistrict_ids']);
         
         if ($validation->passes()) {
             $data = $this->model->find($id);
@@ -52,6 +69,20 @@ class Users extends RESTful {
             }
             
             $data->update($input);
+
+            $model = new \Models\users_subdistrict();
+            $users_subdistrict_ids = [];
+            if($data->groups_id == 2){
+                $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+                $input_subdistrict['user_id'] = $id;
+                foreach($subdistrict_ids as $subdistrict_id){
+                    $input_subdistrict['subdistrict_id'] = $subdistrict_id;
+                    $users_subdistrict = $model->create($input_subdistrict);
+                    $users_subdistrict_ids[] = $users_subdistrict->id;
+                }
+            }
+            $users_subdistrict_delete = $model->where('user_id',$id)
+                    ->whereNotIn('id',$users_subdistrict_ids)->delete();
             
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }

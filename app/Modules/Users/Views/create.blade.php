@@ -34,7 +34,7 @@
                                 <select name="groups_id" class="form-select {{ $errors->has('groups_id')? 'is-invalid' : '' }}">
                                     <option value="" selected>-- Pilih --</option>
                                     @foreach(\Models\groups::all() as $row)
-                                        <option value="{{ $row->id }}" data-code="{{ $row->code }}" {{ $row->id == old('groups_id')? 'selected' : '' }}>{{ $row->name }}</option>
+                                        <option value="{{ $row->id }}" {{ $row->id == old('groups_id')? 'selected' : '' }}>{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                                 {!!$errors->first('groups_id', ' <span class="invalid-feedback">:message</span>')!!}
@@ -85,6 +85,20 @@
                                 {!!$errors->first('status', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
+                        <div class="col-sm-6 hidden" id="coordinator_subdistrict">
+                            <div class="mb-3">
+                                <label class="col-form-label asterisk">Kecamatan</label>
+                                <?php
+                                    $subdistrict_ids = is_array(old('subdistrict_ids'))? old('subdistrict_ids') : [];
+                                ?>
+                                <select name="subdistrict_ids[]" class="form-control selectpicker {{ $errors->has('subdistrict_ids')? 'is-invalid' : '' }}" data-live-search="true" data-actions-box="true" data-selected-text-format="count" title="'-- Pilih --" multiple>
+                                    @foreach(\Models\subdistrict::all() as $row)
+                                        <option value="{{ $row->id }}" {{ in_array($row->id,$subdistrict_ids)? 'selected' : '' }}>{{ $row->name }}</option>
+                                    @endforeach
+                                </select>
+                                {!!$errors->first('subdistrict_ids', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -94,16 +108,20 @@
 @endsection
 
 @section('scripts')
+<link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap-select/1.13.14/css/bootstrap-select.min.css')}}">
+<script src="{{ asset('assets/plugins/bootstrap-select/v1.14.0-beta2/bootstrap-select.js')}}"></script>
 <script type="text/javascript">
-    // $('select[name=groups_id]').on('change', function() {
-    //     val = $(this).val();
-    //     $('.employee_code').addClass('d-none');
-    //     $('.registration_code').addClass('d-none');
-    //     if(val == 3){
-    //         $('.registration_code').removeClass('d-none');
-    //     }else if(val != 3 && val != ''){
-    //         $('.employee_code').removeClass('d-none');
-    //     }
-    // });
+    $('.selectpicker').selectpicker('refresh');
+    $('select[name=groups_id]').on('change', function() {
+        val = $(this).val();
+        getSubdistrict(val);
+    });
+    getSubdistrict("{{ old('groups_id') ?? ($data->groups_id ?? null) }}", "{{ old('groups_id') ?? ($data->groups_id ?? null) }}");
+    function getSubdistrict(val){
+        $('#coordinator_subdistrict').addClass('d-none');
+        if(val == 2){
+            $('#coordinator_subdistrict').removeClass('d-none');
+        }
+    }
 </script>
 @endsection
