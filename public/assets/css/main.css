@@ -50,3 +50,14 @@
         visibility: hidden;
     }
 }
+
+.asterisk{
+    position: relative;
+}
+.asterisk:after {
+    content: "*";
+    color: #ca173f;
+    font-size: 15px;
+    position: absolute;
+    top: -3px;
+}

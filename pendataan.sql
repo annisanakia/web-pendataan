@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 19, 2023 at 04:44 AM
+-- Generation Time: Oct 26, 2023 at 05:01 AM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.7
 
@@ -53,13 +53,21 @@ CREATE TABLE `collection_data` (
   `id` int NOT NULL,
   `coordinator_id` int DEFAULT NULL,
   `city_id` int DEFAULT NULL,
-  `disctrict_id` int DEFAULT NULL,
-  `subdisctrict_id` int DEFAULT NULL,
+  `district_id` int DEFAULT NULL,
+  `subdistrict_id` int DEFAULT NULL,
+  `religion_id` int DEFAULT NULL,
   `no_tps` int DEFAULT NULL,
   `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `whatsapp` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gender` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pob` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `job_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `photo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `rt` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rw` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -101,8 +109,8 @@ INSERT INTO `district` (`id`, `city_id`, `code`, `name`, `created_at`, `updated_
 CREATE TABLE `election_results` (
   `id` int NOT NULL,
   `city_id` int DEFAULT NULL,
-  `disctrict_id` int DEFAULT NULL,
-  `subdisctrict_id` int DEFAULT NULL,
+  `district_id` int DEFAULT NULL,
+  `subdistrict_id` int DEFAULT NULL,
   `no_tps` int DEFAULT NULL,
   `total_result` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -144,21 +152,48 @@ CREATE TABLE `reference_data` (
   `city_id` int DEFAULT NULL,
   `district_id` int DEFAULT NULL,
   `subdistrict_id` int DEFAULT NULL,
+  `religion_id` int DEFAULT NULL,
+  `no_tps` int DEFAULT NULL,
   `nik` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gender` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pob` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `job_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `rw` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rt` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `religion`
+--
+
+CREATE TABLE `religion` (
+  `id` int NOT NULL,
+  `code` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `reference_data`
+-- Dumping data for table `religion`
 --
 
-INSERT INTO `reference_data` (`id`, `city_id`, `district_id`, `subdistrict_id`, `nik`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(4, 1, 5, 28, '1234', 'nakia', '2023-10-18 20:39:47', '2023-10-18 20:39:47', NULL),
-(5, 1, 3, 15, '12345', 'Shakila', '2023-10-18 20:48:48', '2023-10-18 20:48:48', NULL),
-(6, 1, 3, 17, '12345678190', 'Annisa', '2023-10-18 20:56:29', '2023-10-18 20:56:29', NULL);
+INSERT INTO `religion` (`id`, `code`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'ISM', 'Islam', '2023-10-25 21:20:21', NULL, NULL),
+(2, 'PRT', 'Kristen (Protestan)', '2023-10-25 21:20:21', NULL, NULL),
+(3, 'HND', 'Hindu', '2023-10-25 21:20:21', NULL, NULL),
+(4, 'BDH', 'Budha', '2023-10-25 21:20:21', NULL, NULL),
+(5, 'KTK', 'Kristen (Katolik)', '2023-10-25 21:20:21', NULL, NULL),
+(6, 'KHC', 'Konghucu', '2023-10-25 21:20:21', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -284,6 +319,12 @@ ALTER TABLE `reference_data`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `religion`
+--
+ALTER TABLE `religion`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `subdistrict`
 --
 ALTER TABLE `subdistrict`
@@ -334,6 +375,12 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `reference_data`
 --
 ALTER TABLE `reference_data`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `religion`
+--
+ALTER TABLE `religion`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --

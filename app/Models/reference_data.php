@@ -12,19 +12,21 @@ class reference_data extends Model {
     
     public static $customMessages = array(
         'required' => 'Kolom ini wajib diisi.',
+        'numeric' => 'Isi kolom ini dengan angka.',
         'nik.unique' => 'NIK telah tersedia.',
-        'nik.max' => 'NIK harus berisikan 16 digit.',
-        'nik.min' => 'NIK harus berisikan 16 digit.'
+        'nik.digits' => 'NIK harus berisikan 16 digit.',
     );
     
     public function validate($data)
     {
         $rules = array(
-            'nik' => 'required|min:16|max:16|unique:reference_data,nik,' . ($data['id'] ?? null) . ',id,deleted_at,NULL',
+            'nik' => 'required|numeric|digits:16|unique:reference_data,nik,' . ($data['id'] ?? null) . ',id,deleted_at,NULL',
             'name' => 'required',
             'city_id' => 'required',
             'district_id' => 'required',
             'subdistrict_id' => 'required',
+            'rt' => 'nullable|numeric',
+            'rw' => 'nullable|numeric',
         );
         $v = Validator::make($data, $rules, reference_data::$customMessages);
         return $v;
