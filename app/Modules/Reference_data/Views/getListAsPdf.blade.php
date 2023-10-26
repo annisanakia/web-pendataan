@@ -6,7 +6,7 @@
         <tr class="ordering">
             <th width="3%">No</th>
             <th width="20%">NIK</th>
-            <th>Name</th>
+            <th>Nama Lengkap</th>
             <th width="20%">Kecamatan</th>
             <th width="20%">Kelurahan</th>
         </tr>

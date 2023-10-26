@@ -20,7 +20,7 @@
                 <tr>
                     <th width="5%" class="text-center">No</th>
                     <th>NIK</th>
-                    <th width="20%">Nama</th>
+                    <th width="20%">Nama Lengkap</th>
                     <th width="18%">Koordinator</th>
                     <th width="18%">Kelurahan</th>
                     <th width="10%">TPS</th>

@@ -16,7 +16,7 @@
                 <tr>
                     <th width="5%" class="text-center">No</th>
                     <th>NIK</th>
-                    <th width="20%">Nama</th>
+                    <th width="20%">Nama Lengkap</th>
                     <th width="20%">Kecamatan</th>
                     <th width="20%">Kelurahan</th>
                     <th width="12%" class="text-center">Aksi</th>

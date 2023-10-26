@@ -6,7 +6,7 @@
         <tr style="background: #e5e5e5;">
             <th>No</th>
             <th>NIK</th>
-            <th>Name</th>
+            <th>Nama Lengkap</th>
             <th>Koordinator</th>
             <th>Kecamatan</th>
             <th>Kelurahan</th>
