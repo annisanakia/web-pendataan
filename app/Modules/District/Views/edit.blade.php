@@ -23,14 +23,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Name</label>
+                                <label class="col-form-label asterisk">Name</label>
                                 <input name="name" type="text" class="form-control {{ $errors->has('name')? 'is-invalid' : '' }}" value="{{ old('name') ?? $data->name }}">
                                 {!!$errors->first('name', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Kode</label>
+                                <label class="col-form-label asterisk">Kode</label>
                                 <input name="code" type="text" class="form-control {{ $errors->has('code')? 'is-invalid' : '' }}" value="{{ old('code') ?? $data->code }}">
                                 {!!$errors->first('code', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Wilayah</label>
+                                <label class="col-form-label asterisk">Wilayah</label>
                                 <select name="city_id" class="form-select {{ $errors->has('city_id')? 'is-invalid' : '' }}">
                                     @foreach(\Models\city::all() as $row)
                                         <option value="{{ $row->id }}" {{ $row->id == (old('city_id') ?? $data->city_id)? 'selected' : '' }}>{{ $row->name }}</option>

@@ -23,7 +23,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Wilayah</label>
+                                <label class="col-form-label asterisk">Wilayah</label>
                                 <select name="city_id" class="form-select {{ $errors->has('city_id')? 'is-invalid' : '' }}" id="city_id">
                                     @foreach(\Models\city::all() as $row)
                                         <option value="{{ $row->id }}" {{ $row->id == old('city_id')? 'selected' : '' }}>{{ $row->name }}</option>
@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Kecamatan</label>
+                                <label class="col-form-label asterisk">Kecamatan</label>
                                 <select name="district_id" class="form-select {{ $errors->has('district_id')? 'is-invalid' : '' }}" id="district_id">
                                     <option value="">-- Pilih --</option>
                                 </select>
@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Kelurahan</label>
+                                <label class="col-form-label asterisk">Kelurahan</label>
                                 <select name="subdistrict_id" class="form-select {{ $errors->has('subdistrict_id')? 'is-invalid' : '' }}" id="subdistrict_id">
                                     <option value="">-- Pilih --</option>
                                 </select>
@@ -56,7 +56,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Nomor TPS</label>
+                                <label class="col-form-label asterisk">Nomor TPS</label>
                                 <input name="no_tps" type="text" class="form-control {{ $errors->has('no_tps')? 'is-invalid' : '' }}" value="{{ old('no_tps') }}">
                                 {!!$errors->first('no_tps', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>

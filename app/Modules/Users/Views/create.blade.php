@@ -23,14 +23,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Name</label>
+                                <label class="col-form-label asterisk">Name</label>
                                 <input name="name" type="text" class="form-control {{ $errors->has('name')? 'is-invalid' : '' }}" value="{{ old('name') }}">
                                 {!!$errors->first('name', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Grup pengguna</label>
+                                <label class="col-form-label asterisk">Grup pengguna</label>
                                 <select name="groups_id" class="form-select {{ $errors->has('groups_id')? 'is-invalid' : '' }}">
                                     <option value="" selected>-- Pilih --</option>
                                     @foreach(\Models\groups::all() as $row)
@@ -44,14 +44,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Username</label>
+                                <label class="col-form-label asterisk">Username</label>
                                 <input name="username" type="text" class="form-control {{ $errors->has('username')? 'is-invalid' : '' }}" value="{{ old('username') }}">
                                 {!!$errors->first('username', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Password</label>
+                                <label class="col-form-label asterisk">Password</label>
                                 <input name="password" type="password" class="form-control {{ $errors->has('password')? 'is-invalid' : '' }}" value="{{ old('password') }}">
                                 {!!$errors->first('password', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
@@ -76,7 +76,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label">Status</label>
+                                <label class="col-form-label asterisk">Status</label>
                                 <select name="status" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
                                     <option value="" selected>-- Pilih --</option>
                                     <option value="1" {{ 1 == (old('status') ?? 1)? 'selected' : '' }}>Aktif</option>
