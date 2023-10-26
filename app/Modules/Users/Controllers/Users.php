@@ -32,10 +32,19 @@ class Users extends RESTful {
             $model = new \Models\users_subdistrict();
             $users_subdistrict_ids = [];
             if($data->groups_id == 2){
+                $users_subdistricts = $model->where('user_id',$data->id)->get()->keyBy('subdistrict_id')->all();
                 $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
                 $input_subdistrict['user_id'] = $data->id;
                 foreach($subdistrict_ids as $subdistrict_id){
                     $input_subdistrict['subdistrict_id'] = $subdistrict_id;
+                    $users_subdistrict = $users_subdistricts[$subdistrict_id] ?? null;
+
+                    if(!$users_subdistrict){
+                        $users_subdistrict = $model->create($input_subdistrict);
+                    }else{
+                        $users_subdistrict->update($input_subdistrict);
+                    }
+
                     $users_subdistrict = $model->create($input_subdistrict);
                     $users_subdistrict_ids[] = $users_subdistrict->id;
                 }
@@ -73,11 +82,19 @@ class Users extends RESTful {
             $model = new \Models\users_subdistrict();
             $users_subdistrict_ids = [];
             if($data->groups_id == 2){
+                $users_subdistricts = $model->where('user_id',$id)->get()->keyBy('subdistrict_id')->all();
                 $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
                 $input_subdistrict['user_id'] = $id;
                 foreach($subdistrict_ids as $subdistrict_id){
                     $input_subdistrict['subdistrict_id'] = $subdistrict_id;
-                    $users_subdistrict = $model->create($input_subdistrict);
+                    $users_subdistrict = $users_subdistricts[$subdistrict_id] ?? null;
+
+                    if(!$users_subdistrict){
+                        $users_subdistrict = $model->create($input_subdistrict);
+                    }else{
+                        $users_subdistrict->update($input_subdistrict);
+                    }
+
                     $users_subdistrict_ids[] = $users_subdistrict->id;
                 }
             }

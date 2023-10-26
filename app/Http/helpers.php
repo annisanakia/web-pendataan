@@ -34,6 +34,10 @@ function menuSidebar()
                 'name' => 'Data Referensi',
                 'icon' => 'fa-solid fa-building-columns'
             ],
+            'collection_data' => [
+                'name' => 'Data Pendataan',
+                'icon' => 'fa-solid fa-file-pen'
+            ],
         ],
         'COR' => [
             'home' => [

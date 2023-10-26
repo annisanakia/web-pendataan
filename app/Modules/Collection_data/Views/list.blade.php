@@ -12,6 +12,7 @@
         <!-- Table with stripped rows -->
         <?php
             $user_id = Auth::user()->id ?? null;
+            $groups_id = Auth::user()->groups_id ?? null;
         ?>
         <div class="table-responsive">
         <table class="table table-striped mt-3">
@@ -51,7 +52,7 @@
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps }}</td>
                         <td class="action text-center" nowrap>
-                            @if($user_id == $data->coordinator_id)
+                            @if($user_id == $data->coordinator_id || $groups_id == 1)
                             <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>

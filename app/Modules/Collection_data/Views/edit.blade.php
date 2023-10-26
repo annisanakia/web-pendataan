@@ -178,6 +178,23 @@
                             </div>
                         </div>
                     </div>
+                    <?php
+                        $groups_id = Auth::user()->groups_id ?? null;
+                    ?>
+                    @if($groups_id == 1)
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label asterisk">Koordinator</label>
+                                <select name="coordinator_id" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
+                                    <option value="">-- Pilih --</option>
+                                    @foreach(App\Models\User::where('groups_id',2)->get() as $row)
+                                        <option value="{{ $row->id }}" {{ $row->id == (old('coordinator_id') ?? $data->coordinator_id)? 'selected' : '' }}>{{ $row->name }}</option>
+                                    @endforeach
+                                </select>
+                                {!!$errors->first('coordinator_id', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </form>
         </div>

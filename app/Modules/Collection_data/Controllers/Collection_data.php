@@ -27,7 +27,7 @@ class Collection_data extends RESTful {
         $user = \Auth::user();
         $input = $this->getParams(request()->all());
         $validation = $this->model->validate($input);
-        $input['coordinator_id'] = $user->id ?? null;
+        $input['coordinator_id'] = request()->coordinator_id ?? ($user->id ?? null);
 
         if ($validation->passes()) {
             unset($input['photo']);

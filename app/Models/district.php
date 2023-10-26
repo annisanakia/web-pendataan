@@ -27,4 +27,9 @@ class district extends Model {
         $v = Validator::make($data, district::$rules, district::$customMessages);
         return $v;
     }
+
+    public function subdistrict()
+    {
+        return $this->hasMany('Models\subdistrict');
+    }
 }

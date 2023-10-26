@@ -29,6 +29,7 @@ class collection_data extends Model {
             'city_id' => 'required',
             'district_id' => 'required',
             'subdistrict_id' => 'required',
+            'coordinator_id' => 'required',
             'no_tps' => 'required',
             'whatsapp' => 'required|numeric|digits_between:10,12',
             'rt' => 'nullable|numeric',
