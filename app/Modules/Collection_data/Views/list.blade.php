@@ -47,7 +47,7 @@
             <tbody>
                 @if(count($datas) <= 0)
                     <tr>
-                        <td colspan="7" class="text-center">Data Tidak Ditemukan</td>
+                        <td colspan="8" class="text-center">Data Tidak Ditemukan</td>
                     </tr>
                 @else
                     @php $i=0 @endphp
@@ -71,6 +71,9 @@
                             @endif
                         </td>
                         <td class="action text-center" nowrap>
+                            <a class="btn btn-secondary px-2 py-1" href="{{ url($controller_name.'/logActivity/'.$data->id) }}">
+                                <i class="fa-solid fa-list"></i>
+                            </a>
                             @if($user_id == $data->coordinator_id || $groups_id == 1)
                             <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
                                 <i class="fa-solid fa-pencil"></i>

@@ -56,7 +56,9 @@ class Collection_data extends RESTful {
 
         if ($validation->passes()) {
             unset($input['photo']);
-            $input['photo'] = $this->store_image();
+            if (request()->hasFile('photo')) {
+                $input['photo'] = $this->store_image();
+            }
             $data = $this->model->create($input);
 
             $table_name = $this->model->getTable() ?? null;
@@ -85,7 +87,9 @@ class Collection_data extends RESTful {
 
         if ($validation->passes()) {
             unset($input['photo']);
-            $input['photo'] = $this->store_image();
+            if (request()->hasFile('photo')) {
+                $input['photo'] = $this->store_image();
+            }
             $data = $this->model->find($id);
             $activity_before = json_encode($data);
 
@@ -164,6 +168,13 @@ class Collection_data extends RESTful {
                 $data->whereHas('subdistrict', function ($builder) use ($value){
                     $builder->where('name', 'like', '%' . $value . '%');
                 });
+            } elseif ($key == 'user_name') {
+                $data->whereHas('user', function ($builder) use ($value){
+                    $builder->where('name', 'like', '%' . $value . '%');
+                });
+            } elseif ($key == 'datetime'){
+                $data->where('activity_date','>=',date('Y-m-d H:i:00',strtotime($value)))
+                    ->where('activity_date','<=',date('Y-m-d H:i:59',strtotime($value)));
             }
         }
     }
@@ -250,5 +261,26 @@ class Collection_data extends RESTful {
         $activity_after = json_encode($data);
         $this->lib_activity->addActivity($user_id, $table_name, $id, 'updateStatus', date('Y-m-d H:i:s'), $activity_after, $activity_before);
         return redirect()->back();
+    }
+
+    public function logActivity($id)
+    {
+        $table_name = $this->model->getTable() ?? null;
+        $data = $this->model->find($id);
+
+        $log_activitys = \Models\log_activity::where('object',$table_name)
+                ->where('object_id',$id);
+        $this->filter($log_activitys, request(), 'log_activity');
+        $this->order($log_activitys, request());
+        if (request()->has('max_row')) {
+            $this->setMaxRow(request()->input('max_row'));
+        }
+        $log_activitys = $log_activitys->paginate($this->max_row);
+        $log_activitys->chunk(100);
+
+        $with['data'] = $data;
+        $with['log_activitys'] = $log_activitys;
+        $with['param'] = request()->all();
+        return View($this->controller_name . '::logActivity' , $with);
     }
 }

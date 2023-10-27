@@ -68,4 +68,9 @@ class collection_data extends Model {
     {
         return $this->belongsTo('Models\subdistrict', 'subdistrict_id', 'id');
     }
+
+    public function religion()
+    {
+        return $this->belongsTo('Models\religion', 'religion_id', 'id');
+    }
 }

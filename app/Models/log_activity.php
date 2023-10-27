@@ -27,4 +27,9 @@ class log_activity extends Model {
         $v = Validator::make($data, log_activity::$rules, log_activity::$customMessages);
         return $v;
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
 }

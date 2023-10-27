@@ -22,4 +22,5 @@ Route::group(['prefix' => 'collection_data', 'namespace' => 'App\Modules\Collect
     Route::get('/getListAsXls', ['as' => 'collection_data.getListAsXls', 'uses' => 'Collection_data@getListAsXls']);
     Route::get('/getAutocomplete', ['as' => 'collection_data.getAutocomplete', 'uses' => 'Collection_data@getAutocomplete']);
     Route::get('/updateStatus/{id}', ['as' => 'collection_data.updateStatus', 'uses' => 'Collection_data@updateStatus']);
+    Route::get('/logActivity/{id}', ['as' => 'collection_data.logActivity', 'uses' => 'Collection_data@logActivity']);
 });
