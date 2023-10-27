@@ -93,7 +93,7 @@
                                     $subdistrict_ids = \Models\users_subdistrict::where('user_id',$data->id)->pluck('subdistrict_id')->all();;
                                     $subdistrict_ids = is_array(old('subdistrict_ids'))? old('subdistrict_ids') : ($subdistrict_ids ?? []);
                                 ?>
-                                <select name="subdistrict_ids[]" class="form-control selectpicker {{ $errors->has('subdistrict_ids')? 'is-invalid' : '' }}" data-live-search="true" data-actions-box="true" data-selected-text-format="count" title="-- Pilih --" multiple>
+                                <select name="subdistrict_ids[]" class="form-control selectpicker {{ $errors->has('subdistrict_ids')? 'is-invalid' : '' }}" data-size="7" data-live-search="true" data-actions-box="true" data-selected-text-format="count" title="-- Pilih --" multiple>
                                     @foreach(\Models\subdistrict::all() as $row)
                                         <option value="{{ $row->id }}" {{ in_array($row->id,$subdistrict_ids)? 'selected' : '' }}>{{ $row->name }}</option>
                                     @endforeach
