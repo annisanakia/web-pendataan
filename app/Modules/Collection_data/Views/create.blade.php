@@ -94,7 +94,7 @@
                             <div class="mb-3">
                                 <label class="col-form-label">Foto KTP</label>
                                 <input name="photo" class="form-control {{ $errors->has('photo')? 'is-invalid' : '' }}" type="file">
-                                <div class="form-text">Upload file berformat JPEG, PNG, JPG.<br>Maksimal ukuran file 2 Mb.</div>
+                                <div class="form-text">Upload file berformat JPEG, JPG, PNG.<br>Maksimal ukuran file 2 Mb.</div>
                                 {!!$errors->first('photo', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>

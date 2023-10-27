@@ -71,9 +71,6 @@
                             @endif
                         </td>
                         <td class="action text-center" nowrap>
-                            <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
-                                <i class="fa-solid fa-pencil"></i>
-                            </a>
                             @if($user_id == $data->coordinator_id || $groups_id == 1)
                             <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
                                 <i class="fa-solid fa-pencil"></i>

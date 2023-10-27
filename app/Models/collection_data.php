@@ -5,6 +5,7 @@ namespace Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Validation\Rules\File;
 
 class collection_data extends Model {
 
@@ -18,7 +19,9 @@ class collection_data extends Model {
         'numeric' => 'Isi kolom ini dengan angka.',
         'nik.unique' => 'NIK telah tersedia.',
         'nik.digits' => 'NIK harus berisikan 16 digit.',
-        'whatsapp.digits_between' => 'Nomor whatsapp harus berisikan 10 sampai 12 digit.'
+        'whatsapp.digits_between' => 'Nomor whatsapp harus berisikan 10 sampai 12 digit.',
+        'photo.mimes' => 'Foto KTP harus bertipe JPEG, JPG, PNG',
+        'photo.max' => 'Ukuran file Foto KTP harus dibawah 2048 kilobytes'
     );
     
     public function validate($data)
@@ -33,6 +36,10 @@ class collection_data extends Model {
             'whatsapp' => 'required|numeric|digits_between:10,12',
             'rt' => 'nullable|numeric',
             'rw' => 'nullable|numeric',
+            'photo' => [
+                File::types(['jpeg', 'jpg', 'png'])
+                    ->max(2048)
+            ],
         );
         // $route = \Request::route()->getName();
         // if($route != 'store'){
