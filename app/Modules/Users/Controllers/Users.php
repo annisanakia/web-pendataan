@@ -56,7 +56,7 @@ class Users extends RESTful {
             $table_name = $this->model->getTable() ?? null;
             $data_id = $data->id ?? null;
             $activity_after = json_encode($data);
-            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'insert', date('Y-m-d H:i:s'), $activity_after);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'store', date('Y-m-d H:i:s'), $activity_after);
 
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }

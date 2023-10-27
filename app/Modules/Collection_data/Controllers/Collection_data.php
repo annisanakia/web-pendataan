@@ -22,6 +22,29 @@ class Collection_data extends RESTful {
         parent::__construct($model, $controller_name);
     }
 
+    public function edit($id)
+    {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+        $data = $this->model->find($id);
+
+        if (is_null($data) || ($user_id != $data->coordinator_id && $groups_id == 2)) {
+            return Redirect::route(strtolower($this->controller_name) . '.index');
+        }
+
+        $action[] = array('name' => 'Batal', 'url' => strtolower($this->controller_name), 'class' => 'btn btn-secondary px-3 ms-md-1');
+        if ($this->priv['delete_priv'])
+            $action[] = array('name' => 'Hapus', 'url' => strtolower($this->controller_name) . '/delete/' . $id, 'class' => 'btn btn-danger px-3 ms-md-1 delete', 'attr' => 'ng-click=confirm($event) data-name='.($data->name ?? $data->code));
+        $action[] = array('name' => 'Simpan', 'type' => 'submit', 'url' => '#', 'class' => 'btn btn-success px-3 ms-md-1');
+
+        $this->setAction($action);
+
+        $content['data'] = $data;
+        $content['actions'] = $this->actions;
+
+        return View($this->controller_name . '::edit' , $content);
+    }
+
     public function store()
     {
         $user_id = \Auth::user()->id ?? null;
@@ -39,7 +62,7 @@ class Collection_data extends RESTful {
             $table_name = $this->model->getTable() ?? null;
             $data_id = $data->id ?? null;
             $activity_after = json_encode($data);
-            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'insert', date('Y-m-d H:i:s'), $activity_after);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'store', date('Y-m-d H:i:s'), $activity_after);
 
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }
@@ -178,10 +201,54 @@ class Collection_data extends RESTful {
             ->header('Content-Disposition', 'attachment; filename="' . 'Data Pendataan ('.date('d-m-Y').').xls"');
     }
 
+    public function delete($id)
+    {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+        $data = $this->model->find($id);
+
+        if (is_null($data) || ($user_id != $data->coordinator_id && $groups_id == 2)) {
+            return Redirect::route(strtolower($this->controller_name) . '.index');
+        }
+        if ($this->priv['delete_priv']) {
+            $data = $this->model->find($id);
+            if($data){
+                $data->delete();
+            }
+
+            $user_id = \Auth::user()->id ?? null;
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_before = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $id, 'delete', date('Y-m-d H:i:s'), null, $activity_before);
+        }
+        if (!request()->ajax()) {
+            return Redirect::route(strtolower($this->controller_name) . '.index');
+        }
+    }
+
     public function getAutocomplete()
     {
         $data = \Models\reference_data::firstWhere('nik',request()->nik);
         return json_encode($data);
     }
-    
+
+    public function updateStatus($id)
+    {
+        $data = $this->model->find($id);
+        $activity_before = json_encode($data);
+        if($data->status == 1){
+            $data->status = 0;
+        }else{
+            $data->status = 1;
+        }
+        $data->save();
+
+        $user_id = \Auth::user()->id ?? null;
+        $table_name = $this->model->getTable() ?? null;
+        $data_id = $data->id ?? null;
+        $activity_after = json_encode($data);
+        $this->lib_activity->addActivity($user_id, $table_name, $id, 'updateStatus', date('Y-m-d H:i:s'), $activity_after, $activity_before);
+        return redirect()->back();
+    }
 }

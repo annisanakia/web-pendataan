@@ -21,9 +21,10 @@
                     <th width="5%" class="text-center">No</th>
                     <th>NIK</th>
                     <th width="20%">Nama Lengkap</th>
-                    <th width="18%">Koordinator</th>
-                    <th width="18%">Kelurahan</th>
-                    <th width="10%">TPS</th>
+                    <th width="15%">Koordinator</th>
+                    <th width="15%">Kelurahan</th>
+                    <th width="7%">TPS</th>
+                    <th width="13%">Status</th>
                     <th width="10%" class="text-center">Aksi</th>
                 </tr>
                 <tr>
@@ -33,6 +34,13 @@
                     <th><input type="text" name="filter[coordinator_name]" value="{{ $param['filter']['coordinator_name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[subdistrict_name]" value="{{ $param['filter']['subdistrict_name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[no_tps]" value="{{ $param['filter']['no_tps'] ?? null }}" class="form-control"></th>
+                    <th>
+                        <select name="filter[status]" class="form-select">
+                            <option value="" selected>-- Pilih --</option>
+                            <option value="0" {{ 0 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Belum dibagikan</option>
+                            <option value="1" {{ 1 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Sudah dibagikan</option>
+                        </select>
+                    </th>
                     <th></th>
                 </tr>
             </thead>
@@ -51,7 +59,21 @@
                         <td>{{ $data->coordinator->name ?? null }}</td>
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps }}</td>
+                        <td>
+                            @if($data->status != 1)
+                                <a class="btn btn-secondary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                    Belum dibagikan
+                                </a>
+                            @else
+                                <a class="btn btn-success px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                    Sudah dibagikan
+                                </a>
+                            @endif
+                        </td>
                         <td class="action text-center" nowrap>
+                            <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
+                                <i class="fa-solid fa-pencil"></i>
+                            </a>
                             @if($user_id == $data->coordinator_id || $groups_id == 1)
                             <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
                                 <i class="fa-solid fa-pencil"></i>
