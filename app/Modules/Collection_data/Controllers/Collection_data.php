@@ -148,4 +148,11 @@ class Collection_data extends RESTful {
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Data Pendataan ('.date('d-m-Y').').xls"');
     }
+
+    public function getAutocomplete()
+    {
+        $data = \Models\reference_data::firstWhere('nik',request()->nik);
+        return json_encode($data);
+    }
+    
 }

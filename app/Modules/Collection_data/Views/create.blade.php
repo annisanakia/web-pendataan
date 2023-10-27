@@ -19,12 +19,25 @@
                     <div class="d-grid gap-2 d-md-block my-2 text-end">
                         @include('component.actions')
                     </div>
+                    <div class="alert alert-info">
+                        <b>Perhatikan :</b><br>
+                        <ul class="mb-0">
+                            <li>Form yang bertandakan <label class="color-red">*</label> wajib diisi</li>
+                            <li>Icon <i class="fa-solid fa-magnifying-glass"></i> pada form NIK berfungsi untuk mengecek data referensi</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-danger alertNotif" id="alert_notif" style="display:none">
+                        Data referensi tidak ditemukan.
+                    </div>
                     <!-- General Form Elements -->
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
                                 <label class="col-form-label asterisk">NIK</label>
-                                <input name="nik" type="text" class="form-control {{ $errors->has('nik')? 'is-invalid' : '' }}" value="{{ old('nik') }}">
+                                <div class="input-group mb-3">
+                                    <input name="nik" type="text" class="form-control {{ $errors->has('nik')? 'is-invalid' : '' }}" value="{{ old('nik') }}" id="nik">
+                                    <button class="btn btn-primary" type="button" id="autocomplete"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                </div>
                                 {!!$errors->first('nik', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
@@ -221,7 +234,6 @@
             data: data,
             success: function(e) {
                 $('#district_id').html(e);
-                $('.selectpicker').selectpicker('refresh');
             }
         });
     }
@@ -239,7 +251,46 @@
             data: data,
             success: function(e) {
                 $('#subdistrict_id').html(e);
-                $('.selectpicker').selectpicker('refresh');
+            }
+        });
+    }
+
+    $('#autocomplete').click(function() {
+        getAutocomplete();
+    });
+
+    function getAutocomplete(){
+        var url = '{{url("collection_data/getAutocomplete")}}';
+        var data = {
+            nik: $('#nik').val()
+        };
+        $.ajax({
+            url: url,
+            data: data,
+            success: function(e) {
+                var data = JSON.parse(e);
+                if(data != null){
+                    $('input[name=name]').val(data.name);
+                    $('input[name=city_id]').val(data.city_id);
+                    getDistrict(data.city_id, data.district_id);
+                    getSubdistrict(data.district_id, data.subdistrict_id);
+                    $('input[name=no_tps]').val(data.no_tps);
+                    $('input[name=pob]').val(data.pob);
+                    $('input[name=dob]').val(data.dob);
+                    if(data.gender == 'L'){
+                        $('#gender_l').prop('checked',true);
+                    }else if(data.gender == 'P'){v
+                        $('#gender_p').prop('checked',true);
+                    }
+                    $('select[name=religion_id]').val(data.religion_id);
+                    $('input[name=job_name]').val(data.job_name);
+                    $('textarea[name=address]').val(data.address);
+                    $('input[name=rt]').val(data.rt);
+                    $('input[name=rw]').val(data.rw);
+                }else{
+                    $("#alert_notif").show();
+                    setTimeout(function() { $("#alert_notif").hide(); }, 5000);
+                }
             }
         });
     }

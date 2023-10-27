@@ -19,6 +19,12 @@
                     <div class="d-grid gap-2 d-md-block my-2 text-end">
                         @include('component.actions')
                     </div>
+                    <div class="alert alert-info">
+                        <b>Perhatikan :</b><br>
+                        <ul class="mb-0">
+                            <li>Form yang bertandakan <label class="color-red">*</label> wajib diisi</li>
+                        </ul>
+                    </div>
                     <!-- General Form Elements -->
                     <div class="row">
                         <div class="col-sm-6">
@@ -187,7 +193,6 @@
             data: data,
             success: function(e) {
                 $('#district_id').html(e);
-                $('.selectpicker').selectpicker('refresh');
             }
         });
     }
@@ -205,7 +210,6 @@
             data: data,
             success: function(e) {
                 $('#subdistrict_id').html(e);
-                $('.selectpicker').selectpicker('refresh');
             }
         });
     }
