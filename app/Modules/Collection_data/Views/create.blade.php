@@ -191,6 +191,7 @@
                         $groups_id = Auth::user()->groups_id ?? null;
                     ?>
                     @if($groups_id == 1)
+                    <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
                                 <label class="col-form-label">Koordinator</label>
@@ -203,6 +204,20 @@
                                 {!!$errors->first('coordinator_id', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Status</label>
+                                <select name="status" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
+                                    <option value="">-- Pilih --</option>
+                                    <option value="1" {{ 1 == old('status')? 'selected' : '' }}>Belum diverifikasi</option>
+                                    <option value="2" {{ 2 == old('status')? 'selected' : '' }}>Sudah diverifikasi</option>
+                                    <option value="3" {{ 3 == old('status')? 'selected' : '' }}>Belum dibagikan</option>
+                                    <option value="4" {{ 4 == old('status')? 'selected' : '' }}>Sudah dibagikan</option>
+                                </select>
+                                {!!$errors->first('status', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                    </div>
                     @endif
                 </div>
             </form>

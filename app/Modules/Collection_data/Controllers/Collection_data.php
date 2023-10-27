@@ -248,10 +248,12 @@ class Collection_data extends RESTful {
     {
         $data = $this->model->find($id);
         $activity_before = json_encode($data);
-        if($data->status == 1){
-            $data->status = 0;
-        }else{
-            $data->status = 1;
+        if($data->status == 1 || $data->status == 0){
+            $data->status = 2;
+        }elseif($data->status == 2){
+            $data->status = 3;
+        }elseif($data->status == 3){
+            $data->status = 4;
         }
         $data->save();
 

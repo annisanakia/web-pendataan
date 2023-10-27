@@ -37,8 +37,10 @@
                     <th>
                         <select name="filter[status]" class="form-select">
                             <option value="" selected>-- Pilih --</option>
-                            <option value="0" {{ 0 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Belum dibagikan</option>
-                            <option value="1" {{ 1 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Sudah dibagikan</option>
+                            <option value="1" {{ 1 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Belum diverifikasi</option>
+                            <option value="2" {{ 2 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Sudah diverifikasi</option>
+                            <option value="3" {{ 3 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Belum dibagikan</option>
+                            <option value="4" {{ 4 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Sudah dibagikan</option>
                         </select>
                     </th>
                     <th></th>
@@ -60,15 +62,27 @@
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps }}</td>
                         <td>
-                            @if($data->status != 1)
-                                <a class="btn btn-secondary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
-                                    Belum dibagikan
-                                </a>
-                            @else
-                                <a class="btn btn-success px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
-                                    Sudah dibagikan
-                                </a>
-                            @endif
+                            @switch($data->status)
+                                @case(2)
+                                    <a class="btn btn-primary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                        Sudah diverifikasi
+                                    </a>
+                                    @break
+                                @case(3)
+                                    <a class="btn btn-danger px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                        Belum dibagikan
+                                    </a>
+                                    @break
+                                @case(4)
+                                    <a class="btn btn-success px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                        Sudah dibagikan
+                                    </a>
+                                    @break
+                                @default
+                                    <a class="btn btn-secondary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                        Belum diverifikasi
+                                    </a>
+                            @endswitch
                         </td>
                         <td class="action text-center" nowrap>
                             <a class="btn btn-secondary px-2 py-1" href="{{ url($controller_name.'/logActivity/'.$data->id) }}">
