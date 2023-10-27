@@ -22,6 +22,15 @@ class Collection_data extends RESTful {
         parent::__construct($model, $controller_name);
     }
 
+    public function beforeIndex($data)
+    {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+        if($groups_id == 2){
+            $data->where('coordinator_id',$user_id);
+        }
+    }
+
     public function edit($id)
     {
         $user_id = \Auth::user()->id ?? null;

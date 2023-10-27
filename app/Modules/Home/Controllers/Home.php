@@ -39,6 +39,9 @@ class Home extends Controller {
 
     public function getData()
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $district_id = request()->district_id;
         $day = date('w');
         $start_date = new DateTime(date('Y-m-d', strtotime('-'.($day-1).' days')));
@@ -48,8 +51,11 @@ class Home extends Controller {
             ->whereDate('created_at','>=',$start_date)
             ->whereDate('created_at','<=',$end_date)
             ->select(\DB::raw('DATE(created_at) as date'), \DB::raw('count(*) as total'))
-            ->groupBy('date')
-            ->get()->pluck('total','date')->all();
+            ->groupBy('date');
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
+        }
+        $collection_datas = $collection_datas->get()->pluck('total','date')->all();
 
         $interval = DateInterval::createFromDateString('1 day');
         $end_week = new DateTime(date('Y-m-d', strtotime('+'.(8-$day).' days')));
@@ -66,8 +72,11 @@ class Home extends Controller {
             ->whereDate('created_at','>=',$start_date)
             ->whereDate('created_at','<=',$end_date)
             ->select('coordinator_id', \DB::raw('count(*) as total'))
-            ->groupBy('coordinator_id')
-            ->get()->pluck('total','coordinator_id')->all();
+            ->groupBy('coordinator_id');
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
+        }
+        $collection_datas = $collection_datas->get()->pluck('total','coordinator_id')->all();
 
         $user_coordinators = \app\Models\User::where('groups_id',2)->get();
         $coordinators = $user_coordinators->pluck('id')->all();
@@ -82,6 +91,9 @@ class Home extends Controller {
 
         $collection_datas = \Models\collection_data::where('district_id',request()->district_id)
                 ->whereDate('created_at',date('Y-m-d'));
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
+        }
         $this->filter($collection_datas, request(), 'collection_data');
         $max_row = request()->input('max_row') ?? 50;
         $collection_datas = $collection_datas->paginate($max_row);
