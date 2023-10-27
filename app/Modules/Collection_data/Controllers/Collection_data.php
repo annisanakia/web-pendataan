@@ -24,17 +24,26 @@ class Collection_data extends RESTful {
 
     public function store()
     {
-        $user = \Auth::user();
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+        
         $input = $this->getParams(request()->all());
+        $input['coordinator_id'] = request()->coordinator_id ?? ($groups_id == 2? $user_id : null);
         $validation = $this->model->validate($input);
-        $input['coordinator_id'] = request()->coordinator_id ?? ($user->id ?? null);
 
         if ($validation->passes()) {
             unset($input['photo']);
             $input['photo'] = $this->store_image();
-            $this->model->create($input);
+            $data = $this->model->create($input);
+
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_after = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'insert', date('Y-m-d H:i:s'), $activity_after);
+
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }
+
         return Redirect::route(strtolower($this->controller_name) . '.create')
             ->withInput()
             ->withErrors($validation)
@@ -43,7 +52,11 @@ class Collection_data extends RESTful {
     
     public function update($id)
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $input = $this->getParams(request()->all());
+        $input['coordinator_id'] = request()->coordinator_id ?? ($groups_id == 2? $user_id : null);
         $input['id'] = $id;
         $validation = $this->model->validate($input);
 
@@ -51,7 +64,15 @@ class Collection_data extends RESTful {
             unset($input['photo']);
             $input['photo'] = $this->store_image();
             $data = $this->model->find($id);
+            $activity_before = json_encode($data);
+
             $data->update($input);
+
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_after = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'update', date('Y-m-d H:i:s'), $activity_after, $activity_before);
+
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }
         return Redirect::route(strtolower($this->controller_name) . '.edit', $id)
@@ -84,6 +105,7 @@ class Collection_data extends RESTful {
     {
         if ($this->priv['delete_priv']) {
             $data = $this->model->find($id);
+            $activity_before = json_encode($data);
             if($data){
                 $image_name = $data->photo;
                 $image_path = public_path($data->photo);
@@ -96,6 +118,13 @@ class Collection_data extends RESTful {
                 $data->save();
             }
         }
+
+        $user_id = \Auth::user()->id ?? null;
+        $table_name = $this->model->getTable() ?? null;
+        $data_id = $data->id ?? null;
+        $activity_after = json_encode($data);
+        $this->lib_activity->addActivity($user_id, $table_name, $id, 'delete_img', date('Y-m-d H:i:s'), $activity_after, $activity_before);
+
         if (!request()->ajax()) {
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }

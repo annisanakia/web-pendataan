@@ -190,7 +190,7 @@
                     @if($groups_id == 1)
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label asterisk">Koordinator</label>
+                                <label class="col-form-label">Koordinator</label>
                                 <select name="coordinator_id" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
                                     <option value="">-- Pilih --</option>
                                     @foreach(App\Models\User::where('groups_id',2)->get() as $row)

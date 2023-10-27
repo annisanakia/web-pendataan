@@ -52,6 +52,12 @@ class Users extends RESTful {
             $users_subdistrict_delete = $model->where('user_id',$data->id)
                     ->whereNotIn('id',$users_subdistrict_ids)->delete();
 
+            $user_id = \Auth::user()->id ?? null;
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_after = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'insert', date('Y-m-d H:i:s'), $activity_after);
+
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }
 
@@ -77,6 +83,7 @@ class Users extends RESTful {
                 $input['password'] = \Hash::make($input['password']);
             }
             
+            $activity_before = json_encode($data);
             $data->update($input);
 
             $model = new \Models\users_subdistrict();
@@ -100,6 +107,12 @@ class Users extends RESTful {
             }
             $users_subdistrict_delete = $model->where('user_id',$id)
                     ->whereNotIn('id',$users_subdistrict_ids)->delete();
+
+            $user_id = \Auth::user()->id ?? null;
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_after = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'update', date('Y-m-d H:i:s'), $activity_after, $activity_before);
             
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }
@@ -107,5 +120,25 @@ class Users extends RESTful {
             ->withInput()
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
+    }
+
+    public function delete($id)
+    {
+        if ($this->priv['delete_priv']) {
+            $data = $this->model->find($id);
+            if($data){
+                $data->delete();
+                $users_subdistrict_delete = \Models\users_subdistrict::where('user_id',$id)->delete();
+            }
+
+            $user_id = \Auth::user()->id ?? null;
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_before = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $id, 'delete', date('Y-m-d H:i:s'), null, $activity_before);
+        }
+        if (!request()->ajax()) {
+            return Redirect::route(strtolower($this->controller_name) . '.index');
+        }
     }
 }

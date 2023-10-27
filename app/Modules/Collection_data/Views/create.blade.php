@@ -37,8 +37,8 @@
                                 <div class="input-group mb-3">
                                     <input name="nik" type="text" class="form-control {{ $errors->has('nik')? 'is-invalid' : '' }}" value="{{ old('nik') }}" id="nik">
                                     <button class="btn btn-primary" type="button" id="autocomplete"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                    {!!$errors->first('nik', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
-                                {!!$errors->first('nik', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -193,7 +193,7 @@
                     @if($groups_id == 1)
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label asterisk">Koordinator</label>
+                                <label class="col-form-label">Koordinator</label>
                                 <select name="coordinator_id" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
                                     <option value="">-- Pilih --</option>
                                     @foreach(App\Models\User::where('groups_id',2)->get() as $row)

@@ -13,6 +13,7 @@ class RESTful extends Controller
 
     protected $model;
     protected $controller_name;
+    protected $lib_activity;
     protected $max_row = 50;
     protected $priv;
     protected $title = '';
@@ -38,6 +39,7 @@ class RESTful extends Controller
         $this->priv['delete_priv'] = true;
         $this->enable_xls = true;
         $this->enable_pdf = true;
+        $this->lib_activity = new \Lib\activity();
 
         view::share('priv', $this->priv);
         view::share('title', $this->title);
@@ -192,7 +194,14 @@ class RESTful extends Controller
         $validation = $this->model->validate($input);
 
         if ($validation->passes()) {
-            $this->model->create($input);
+            $data = $this->model->create($input);
+
+            $user_id = \Auth::user()->id ?? null;
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_after = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'insert', date('Y-m-d H:i:s'), $activity_after);
+
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }
         return Redirect::route(strtolower($this->controller_name) . '.create')
@@ -247,7 +256,16 @@ class RESTful extends Controller
 
         if ($validation->passes()) {
             $data = $this->model->find($id);
+            $activity_before = json_encode($data);
+
             $data->update($input);
+
+            $user_id = \Auth::user()->id ?? null;
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_after = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'update', date('Y-m-d H:i:s'), $activity_after, $activity_before);
+
             return Redirect::route(strtolower($this->controller_name) . '.index');
         }
         return Redirect::route(strtolower($this->controller_name) . '.edit', $id)
@@ -263,6 +281,12 @@ class RESTful extends Controller
             if($data){
                 $data->delete();
             }
+
+            $user_id = \Auth::user()->id ?? null;
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_before = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $id, 'delete', date('Y-m-d H:i:s'), null, $activity_before);
         }
         if (!request()->ajax()) {
             return Redirect::route(strtolower($this->controller_name) . '.index');
