@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redirect;
+use DateInterval;
+use DateTime;
+use DatePeriod;
 
 class Home extends Controller {
 
@@ -27,9 +30,128 @@ class Home extends Controller {
     public function index()
     {
         $districts = \Models\district::all();
+        $collection_datas = \Models\collection_data::all();
         
         $with['districts'] = $districts;
+        $with['collection_datas'] = $collection_datas;
         return view($this->controller_name . '::index', $with);
+    }
+
+    public function getData()
+    {
+        $district_id = request()->district_id;
+        $day = date('w');
+        $start_date = new DateTime(date('Y-m-d', strtotime('-'.($day-1).' days')));
+        $end_date = new DateTime(date('Y-m-d', strtotime('+'.(7-$day).' days')));
+
+        $collection_datas = \Models\collection_data::where('district_id',$district_id)
+            ->whereDate('created_at','>=',$start_date)
+            ->whereDate('created_at','<=',$end_date)
+            ->select(\DB::raw('DATE(created_at) as date'), \DB::raw('count(*) as total'))
+            ->groupBy('date')
+            ->get()->pluck('total','date')->all();
+
+        $interval = DateInterval::createFromDateString('1 day');
+        $end_week = new DateTime(date('Y-m-d', strtotime('+'.(8-$day).' days')));
+        $date_range = new DatePeriod($start_date, $interval, $end_week);
+
+        $dataByDay = [];
+        foreach ($date_range as $dt) {
+            $date = $dt->format('Y-m-d');
+            // $day = $dt->format('w') == 0? '7' : $dt->format('w');
+            $dataByDay[] = $collection_datas[$date] ?? 0;
+        }
+
+        $collection_datas = \Models\collection_data::where('district_id',$district_id)
+            ->whereDate('created_at','>=',$start_date)
+            ->whereDate('created_at','<=',$end_date)
+            ->select('coordinator_id', \DB::raw('count(*) as total'))
+            ->groupBy('coordinator_id')
+            ->get()->pluck('total','coordinator_id')->all();
+
+        $user_coordinators = \app\Models\User::where('groups_id',2)->get();
+        $coordinators = $user_coordinators->pluck('id')->all();
+        $coordinators[''] = '';
+
+        $dataByCoor = [];
+        foreach ($coordinators as $coordinator_id) {
+            $dataByCoor[] = $collection_datas[$coordinator_id] ?? 0;
+        }
+        $coordinators = $user_coordinators->pluck('name')->all();
+        $coordinators[] = 'none';
+
+        $collection_datas = \Models\collection_data::where('district_id',request()->district_id)
+                ->whereDate('created_at',date('Y-m-d'));
+        $this->filter($collection_datas, request(), 'collection_data');
+        $max_row = request()->input('max_row') ?? 50;
+        $collection_datas = $collection_datas->paginate($max_row);
+        $collection_datas->chunk(100);
+
+        $with['district_id'] = $district_id;
+        $with['dataByDay'] = $dataByDay;
+        $with['coordinators'] = $coordinators;
+        $with['dataByCoor'] = $dataByCoor;
+        $with['collection_datas'] = $collection_datas;
+        $with['param'] = request()->all();
+        return view($this->controller_name . '::getData', $with);
+    }
+
+    public function filter($data, $request, $table)
+    {
+        if ($request->isMethod('post') || $request->isMethod('get')) {
+            $schema = \DB::getDoctrineSchemaManager();
+            $tables = $schema->listTableColumns($table);
+            $filters = $this->getFilters($request);
+            if ($filters) {
+                $newFilters = [];
+                foreach ($filters as $key => $value) {
+                    if ($value != '') {
+                        if (array_key_exists($key, $tables)) {
+                            if ($tables[$key]->getType()->getName() == 'string' || $tables[$key]->getType()->getName() == 'text') {
+                                $data->where($key, 'LIKE', '%' . $value . '%');
+                            } elseif ($tables[$key]->getType()->getName() == 'date' || $tables[$key]->getType()->getName() == 'time') {
+                                if ($key == 'start' || $key == 'start_date') {
+                                    $data->where($key, '>=', $value);
+                                }
+                                if ($key == 'end' || $key == 'end_date') {
+                                    $data->where($key, '<=', $value);
+                                }
+                                if ($key == 'date') {
+                                    $data->whereDate($key, $value);
+                                }
+                            } else {
+                                $data->where($key, '=', $value);
+                            }
+                        } else {
+                            if($key == 'subdistrict_name'){
+                                $data->whereHas('subdistrict', function($builder) use($value){
+                                    $builder->where('name', 'LIKE', '%' . $value . '%');
+                                });
+                            } elseif ($key == 'coordinator_name') {
+                                $data->whereHas('coordinator', function($builder) use($value){
+                                    $builder->where('name', 'LIKE', '%' . $value . '%');
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function getFilters(Request $request)
+    {
+        $filters = [];
+        if ($request->has('filter')) {
+            foreach ($request->input('filter') as $key => $value) {
+                if (!empty($value)) {
+                    $filters[$key] = $value;
+                }
+            }
+        }
+
+        unset($filters['_token']);
+        return $filters;
     }
 
     public function form()
@@ -38,20 +160,29 @@ class Home extends Controller {
 
         $with['actions'] = $action;
         return view($this->controller_name . '::form', $with);
-    }  
+    }
 
     public function store()
     {
-        $user = \Auth::user();
-        $input = request()->all();
-        $model = new \Models\collection_data();
-        $validation = $model->validate($input);
-        $input['coordinator_id'] = $user->id ?? null;
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+        
+        $input = $this->getParams(request()->all());
+        // $input['coordinator_id'] = request()->coordinator_id ?? ($groups_id == 2? $user_id : null);
+        $validation = $this->model->validate($input);
 
         if ($validation->passes()) {
             unset($input['photo']);
-            $input['photo'] = $this->store_image();
-            $model->create($input);
+            if (request()->hasFile('photo')) {
+                $input['photo'] = $this->store_image();
+            }
+            $data = $this->model->create($input);
+
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_after = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'store', date('Y-m-d H:i:s'), $activity_after);
+
             return Redirect::route('form')
                     ->with('success', 'Data berhasil disimpan!');
         }
