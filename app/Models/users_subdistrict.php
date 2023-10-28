@@ -27,4 +27,9 @@ class users_subdistrict extends Model {
         $v = Validator::make($data, users_subdistrict::$rules, users_subdistrict::$customMessages);
         return $v;
     }
+
+    public function subdistrict()
+    {
+        return $this->belongsTo('Models\subdistrict', 'subdistrict_id', 'id');
+    }
 }

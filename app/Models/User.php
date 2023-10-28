@@ -86,4 +86,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo('Models\groups', 'groups_id', 'id');
     }
+
+    public function users_subdistrict()
+    {
+        return $this->hasMany('Models\users_subdistrict', 'user_id', 'id');
+    }
 }

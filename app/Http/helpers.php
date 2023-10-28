@@ -38,6 +38,10 @@ function menuSidebar()
                 'name' => 'Data Pendataan',
                 'icon' => 'fa-solid fa-file-pen'
             ],
+            'report_data' => [
+                'name' => 'Laporan Pendataan',
+                'icon' => 'fa-solid fa-chart-simple'
+            ],
         ],
         'COR' => [
             'home' => [

@@ -10,6 +10,7 @@ return [
         'Users',
         'Reference_data',
         'Collection_data',
-        'Election_results'
+        'Election_results',
+        'Report_data'
     ]
 ];

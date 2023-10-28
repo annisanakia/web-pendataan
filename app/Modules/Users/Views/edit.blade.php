@@ -88,7 +88,7 @@
                         </div>
                         <div class="col-sm-6 hidden" id="coordinator_subdistrict">
                             <div class="mb-3">
-                                <label class="col-form-label asterisk">Kecamatan</label>
+                                <label class="col-form-label asterisk">Kelurahan</label>
                                 <?php
                                     $subdistrict_ids = \Models\users_subdistrict::where('user_id',$data->id)->pluck('subdistrict_id')->all();;
                                     $subdistrict_ids = is_array(old('subdistrict_ids'))? old('subdistrict_ids') : ($subdistrict_ids ?? []);
