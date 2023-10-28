@@ -43,7 +43,7 @@ class Home extends Controller {
         $groups_id = \Auth::user()->groups_id ?? null;
 
         $district_id = request()->district_id;
-        $day = date('w');
+        $day = date('N');
         $start_date = new DateTime(date('Y-m-d', strtotime('-'.($day-1).' days')));
         $end_date = new DateTime(date('Y-m-d', strtotime('+'.(7-$day).' days')));
 
