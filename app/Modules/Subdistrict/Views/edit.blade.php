@@ -48,6 +48,13 @@
                                 {!!$errors->first('district_id', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label asterisk">Target</label>
+                                <input name="target" type="text" class="form-control {{ $errors->has('target')? 'is-invalid' : '' }}" value="{{ old('target') ?? $data->target }}">
+                                {!!$errors->first('target', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>

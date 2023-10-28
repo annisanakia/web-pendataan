@@ -172,10 +172,10 @@
     data: {
         labels: {!! json_encode($coordinators) !!},
         datasets: [{
-        label: "Rekap Koordinator",
-        backgroundColor: "rgba(2,117,216,1)",
-        borderColor: "rgba(2,117,216,1)",
-        data: {!! json_encode($dataByCoor) !!},
+            label: "Rekap Koordinator",
+            backgroundColor: "rgba(2,117,216,1)",
+            borderColor: "rgba(2,117,216,1)",
+            data: {!! json_encode($dataByCoor) !!},
         }],
     },
     options: {

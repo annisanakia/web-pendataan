@@ -140,7 +140,7 @@
             display: false
             },
             ticks: {
-            maxTicksLimit: 6
+            maxTicksLimit: 10
             }
         }],
         yAxes: [{

@@ -12,12 +12,13 @@
         @foreach($districts as $key => $district)
         <?php
             $key = $key > 5? $key-5 : $key;
-            $total = $collection_datas->where('district_id',$district->id)->count();
+            $total = $collection_datas->where('district_id',$district->id)->count() ?? 0;
+            $total_target = $district->subdistrict->sum('target') ?? 0;
         ?>
         <div class="col-md">
             <div class="card bg-primary text-white mb-4 text-center" style="background-color: {{ $colors[$key] ?? '#4e88d0' }} !important;">
                 <div class="card-header"><b>{{ $district->name }}</b></div>
-                <div class="card-body">{{ $total }} Data</div>
+                <div class="card-body">{{ $total }} / {{ $total_target }} Data</div>
             </div>
         </div>
         @endforeach

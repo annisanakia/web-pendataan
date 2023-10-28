@@ -131,7 +131,7 @@
             display: false
             },
             ticks: {
-            maxTicksLimit: 6
+            maxTicksLimit: 20
             }
         }],
         yAxes: [{

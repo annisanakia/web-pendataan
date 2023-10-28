@@ -16,6 +16,7 @@ class subdistrict extends Model {
     public static $rules = array(
         'code' => 'required',
         'name' => 'required',
+        'target' => 'required|numeric'
     );
     
     public static $customMessages = array(
