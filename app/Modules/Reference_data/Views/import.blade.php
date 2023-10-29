@@ -28,9 +28,9 @@
                 <div class="row mt-2">
                     <div class="col-sm-6">
                         <label class="col-form-label">Upload template</label>
-                        <input name="files" class="form-control files {{ $errors->has('files')? 'is-invalid' : '' }}" type="file">
+                        <input name="file" class="form-control file {{ $errors->has('file')? 'is-invalid' : '' }}" type="file">
                         <div class="form-text">Upload file berformat XLS.</div>
-                        {!!$errors->first('files', ' <span class="invalid-feedback">:message</span>')!!}
+                        {!!$errors->first('file', ' <span class="invalid-feedback">:message</span>')!!}
                     </div>
                 </div>
             </form>
@@ -53,7 +53,7 @@
 <script>
     var progress = $('#progress-template').html();
 
-    $('#upload-template .files').on('change', function () {
+    $('#upload-template .file').on('change', function () {
         var extension = $(this).val().split('.').pop();
         if (extension == 'xls') {
             $("#upload-template").find('#fileProgress').remove();

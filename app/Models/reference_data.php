@@ -15,6 +15,8 @@ class reference_data extends Model {
         'numeric' => 'Isi kolom ini dengan angka.',
         'nik.unique' => 'NIK telah tersedia.',
         'nik.digits' => 'NIK harus berisikan 16 digit.',
+        'nik.*.unique' => 'NIK telah tersedia.',
+        'nik.*.digits' => 'NIK harus berisikan 16 digit.'
     );
     
     public function validate($data)
@@ -25,8 +27,25 @@ class reference_data extends Model {
             'city_id' => 'required',
             'district_id' => 'required',
             'subdistrict_id' => 'required',
+            'no_tps' => 'nullable|numeric',
             'rt' => 'nullable|numeric',
             'rw' => 'nullable|numeric',
+        );
+        $v = Validator::make($data, $rules, reference_data::$customMessages);
+        return $v;
+    }
+    
+    public function validateMultiple($data)
+    {
+        $rules = array(
+            'nik.*' => 'required|numeric|digits:16|unique:reference_data,nik,' . ($data['id'] ?? null) . ',id,deleted_at,NULL',
+            'name.*' => 'required',
+            'city_id.*' => 'required',
+            'district_id.*' => 'required',
+            'subdistrict_id.*' => 'required',
+            'no_tps.*' => 'nullable|numeric',
+            'rt.*' => 'nullable|numeric',
+            'rw.*' => 'nullable|numeric',
         );
         $v = Validator::make($data, $rules, reference_data::$customMessages);
         return $v;

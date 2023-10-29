@@ -7,6 +7,7 @@ use Lib\core\RESTful;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use PDF;
+use App\Imports\generalImport;
 
 class Reference_data extends RESTful {
 
@@ -157,10 +158,74 @@ class Reference_data extends RESTful {
     {
         $file = request()->file('file');
 
-        $excel = \Excel::toArray(new generalImport(), request()->file);
+        $excel = \Excel::toArray(new generalImport(), $file);
+        $district_codes = \Models\district::pluck('id','code')->all();
+        $subdistrict_codes = \Models\subdistrict::pluck('id','code')->all();
 
-        $with['datas'] = array_slice($excel[0], 15, count($excel[0]));
+        $with['datas'] = array_slice($excel[0], 16, count($excel[0]));
+        $with['district_codes'] = $district_codes;
+        $with['subdistrict_codes'] = $subdistrict_codes;
+        return view($this->controller_name . '::previewImport', $with);
+    }
 
-        return view($this->view_path . '::previewImport', $with);
+    public function storeImport()
+    {
+        $niks = is_array(request()->nik)? request()->nik : [];
+        $name = is_array(request()->name)? request()->name : [];
+        $city_id = is_array(request()->city_id)? request()->city_id : [];
+        $district_id = is_array(request()->district_id)? request()->district_id : [];
+        $subdistrict_id = is_array(request()->subdistrict_id)? request()->subdistrict_id : [];
+        $no_tps = is_array(request()->no_tps)? request()->no_tps : [];
+        $pob = is_array(request()->pob)? request()->pob : [];
+        $dob = is_array(request()->dob)? request()->dob : [];
+        $gender = is_array(request()->gender)? request()->gender : [];
+        $religion_id = is_array(request()->religion_id)? request()->religion_id : [];
+        $job_name = is_array(request()->job_name)? request()->job_name : [];
+        $address = is_array(request()->address)? request()->address : [];
+        $rt = is_array(request()->rt)? request()->rt : [];
+        $rw = is_array(request()->rw)? request()->rw : [];
+
+        $input = request()->all();
+        $validation = $this->model->validateMultiple($input);
+
+        // nik double input
+        $nik_unique = array_unique($niks);
+        $check = count($niks) !== count($nik_unique);
+        $nik_duplicates = [];
+        if($check == 1) {
+            //Duplicates found
+            $nik_duplicates = array_diff_assoc($niks, $nik_unique);
+        }
+        foreach($nik_duplicates as $key => $nik){
+            $validation->getMessageBag()->add('nik.'.$key, 'Terdapat lebih dari 1 data import NIK yang sama');
+        }
+
+        if ($validation->errors()->count() <= 0) {
+            $input = [];
+            foreach($niks as $key => $nik){
+                $input['nik'] = $nik;
+                $input['name'] = $name[$key];
+                $input['city_id'] = $city_id[$key];
+                $input['district_id'] = $district_id[$key];
+                $input['subdistrict_id'] = $subdistrict_id[$key];
+                $input['no_tps'] = $no_tps[$key];
+                $input['pob'] = $pob[$key];
+                $input['dob'] = $dob[$key];
+                $input['gender'] = $gender[$key];
+                $input['religion_id'] = $religion_id[$key];
+                $input['job_name'] = $job_name[$key];
+                $input['address'] = $address[$key];
+                $input['rt'] = $rt[$key];
+                $input['rw'] = $rw[$key];
+                $data = $this->model->create($input);
+            }
+
+            \Session::flash('message_import', 'Data Import telah berhasil di upload!'); 
+            return redirect(strtolower($this->controller_name));
+        }
+
+        $with = request()->all();
+        $with['nik_duplicates'] = $nik_duplicates;
+        return view($this->controller_name . '::previewValidation', $with)->withErrors($validation);
     }
 }
