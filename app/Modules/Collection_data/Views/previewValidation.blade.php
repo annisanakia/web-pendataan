@@ -27,6 +27,7 @@
                 <li>Untuk NIK pastikan data belum ada di sistem</li>
                 <li>Perhatikan kesesuaian template kode pada Wilayah, Kecamatan, Kelurahan, Jenis Kelamin, dan Agama</li>
                 <li>Pastikan dan cek kembali data yang ingin diimport</li>
+                <li>Cek data NIK sebelum di input ke web : <a href="https://cekdptonline.kpu.go" target="_blank">https://cekdptonline.kpu.go</a></li>
             </ul>
         </div>
 
