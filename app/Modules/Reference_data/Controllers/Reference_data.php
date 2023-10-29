@@ -143,7 +143,7 @@ class Reference_data extends RESTful {
     public function getTemplateAsXls()
     {
         $template = $this->controller_name . '::getTemplateAsXls';
-        $data = $this->getList(request());
+        $data = [];
 
         if (request()->has('print_view')) {
             return view($template, $data);

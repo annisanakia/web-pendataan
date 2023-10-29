@@ -37,10 +37,9 @@
                     <th>
                         <select name="filter[status]" class="form-select">
                             <option value="" selected>-- Pilih --</option>
-                            <option value="1" {{ 1 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Belum diverifikasi</option>
-                            <option value="2" {{ 2 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Sudah diverifikasi</option>
-                            <option value="3" {{ 3 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Belum dibagikan</option>
-                            <option value="4" {{ 4 == ($param['filter']['status'] ?? null)? 'selected' : '' }}>Sudah dibagikan</option>
+                            @foreach(status() as $key => $status)
+                                <option value="{{ $key }}" {{ $key == ($param['filter']['status'] ?? null)? 'selected' : '' }}>{{ $status }}</option>
+                            @endforeach
                         </select>
                     </th>
                     <th></th>

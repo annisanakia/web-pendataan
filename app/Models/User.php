@@ -57,7 +57,7 @@ class User extends Authenticatable
         'username.unique' => 'Nama pengguna telah tersedia.',
         'email' => 'Format alamat email salah.',
         'phone_no.numeric' => 'Nomor telepon harus berupa angka.',
-        'phone_no.min_digits' => 'Masukkan nomor telepon minimal 10 angka.',
+        'phone_no.digits_between' => 'Nomor telepon harus berisikan 10 sampai 13 digit.',
         'password.min' => 'Masukkan password minimal 6 karakter.'
     );
 
@@ -69,7 +69,7 @@ class User extends Authenticatable
             'name' => 'required',
             'password' => 'nullable|min:6',
             'email' => 'email|nullable',
-            'phone_no' => 'numeric|nullable|min_digits:10',
+            'phone_no' => 'numeric|nullable|digits_between:10,13',
             'status' => 'required'
         );
         if($data['groups_id'] == 2){

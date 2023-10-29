@@ -136,3 +136,14 @@ function weekOfYear($date) {
         return $weekOfYear;
     }
 }
+
+function status() {
+    $status = [
+        1 => 'Belum diverifikasi',
+        2 => 'Sudah diverifikasi',
+        3 => 'Belum dibagikan',
+        4 => 'Sudah dibagikan',
+    ];
+
+    return $status;
+}

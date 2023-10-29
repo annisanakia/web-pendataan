@@ -7,6 +7,7 @@ use Lib\core\RESTful;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use File;
+use App\Imports\generalImport;
 
 class Collection_data extends RESTful {
 
@@ -19,6 +20,7 @@ class Collection_data extends RESTful {
         $this->enable_pdf = true;
         $this->enable_pdf_button = true;
         $this->enable_xls_button = true;
+        $this->enable_import = true;
         parent::__construct($model, $controller_name);
     }
 
@@ -293,5 +295,115 @@ class Collection_data extends RESTful {
         $with['log_activitys'] = $log_activitys;
         $with['param'] = request()->all();
         return View($this->controller_name . '::logActivity' , $with);
+    }
+
+    public function import()
+    {
+        $with = [];
+        return view($this->controller_name . '::import', $with);
+    }
+
+    public function getTemplateAsXls()
+    {
+        $template = $this->controller_name . '::getTemplateAsXls';
+        $groups_id = \Auth::user()->groups_id ?? null;
+        $data['groups_id'] = $groups_id;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Template Import Data Pendataan.xls"');
+    }
+
+    public function previewImport()
+    {
+        $file = request()->file('file');
+        $groups_id = \Auth::user()->groups_id ?? null;
+
+        $excel = \Excel::toArray(new generalImport(), $file);
+        $district_codes = \Models\district::pluck('id','code')->all();
+        $subdistrict_codes = \Models\subdistrict::pluck('id','code')->all();
+
+        $with['groups_id'] = $groups_id;
+        $with['datas'] = array_slice($excel[0], 16, count($excel[0]));
+        if($groups_id != 2){
+            $with['datas'] = array_slice($excel[0], 18, count($excel[0]));
+        }
+
+        $with['district_codes'] = $district_codes;
+        $with['subdistrict_codes'] = $subdistrict_codes;
+        return view($this->controller_name . '::previewImport', $with);
+    }
+
+    public function storeImport()
+    {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+        $niks = is_array(request()->nik)? request()->nik : [];
+        $name = is_array(request()->name)? request()->name : [];
+        $city_id = is_array(request()->city_id)? request()->city_id : [];
+        $district_id = is_array(request()->district_id)? request()->district_id : [];
+        $subdistrict_id = is_array(request()->subdistrict_id)? request()->subdistrict_id : [];
+        $no_tps = is_array(request()->no_tps)? request()->no_tps : [];
+        $whatsapp = is_array(request()->rw)? request()->whatsapp : [];
+        $pob = is_array(request()->pob)? request()->pob : [];
+        $dob = is_array(request()->dob)? request()->dob : [];
+        $gender = is_array(request()->gender)? request()->gender : [];
+        $religion_id = is_array(request()->religion_id)? request()->religion_id : [];
+        $job_name = is_array(request()->job_name)? request()->job_name : [];
+        $address = is_array(request()->address)? request()->address : [];
+        $rt = is_array(request()->rt)? request()->rt : [];
+        $rw = is_array(request()->rw)? request()->rw : [];
+        $coordinator_id = is_array(request()->coordinator_id)? request()->coordinator_id : [];
+        $status = is_array(request()->status)? request()->status : [];
+
+        $input = request()->all();
+        $validation = $this->model->validateMultiple($input);
+
+        // nik double input
+        $nik_unique = array_unique($niks);
+        $check = count($niks) !== count($nik_unique);
+        $nik_duplicates = [];
+        if($check == 1) {
+            //Duplicates found
+            $nik_duplicates = array_diff_assoc($niks, $nik_unique);
+        }
+        foreach($nik_duplicates as $key => $nik){
+            $validation->getMessageBag()->add('nik.'.$key, 'Terdapat lebih dari 1 data import NIK yang sama');
+        }
+
+        if ($validation->errors()->count() <= 0) {
+            $input = [];
+            foreach($niks as $key => $nik){
+                $input['nik'] = $nik;
+                $input['name'] = $name[$key];
+                $input['city_id'] = $city_id[$key];
+                $input['district_id'] = $district_id[$key];
+                $input['subdistrict_id'] = $subdistrict_id[$key];
+                $input['no_tps'] = $no_tps[$key];
+                $input['whatsapp'] = $whatsapp[$key];
+                $input['pob'] = $pob[$key];
+                $input['dob'] = $dob[$key];
+                $input['gender'] = $gender[$key];
+                $input['religion_id'] = $religion_id[$key];
+                $input['job_name'] = $job_name[$key];
+                $input['address'] = $address[$key];
+                $input['rt'] = $rt[$key];
+                $input['coordinator_id'] = ($coordinator_id[$key] ?? null) ?? ($groups_id == 2? $user_id : null);
+                $input['status'] = ($status[$key] ?? null) ?? ($groups_id == 2? 1 : null);;
+                $data = $this->model->create($input);
+            }
+
+            \Session::flash('message_import', 'Data Import telah berhasil di upload!'); 
+            return redirect(strtolower($this->controller_name));
+        }
+
+        $with = request()->all();
+        $with['groups_id'] = $groups_id;
+        $with['nik_duplicates'] = $nik_duplicates;
+        return view($this->controller_name . '::previewValidation', $with)->withErrors($validation);
     }
 }

@@ -208,10 +208,9 @@
                             <div class="mb-3">
                                 <label class="col-form-label">Status</label>
                                 <select name="status" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
-                                    <option value="1" {{ 1 == old('status')? 'selected' : '' }}>Belum diverifikasi</option>
-                                    <option value="2" {{ 2 == old('status')? 'selected' : '' }}>Sudah diverifikasi</option>
-                                    <option value="3" {{ 3 == old('status')? 'selected' : '' }}>Belum dibagikan</option>
-                                    <option value="4" {{ 4 == old('status')? 'selected' : '' }}>Sudah dibagikan</option>
+                                    @foreach(status() as $key => $status))
+                                        <option value="{{ $key }}" {{ $key == old('status')? 'selected' : '' }}>{{ $status }}</option>
+                                    @endforeach
                                 </select>
                                 {!!$errors->first('status', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
