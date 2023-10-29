@@ -24,15 +24,60 @@
             <a href="{{ url($controller_name.'/getTemplateAsXls') }}" target="_blank" class="btn btn-primary align-middle py-2">
                 <i class="fa-solid fa-download me-2"></i>Download Template
             </a>
-            <div class="row mt-2">
-                <div class="col-sm-6">
-                    <label class="col-form-label">Upload template</label>
-                    <input name="photo" class="form-control {{ $errors->has('photo')? 'is-invalid' : '' }}" type="file">
-                    <div class="form-text">Upload file berformat XLS.</div>
-                    {!!$errors->first('photo', ' <span class="invalid-feedback">:message</span>')!!}
+            <form id="upload-template" method="post" action="{{url($controller_name.'/previewImport')}}" enctype="multipart/form-data" class="form-horizontal">
+                <div class="row mt-2">
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Upload template</label>
+                        <input name="files" class="form-control files {{ $errors->has('files')? 'is-invalid' : '' }}" type="file">
+                        <div class="form-text">Upload file berformat XLS.</div>
+                        {!!$errors->first('files', ' <span class="invalid-feedback">:message</span>')!!}
+                    </div>
                 </div>
-            </div>
+            </form>
+            <div id="preview-import"></div>
         </div>
     </section>
 </div>
+
+<div id="progress-template" class="d-none">
+    <div id="fileProgress">
+        <div class="progress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="width: 25%">25%</div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script src="{{ asset('assets/plugins/jquery-validation/jquery.form.js')}}" type="text/javascript"></script>
+<script>
+    var progress = $('#progress-template').html();
+
+    $('#upload-template .files').on('change', function () {
+        var extension = $(this).val().split('.').pop();
+        if (extension == 'xls') {
+            $("#upload-template").find('#fileProgress').remove();
+            $("#upload-template .form-group>div").append(progress);
+
+            $('#upload-template').ajaxForm({
+                xhr: function () {
+                    var xhr = $.ajaxSettings.xhr();
+                    if (xhr.upload) {
+                        xhr.upload.addEventListener('progress', function (evt) {
+                            var percent = (evt.loaded / evt.total) * 100;
+                            $("#upload-template").find(".progress-bar").width(percent + "%");
+                            $("#upload-template").find(".progress-bar").text(percent.toFixed(0) + "%");
+                        }, false);
+                    }
+                    return xhr;
+                },
+                success: function (e) {
+                    $('#preview-import').html(e);
+                }
+            }).submit();
+        } else {
+            alert('Upload File berformat XLS');
+        }
+    });
+</script>
 @endsection

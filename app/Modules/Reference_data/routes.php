@@ -23,4 +23,5 @@ Route::group(['prefix' => 'reference_data', 'namespace' => 'App\Modules\Referenc
     Route::get('/getListAsXls', ['as' => 'reference_data.getListAsXls', 'uses' => 'Reference_data@getListAsXls']);
     Route::get('/import', ['as' => 'reference_data.import', 'uses' => 'Reference_data@import']);
     Route::get('/getTemplateAsXls', ['as' => 'reference_data.getTemplateAsXls', 'uses' => 'Reference_data@getTemplateAsXls']);
+    Route::post('/previewImport', ['as' => 'reference_data.previewImport', 'uses' => 'Reference_data@previewImport']);
 });

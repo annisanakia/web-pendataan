@@ -152,4 +152,15 @@ class Reference_data extends RESTful {
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Template Import Data Referensi.xls"');
     }
+
+    public function previewImport()
+    {
+        $file = request()->file('file');
+
+        $excel = \Excel::toArray(new generalImport(), request()->file);
+
+        $with['datas'] = array_slice($excel[0], 15, count($excel[0]));
+
+        return view($this->view_path . '::previewImport', $with);
+    }
 }
