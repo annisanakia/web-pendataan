@@ -56,7 +56,7 @@ class Home extends Controller {
             $dataByStatus[] = $dataStatus;
             $status[] = $status_name;
         }
-        foreach (statusShare() as $key => $status_name) {
+        foreach (status_share() as $key => $status_name) {
             $dataStatus = $collection_datas->where('status_share',$key)->count();
             $dataByStatus[] = $dataStatus;
             $status[] = $status_name;

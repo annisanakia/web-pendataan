@@ -195,6 +195,30 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
+                                <label class="col-form-label">Status</label>
+                                <select name="status" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
+                                    @foreach(status() as $key => $status))
+                                        <option value="{{ $key }}" {{ $key == old('status')? 'selected' : '' }}>{{ $status }}</option>
+                                    @endforeach
+                                </select>
+                                {!!$errors->first('status', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Status Dibagikan</label>
+                                <select name="status_share" class="form-select {{ $errors->has('status_share')? 'is-invalid' : '' }}">
+                                    @foreach(status_share() as $key => $status))
+                                        <option value="{{ $key }}" {{ $key == old('status_share')? 'selected' : '' }}>{{ $status }}</option>
+                                    @endforeach
+                                </select>
+                                {!!$errors->first('status_share', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
                                 <label class="col-form-label">Koordinator</label>
                                 <select name="coordinator_id" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
                                     <option value="">-- Pilih --</option>
@@ -203,17 +227,6 @@
                                     @endforeach
                                 </select>
                                 {!!$errors->first('coordinator_id', ' <span class="invalid-feedback">:message</span>')!!}
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label class="col-form-label">Status</label>
-                                <select name="status" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
-                                    @foreach(status() as $key => $status))
-                                        <option value="{{ $key }}" {{ $key == old('status')? 'selected' : '' }}>{{ $status }}</option>
-                                    @endforeach
-                                </select>
-                                {!!$errors->first('status', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
                     </div>

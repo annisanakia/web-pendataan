@@ -45,13 +45,14 @@
             @if($groups_id != 2)
                 <th>Koordinator</th>
                 <th>Status</th>
+                <th>Status<br>Dibagikan</th>
             @endif
         </tr>
         </thead>
         <tbody>
         <tr></tr>
         @if (count($datas) <= 0) <tr>
-            <td colspan="{{ $groups_id != 2? 19 : 17 }}" style="text-align: center">Data Tidak Ditemukan</td>
+            <td colspan="{{ $groups_id != 2? 20 : 17 }}" style="text-align: center">Data Tidak Ditemukan</td>
         </tr>
         @else
             @php
@@ -142,6 +143,13 @@
                                 <select name="status[]" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
                                     @foreach(status() as $key_status => $status_name)
                                         <option value="{{ $key_status }}" {{ $status_name == ($data[17] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td nowrap>
+                                <select name="status_share[]" class="form-select {{ $errors->has('status_share')? 'is-invalid' : '' }}">
+                                    @foreach(status_share() as $key_status => $status_name)
+                                        <option value="{{ $key_status }}" {{ $status_name == ($data[18] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
                                     @endforeach
                                 </select>
                             </td>

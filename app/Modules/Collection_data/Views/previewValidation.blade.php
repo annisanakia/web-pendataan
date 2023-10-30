@@ -55,13 +55,14 @@
                     @if($groups_id != 2)
                         <th>Koordinator</th>
                         <th>Status</th>
+                        <th>Status<br>Dibagikan</th>
                     @endif
                 </tr>
                 </thead>
                 <tbody id="data-import">
                 <tr></tr>
                 @if (count($keys) <= 0) <tr>
-                    <td colspan="{{ $groups_id != 2? 19 : 17 }}" style="text-align: center">Data Tidak Ditemukan</td>
+                    <td colspan="{{ $groups_id != 2? 20 : 17 }}" style="text-align: center">Data Tidak Ditemukan</td>
                 </tr>
                 @else
                     @php
@@ -169,6 +170,22 @@
                                             @endforeach
                                         </select>
                                         {!!$errors->first('status.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
+                                    </td>
+                                    <td nowrap>
+                                        <select name="status[{{ $key }}]" class="form-select {{ $errors->has('status.'.$key)? 'is-invalid' : '' }}">
+                                            @foreach(status() as $key_status => $status_name)
+                                                <option value="{{ $key_status }}" {{ $key_status == ($status[$key] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        {!!$errors->first('status.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
+                                    </td>
+                                    <td nowrap>
+                                        <select name="status_share[{{ $key }}]" class="form-select {{ $errors->has('status_share.'.$key)? 'is-invalid' : '' }}">
+                                            @foreach(status_share() as $key_status => $status_name)
+                                                <option value="{{ $key_status }}" {{ $key_status == ($status_share[$key] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        {!!$errors->first('status_share.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                     </td>
                                 @endif
                             </tr>

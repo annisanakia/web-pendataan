@@ -85,6 +85,12 @@
                 Kolom "Status" diisi nama status ({{ sprintf('"%s"', implode('","', status())) }}) tanpa tanda petik
             </td>
         </tr>
+        <tr>
+            <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
+            <td colspan="{{ $colspan }}">
+                Kolom "Status Dibagikan" diisi nama status ({{ sprintf('"%s"', implode('","', status_share())) }}) tanpa tanda petik
+            </td>
+        </tr>
     @endif
     <tr>
         <td colspan="{{ $colspan }}"></td>
@@ -112,6 +118,7 @@
             @if($groups_id != 2)
             <th>Koordinator</th>
             <th>Status</th>
+            <th>Status Dibagikan</th>
             @endif
         </tr>
     </thead>
@@ -134,6 +141,7 @@
             <td></td>
             <td></td>
             @if($groups_id != 2)
+            <td></td>
             <td></td>
             <td></td>
             @endif

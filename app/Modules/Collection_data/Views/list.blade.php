@@ -28,6 +28,7 @@
                     <th width="15%">Kelurahan</th>
                     <th width="7%">TPS</th>
                     <th width="13%">Status</th>
+                    <th width="13%">Status<br>Dibagikan</th>
                     <th width="10%" class="text-center">Aksi</th>
                 </tr>
                 <tr>
@@ -45,13 +46,21 @@
                             @endforeach
                         </select>
                     </th>
+                    <th>
+                        <select name="filter[status_share]" class="form-select">
+                            <option value="" selected>-- Pilih --</option>
+                            @foreach(status_share() as $key => $status)
+                                <option value="{{ $key }}" {{ $key == ($param['filter']['status_share'] ?? null)? 'selected' : '' }}>{{ $status }}</option>
+                            @endforeach
+                        </select>
+                    </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 @if(count($datas) <= 0)
                     <tr>
-                        <td colspan="8" class="text-center">Data Tidak Ditemukan</td>
+                        <td colspan="9" class="text-center">Data Tidak Ditemukan</td>
                     </tr>
                 @else
                     @php $i=0 @endphp
@@ -70,14 +79,22 @@
                                         Sudah diverifikasi
                                     </a>
                                     @break
-                                @case(3)
-                                    <a class="btn btn-danger px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                @default
+                                    <a class="btn btn-secondary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                        Belum diverifikasi
+                                    </a>
+                            @endswitch
+                        </td>
+                        <td>
+                            @switch($data->status_share)
+                                @case(2)
+                                    <a class="btn btn-success px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatusShare/'.$data->id) }}" style="font-si">
                                         Sudah dibagikan
                                     </a>
                                     @break
                                 @default
-                                    <a class="btn btn-secondary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
-                                        Belum diverifikasi
+                                    <a class="btn btn-secondary px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}" href="{{ url($controller_name.'/updateStatusShare/'.$data->id) }}" style="font-si">
+                                        Belum dibagikan
                                     </a>
                             @endswitch
                         </td>
@@ -86,12 +103,12 @@
                                 <i class="fa-solid fa-list"></i>
                             </a>
                             @if($user_id == $data->coordinator_id || $groups_id == 1)
-                            <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
-                                <i class="fa-solid fa-pencil"></i>
-                            </a>
-                            <a class="btn btn-danger px-2 py-1 delete" data-name="{{ $data->name }}" href="{{ url($controller_name.'/delete/'.$data->id) }}">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
+                                <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
+                                    <i class="fa-solid fa-pencil"></i>
+                                </a>
+                                <a class="btn btn-danger px-2 py-1 delete" data-name="{{ $data->name }}" href="{{ url($controller_name.'/delete/'.$data->id) }}">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
                             @endif
                         </td>
                     </tr>

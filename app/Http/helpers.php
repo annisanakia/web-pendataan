@@ -146,7 +146,7 @@ function status() {
     return $status;
 }
 
-function statusShare() {
+function status_share() {
     $status = [
         1 => 'Belum dibagikan',
         2 => 'Sudah dibagikan'

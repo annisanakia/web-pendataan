@@ -259,12 +259,8 @@ class Collection_data extends RESTful {
     {
         $data = $this->model->find($id);
         $activity_before = json_encode($data);
-        if($data->status == 1 || $data->status == 0){
+        if($data->status != 2){
             $data->status = 2;
-        }elseif($data->status == 2){
-            $data->status = 3;
-        }elseif($data->status == 3){
-            $data->status = 4;
         }
         $data->save();
 
@@ -273,6 +269,23 @@ class Collection_data extends RESTful {
         $data_id = $data->id ?? null;
         $activity_after = json_encode($data);
         $this->lib_activity->addActivity($user_id, $table_name, $id, 'updateStatus', date('Y-m-d H:i:s'), $activity_after, $activity_before);
+        return redirect()->back();
+    }
+
+    public function updateStatusShare($id)
+    {
+        $data = $this->model->find($id);
+        $activity_before = json_encode($data);
+        if($data->status_share != 2 && $data->status == 2){
+            $data->status_share = 2;
+        }
+        $data->save();
+
+        $user_id = \Auth::user()->id ?? null;
+        $table_name = $this->model->getTable() ?? null;
+        $data_id = $data->id ?? null;
+        $activity_after = json_encode($data);
+        $this->lib_activity->addActivity($user_id, $table_name, $id, 'updateStatusShare', date('Y-m-d H:i:s'), $activity_after, $activity_before);
         return redirect()->back();
     }
 
@@ -330,7 +343,7 @@ class Collection_data extends RESTful {
         $with['groups_id'] = $groups_id;
         $with['datas'] = array_slice($excel[0], 16, count($excel[0]));
         if($groups_id != 2){
-            $with['datas'] = array_slice($excel[0], 18, count($excel[0]));
+            $with['datas'] = array_slice($excel[0], 19, count($excel[0]));
         }
 
         $with['district_codes'] = $district_codes;
@@ -359,6 +372,7 @@ class Collection_data extends RESTful {
         $rw = is_array(request()->rw)? request()->rw : [];
         $coordinator_id = is_array(request()->coordinator_id)? request()->coordinator_id : [];
         $status = is_array(request()->status)? request()->status : [];
+        $status_share = is_array(request()->status_share)? request()->status_share : [];
 
         $input = request()->all();
         $validation = $this->model->validateMultiple($input);
@@ -394,6 +408,7 @@ class Collection_data extends RESTful {
                 $input['rt'] = $rt[$key];
                 $input['coordinator_id'] = ($coordinator_id[$key] ?? null) ?? ($groups_id == 2? $user_id : null);
                 $input['status'] = ($status[$key] ?? null) ?? ($groups_id == 2? 1 : null);;
+                $input['status_share'] = ($status_share[$key] ?? null) ?? ($groups_id == 2? 1 : null);;
                 $data = $this->model->create($input);
             }
 
