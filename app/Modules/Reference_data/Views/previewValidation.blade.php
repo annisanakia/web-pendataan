@@ -108,7 +108,7 @@
                                     {!!$errors->first('pob.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                 </td>
                                 <td>
-                                    <input value="{{ $dob[$key] }}" type="date" name="dob[{{ $key }}]" class="form-control {{ $errors->has('dob.'.$key)? 'is-invalid' : '' }}">
+                                    <input value="{{ $dob[$key] ?? null }}" type="date" name="dob[{{ $key }}]" class="form-control {{ $errors->has('dob.'.$key)? 'is-invalid' : '' }}">
                                     {!!$errors->first('dob.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                 </td>
                                 <td>
