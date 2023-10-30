@@ -8,7 +8,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar me-1"></i>
-                    Grafik Koordinator
+                    Grafik Total Data Koordinator
                 </div>
                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
             </div>
@@ -50,7 +50,7 @@
                     <?php
                         $collection_data = $collection_datas->where('coordinator_id',$data->id);
                         $verifikasi = $collection_data->where('status',2);
-                        $dibagikan = $collection_data->where('status',4);
+                        $dibagikan = $collection_data->where('status_share',2);
                         $dataByCoordinators[] = $collection_data->count();
                     ?>
                     <tr>
@@ -64,7 +64,7 @@
                         <?php
                             $collection_data = $collection_datas->where('coordinator_id',$data->id)->where('subdistrict_id',$row->subdistrict_id);
                             $verifikasi = $collection_data->where('status',2);
-                            $dibagikan = $collection_data->where('status',4);
+                            $dibagikan = $collection_data->where('status_share',2);
                             $dataByCoordinators[] = $collection_data->count();
                         ?>
                         <tr>

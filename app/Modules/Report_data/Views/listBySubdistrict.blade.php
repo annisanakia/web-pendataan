@@ -55,7 +55,7 @@
                     <?php
                         $collection_data = $collection_datas->where('subdistrict_id',$data->id);
                         $verifikasi = $collection_data->where('status',2);
-                        $dibagikan = $collection_data->where('status',4);
+                        $dibagikan = $collection_data->where('status_share',2);
                         $dataBySubdistrict[] = $collection_data->count();
                     ?>
                     <tr>
