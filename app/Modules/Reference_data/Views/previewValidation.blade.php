@@ -86,16 +86,20 @@
                                     {!!$errors->first('city_id.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                 </td>
                                 <td>
-                                    <input value="{{ $district_id[$key] ?? null }}" type="hidden" id="text_district_id{{ $i }}">
                                     <select name="district_id[{{ $key }}]" data-no="{{ $i }}" class="form-select district_id {{ $errors->has('district_id.'.$key)? 'is-invalid' : '' }}" id="district_id{{ $i }}">
                                         <option value="">-- Pilih --</option>
+                                        @foreach($districts->where('city_id',($city_id[$key] ?? null))->all() as $row)
+                                            <option value="{{ $row->id }}" {{ $row->id == ($district_id[$key] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
+                                        @endforeach
                                     </select>
                                     {!!$errors->first('district_id.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                 </td>
                                 <td>
-                                    <input value="{{ $subdistrict_id[$key] ?? null }}" type="hidden" id="text_subdistrict_id{{ $i }}">
                                     <select name="subdistrict_id[{{ $key }}]" data-no="{{ $i }}" class="form-select subdistrict_id {{ $errors->has('subdistrict_id.'.$key)? 'is-invalid' : '' }}" id="subdistrict_id{{ $i }}">
                                         <option value="">-- Pilih --</option>
+                                        @foreach($subdistricts->where('district_id',($district_id[$key] ?? null))->all() as $row)
+                                            <option value="{{ $row->id }}" {{ $row->id == ($subdistrict_id[$key] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
+                                        @endforeach
                                     </select>
                                     {!!$errors->first('subdistrict_id.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                 </td>
@@ -161,10 +165,10 @@
         $('#data-import').on("click", ".remove-tr", function () {
             $(this).parents('tr').remove();
         });
-        $('.city_id').each(function() {
-            var num = $(this).data('no');
-            getDistrict(num, $('#text_district_id'+num).val());
-        });
+        // $('.city_id').each(function() {
+        //     var num = $(this).data('no');
+        //     getDistrict(num, $('#text_district_id'+num).val());
+        // });
         $('.city_id').change(function () {
             var num = $(this).data('no');
             getDistrict(num, $('#district_id'+num).val());
@@ -185,11 +189,11 @@
             });
         }
 
-        $('.district_id').each(function() {
-            var num = $(this).data('no'),
-                district_id = $('#text_district_id'+num).val();
-            getSubdistrict(num, district_id, $('#text_subdistrict_id'+num).val());
-        });
+        // $('.district_id').each(function() {
+        //     var num = $(this).data('no'),
+        //         district_id = $('#text_district_id'+num).val();
+        //     getSubdistrict(num, district_id, $('#text_subdistrict_id'+num).val());
+        // });
         $('.district_id').change(function () {
             var num = $(this).data('no'),
                 district_id = $('#district_id'+num).val();

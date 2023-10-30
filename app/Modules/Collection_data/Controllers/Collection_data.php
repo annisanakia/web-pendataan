@@ -347,8 +347,8 @@ class Collection_data extends RESTful {
         $districts = \Models\district::select(['*']);
         if($groups_id == 2){
             $districts->whereHas('subdistrict', function($builder) use($subdistrict_ids){
-                    $builder->whereIn('id',$subdistrict_ids);
-                });
+                $builder->whereIn('id',$subdistrict_ids);
+            });
         }
         $districts = $districts->get();
         $district_codes = $districts->pluck('id','code')->all();
@@ -446,8 +446,8 @@ class Collection_data extends RESTful {
         $districts = \Models\district::select(['*']);
         if($groups_id == 2){
             $districts->whereHas('subdistrict', function($builder) use($subdistrict_ids){
-                    $builder->whereIn('id',$subdistrict_ids);
-                });
+                $builder->whereIn('id',$subdistrict_ids);
+            });
         }
         $districts = $districts->get();
 
