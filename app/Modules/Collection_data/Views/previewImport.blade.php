@@ -100,8 +100,8 @@
                         </td>
                         <td nowrap>
                             <?php
-                                $date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data[9] ?? null);
-                                $date = $date->format('Y-m-d');
+                                $date = $data[9] ?? null;
+                                $date = $date != ''? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date)->format('Y-m-d') : '';
                             ?>
                             <input value="{{ $date }}" type="date" name="dob[]" class="form-control">
                         </td>
