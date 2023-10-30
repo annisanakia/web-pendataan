@@ -28,6 +28,11 @@ class district extends Model {
         return $v;
     }
 
+    public function city()
+    {
+        return $this->belongsTo('Models\city', 'city_id', 'id');
+    }
+
     public function subdistrict()
     {
         return $this->hasMany('Models\subdistrict');

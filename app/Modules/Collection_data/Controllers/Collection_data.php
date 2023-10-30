@@ -334,20 +334,42 @@ class Collection_data extends RESTful {
     public function previewImport()
     {
         $file = request()->file('file');
+        $user_id = \Auth::user()->id ?? null;
         $groups_id = \Auth::user()->groups_id ?? null;
 
         $excel = \Excel::toArray(new generalImport(), $file);
-        $district_codes = \Models\district::pluck('id','code')->all();
-        $subdistrict_codes = \Models\subdistrict::pluck('id','code')->all();
 
-        $with['groups_id'] = $groups_id;
+        $subdistrict_ids = \Models\users_subdistrict::select(['subdistrict_id'])
+                ->where('user_id',$user_id)
+                ->pluck('subdistrict_id')
+                ->all();
+
+        $districts = \Models\district::select(['*']);
+        if($groups_id == 2){
+            $districts->whereHas('subdistrict', function($builder) use($subdistrict_ids){
+                    $builder->whereIn('id',$subdistrict_ids);
+                });
+        }
+        $districts = $districts->get();
+        $district_codes = $districts->pluck('id','code')->all();
+
+        $subdistricts = \Models\subdistrict::select(['*']);
+        if($groups_id == 2){
+            $subdistricts->whereIn('id',$subdistrict_ids);
+        }
+        $subdistricts = $subdistricts->get();
+        $subdistrict_codes = $subdistricts->pluck('id','code')->all();
+
         $with['datas'] = array_slice($excel[0], 16, count($excel[0]));
         if($groups_id != 2){
             $with['datas'] = array_slice($excel[0], 19, count($excel[0]));
         }
 
+        $with['groups_id'] = $groups_id;
         $with['district_codes'] = $district_codes;
         $with['subdistrict_codes'] = $subdistrict_codes;
+        $with['districts'] = $districts;
+        $with['subdistricts'] = $subdistricts;
         return view($this->controller_name . '::previewImport', $with);
     }
 
@@ -416,9 +438,30 @@ class Collection_data extends RESTful {
             return redirect(strtolower($this->controller_name));
         }
 
+        $subdistrict_ids = \Models\users_subdistrict::select(['subdistrict_id'])
+                ->where('user_id',$user_id)
+                ->pluck('subdistrict_id')
+                ->all();
+
+        $districts = \Models\district::select(['*']);
+        if($groups_id == 2){
+            $districts->whereHas('subdistrict', function($builder) use($subdistrict_ids){
+                    $builder->whereIn('id',$subdistrict_ids);
+                });
+        }
+        $districts = $districts->get();
+
+        $subdistricts = \Models\subdistrict::select(['*']);
+        if($groups_id == 2){
+            $subdistricts->whereIn('id',$subdistrict_ids);
+        }
+        $subdistricts = $subdistricts->get();
+
         $with = request()->all();
         $with['groups_id'] = $groups_id;
         $with['nik_duplicates'] = $nik_duplicates;
+        $with['districts'] = $districts;
+        $with['subdistricts'] = $subdistricts;
         return view($this->controller_name . '::previewValidation', $with)->withErrors($validation);
     }
 }

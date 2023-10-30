@@ -78,15 +78,20 @@
                             </select>
                         </td>
                         <td nowrap>
-                            <input value="{{ $district_codes[$data[4] ?? null] ?? null }}" type="hidden" id="text_district_id{{ $i }}">
                             <select name="district_id[]" data-no="{{ $i }}" class="form-select district_id {{ $errors->has('district_id')? 'is-invalid' : '' }}" id="district_id{{ $i }}">
                                 <option value="">-- Pilih --</option>
+                                @foreach($districts->where('city.code',($data[3] ?? null))->all() as $row)
+                                    <option value="{{ $row->id }}" {{ $row->code == ($data[4] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
+                                @endforeach
                             </select>
                         </td>
                         <td nowrap>
                             <input value="{{ $subdistrict_codes[$data[5] ?? null] ?? null }}" type="hidden" id="text_subdistrict_id{{ $i }}">
                             <select name="subdistrict_id[]" data-no="{{ $i }}" class="form-select subdistrict_id {{ $errors->has('subdistrict_id')? 'is-invalid' : '' }}" id="subdistrict_id{{ $i }}">
                                 <option value="">-- Pilih --</option>
+                                @foreach($subdistricts->where('district.code',($data[4] ?? null))->all() as $row)
+                                    <option value="{{ $row->id }}" {{ $row->code == ($data[5] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
+                                @endforeach
                             </select>
                         </td>
                         <td nowrap>
@@ -169,10 +174,10 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.city_id').each(function() {
-            var num = $(this).data('no');
-            getDistrict(num, $('#text_district_id'+num).val());
-        });
+        // $('.city_id').each(function() {
+        //     var num = $(this).data('no');
+        //     getDistrict(num, $('#text_district_id'+num).val());
+        // });
         $('.city_id').change(function () {
             var num = $(this).data('no');
             getDistrict(num, $('#district_id'+num).val());
@@ -193,11 +198,11 @@
             });
         }
 
-        $('.district_id').each(function() {
-            var num = $(this).data('no'),
-                district_id = $('#text_district_id'+num).val();
-            getSubdistrict(num, district_id, $('#text_subdistrict_id'+num).val());
-        });
+        // $('.district_id').each(function() {
+        //     var num = $(this).data('no'),
+        //         district_id = $('#text_district_id'+num).val();
+        //     getSubdistrict(num, district_id, $('#text_subdistrict_id'+num).val());
+        // });
         $('.district_id').change(function () {
             var num = $(this).data('no'),
                 district_id = $('#district_id'+num).val();
