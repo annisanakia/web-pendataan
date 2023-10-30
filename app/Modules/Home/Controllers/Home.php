@@ -47,6 +47,8 @@ class Home extends Controller {
 
     public function getDataStatusGraph($district_id = null, $start_date = null, $end_date = null)
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
         $collection_datas = \Models\collection_data::select(['*']);
         if($district_id != null){
             $collection_datas->where('district_id',$district_id);
@@ -56,6 +58,9 @@ class Home extends Controller {
         }
         if($end_date != null){
             $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
         }
         $collection_datas = $collection_datas->get();
 
