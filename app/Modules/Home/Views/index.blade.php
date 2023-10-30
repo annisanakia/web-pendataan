@@ -40,6 +40,7 @@
 @endsection
 
 @section('scripts')
+<script src="{{ asset('assets/js/chart.min.js') }}" crossorigin="anonymous"></script>
 <script type="text/javascript">
     getData($('select[name=district_id]').val());
     function getData(district_id){

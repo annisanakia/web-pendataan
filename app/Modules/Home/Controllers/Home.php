@@ -41,12 +41,36 @@ class Home extends Controller {
     {
         $user_id = \Auth::user()->id ?? null;
         $groups_id = \Auth::user()->groups_id ?? null;
-
         $district_id = request()->district_id;
+
         $day = date('N');
         $start_date = new DateTime(date('Y-m-d', strtotime('-'.($day-1).' days')));
         $end_date = new DateTime(date('Y-m-d', strtotime('+'.(7-$day).' days')));
 
+        $dataByDay = $this->getDataGraph($district_id, $groups_id, $start_date, $end_date, $day);
+        if($groups_id != 2){
+            $with = $this->getDataCoorGraph($district_id, $groups_id, $start_date, $end_date);
+        }
+
+        $collection_datas = \Models\collection_data::where('district_id',request()->district_id)
+                ->whereDate('created_at',date('Y-m-d'));
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
+        }
+        $this->filter($collection_datas, request(), 'collection_data');
+        $max_row = request()->input('max_row') ?? 50;
+        $collection_datas = $collection_datas->paginate($max_row);
+        $collection_datas->chunk(100);
+
+        $with['district_id'] = $district_id;
+        $with['dataByDay'] = $dataByDay;
+        $with['collection_datas'] = $collection_datas;
+        $with['param'] = request()->all();
+        return view($this->controller_name . '::getData', $with);
+    }
+
+    public function getDataGraph($district_id, $groups_id, $start_date, $end_date, $day)
+    {
         $collection_datas = \Models\collection_data::where('district_id',$district_id)
             ->whereDate('created_at','>=',$start_date)
             ->whereDate('created_at','<=',$end_date)
@@ -67,7 +91,11 @@ class Home extends Controller {
             // $day = $dt->format('w') == 0? '7' : $dt->format('w');
             $dataByDay[] = $collection_datas[$date] ?? 0;
         }
+        return $dataByDay;
+    }
 
+    public function getDataCoorGraph($district_id, $groups_id, $start_date, $end_date)
+    {
         $collection_datas = \Models\collection_data::where('district_id',$district_id)
             ->whereDate('created_at','>=',$start_date)
             ->whereDate('created_at','<=',$end_date)
@@ -89,23 +117,9 @@ class Home extends Controller {
         $coordinators = $user_coordinators->pluck('name')->all();
         $coordinators[] = 'none';
 
-        $collection_datas = \Models\collection_data::where('district_id',request()->district_id)
-                ->whereDate('created_at',date('Y-m-d'));
-        if($groups_id == 2){
-            $collection_datas->where('coordinator_id',$user_id);
-        }
-        $this->filter($collection_datas, request(), 'collection_data');
-        $max_row = request()->input('max_row') ?? 50;
-        $collection_datas = $collection_datas->paginate($max_row);
-        $collection_datas->chunk(100);
-
-        $with['district_id'] = $district_id;
-        $with['dataByDay'] = $dataByDay;
         $with['coordinators'] = $coordinators;
         $with['dataByCoor'] = $dataByCoor;
-        $with['collection_datas'] = $collection_datas;
-        $with['param'] = request()->all();
-        return view($this->controller_name . '::getData', $with);
+        return $with;
     }
 
     public function filter($data, $request, $table)

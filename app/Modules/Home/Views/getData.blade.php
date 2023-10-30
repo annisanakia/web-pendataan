@@ -8,7 +8,9 @@
                 <i class="fas fa-chart-area me-1"></i>
                 Grafik Mingguan
             </div>
-            <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+            <div class="card-body">
+                @include(ucwords($controller_name).'::getDataGraph')
+            </div>
         </div>
     </div>
     @if($groups_id != 2)
@@ -18,7 +20,9 @@
                 <i class="fas fa-chart-bar me-1"></i>
                 Grafik Mingguan Koordinator
             </div>
-            <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+            <div class="card-body">
+                @include(ucwords($controller_name).'::getDataCoorGraph')
+            </div>
         </div>
     </div>
     @endif
@@ -85,8 +89,6 @@
     </div>
 </div>
 
-<script src="{{ asset('assets/js/chart.min.js') }}" crossorigin="anonymous"></script>
-
 <script type="text/javascript">
     $(".form-validation").submit(function (e) {
         e.preventDefault();
@@ -107,104 +109,4 @@
             }
         });
     }
-    // Set new default font family and font color to mimic Bootstrap's default styling
-    Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-    Chart.defaults.global.defaultFontColor = '#292b2c';
-
-    // Area Chart Example
-    var ctx = document.getElementById("myAreaChart");
-    var myLineChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu"],
-        datasets: [{
-        label: "Rekap Mingguan",
-        lineTension: 0.3,
-        backgroundColor: "rgba(2,117,216,0.2)",
-        borderColor: "rgba(2,117,216,1)",
-        pointRadius: 5,
-        pointBackgroundColor: "rgba(2,117,216,1)",
-        pointBorderColor: "rgba(255,255,255,0.8)",
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "rgba(2,117,216,1)",
-        pointHitRadius: 50,
-        pointBorderWidth: 2,
-        data: {!! json_encode($dataByDay) !!},
-        }],
-    },
-    options: {
-        scales: {
-        xAxes: [{
-            time: {
-            unit: 'date'
-            },
-            gridLines: {
-            display: false
-            },
-            ticks: {
-            maxTicksLimit: 7
-            }
-        }],
-        yAxes: [{
-            ticks: {
-            min: 0,
-            maxTicksLimit: 5
-            },
-            gridLines: {
-            color: "rgba(0, 0, 0, .125)",
-            }
-        }],
-        },
-        legend: {
-        display: false
-        }
-    }
-    });
-    @if($groups_id != 2)
-    // Set new default font family and font color to mimic Bootstrap's default styling
-    Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-    Chart.defaults.global.defaultFontColor = '#292b2c';
-
-    // Bar Chart Example
-    var ctx = document.getElementById("myBarChart");
-    var myLineChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: {!! json_encode($coordinators) !!},
-        datasets: [{
-            label: "Rekap Koordinator",
-            backgroundColor: "rgba(2,117,216,1)",
-            borderColor: "rgba(2,117,216,1)",
-            data: {!! json_encode($dataByCoor) !!},
-        }],
-    },
-    options: {
-        scales: {
-        xAxes: [{
-            time: {
-            unit: 'month'
-            },
-            gridLines: {
-            display: false
-            },
-            ticks: {
-            maxTicksLimit: 6
-            }
-        }],
-        yAxes: [{
-            ticks: {
-            min: 0,
-            maxTicksLimit: 5
-            },
-            gridLines: {
-            display: true
-            }
-        }],
-        },
-        legend: {
-        display: false
-        }
-    }
-    });
-    @endif
 </script>
