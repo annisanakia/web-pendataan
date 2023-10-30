@@ -29,12 +29,64 @@ class Home extends Controller {
 
     public function index()
     {
+        $groups_id = \Auth::user()->groups_id ?? null;
         $districts = \Models\district::all();
         $collection_datas = \Models\collection_data::all();
+
+        if($groups_id != 2){
+            $withTarget = $this->getDataTargetGraph();
+            $withStatus = $this->getDataStatusGraph();
+            $with = array_merge($withTarget, $withStatus);
+        }
         
+        $with['groups_id'] = $groups_id;
         $with['districts'] = $districts;
         $with['collection_datas'] = $collection_datas;
         return view($this->controller_name . '::index', $with);
+    }
+
+    public function getDataTargetGraph()
+    {
+        $collection_datas = \Models\collection_data::get();
+
+        $status = [];
+        $dataByStatus = [];
+        foreach (status() as $key => $status_name) {
+            $dataStatus = $collection_datas->where('status',$key)->count();
+            $dataByStatus[] = $dataStatus;
+            $status[] = $status_name;
+        }
+        foreach (statusShare() as $key => $status_name) {
+            $dataStatus = $collection_datas->where('status_share',$key)->count();
+            $dataByStatus[] = $dataStatus;
+            $status[] = $status_name;
+        }
+
+        $with['status'] = $status;
+        $with['dataByStatus'] = $dataByStatus;
+        return $with;
+    }
+
+    public function getDataStatusGraph()
+    {
+        $collection_datas = \Models\collection_data::get();
+
+        $districts = \Models\district::get();
+        $district_names = $districts->pluck('name')->all();
+
+        $dataByDistrict = [];
+        $dataByTarget = [];
+        foreach ($districts as $district) {
+            $dataDistrict = $collection_datas->where('district_id',$district->id)->count();
+            $dataTarget = $district->subdistrict->sum('target');
+            $dataByDistrict[] = $dataDistrict;
+            $dataByTarget[] = $dataTarget;
+        }
+
+        $with['district_names'] = $district_names;
+        $with['dataByDistrict'] = $dataByDistrict;
+        $with['dataByTarget'] = $dataByTarget;
+        return $with;
     }
 
     public function getData()

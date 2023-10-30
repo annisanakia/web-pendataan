@@ -23,6 +23,32 @@
         </div>
         @endforeach
     </div>
+    @if($groups_id != 2)
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Grafik Pendataan Target
+                    </div>
+                    <div class="card-body">
+                        @include(ucwords($controller_name).'::getDataTargetGraph')
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Grafik Pendataan Status
+                    </div>
+                    <div class="card-body">
+                        @include(ucwords($controller_name).'::getDataStatusGraph')
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="row mb-4">
         <div class="col-md-6">
             <label class="form-label">Kecamatan</label>

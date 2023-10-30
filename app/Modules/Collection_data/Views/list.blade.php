@@ -72,11 +72,6 @@
                                     @break
                                 @case(3)
                                     <a class="btn btn-danger px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
-                                        Belum dibagikan
-                                    </a>
-                                    @break
-                                @case(4)
-                                    <a class="btn btn-success px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
                                         Sudah dibagikan
                                     </a>
                                     @break

@@ -140,9 +140,16 @@ function weekOfYear($date) {
 function status() {
     $status = [
         1 => 'Belum diverifikasi',
-        2 => 'Sudah diverifikasi',
-        3 => 'Belum dibagikan',
-        4 => 'Sudah dibagikan',
+        2 => 'Sudah diverifikasi'
+    ];
+
+    return $status;
+}
+
+function statusShare() {
+    $status = [
+        1 => 'Belum dibagikan',
+        2 => 'Sudah dibagikan'
     ];
 
     return $status;
