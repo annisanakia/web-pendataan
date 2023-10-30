@@ -55,7 +55,8 @@ class User extends Authenticatable
     public static $customMessages = array(
         'required' => 'Kolom ini wajib diisi.',
         'username.unique' => 'Nama pengguna telah tersedia.',
-        'email' => 'Format alamat email salah.',
+        'email.email' => 'Format alamat email salah.',
+        'email.unique' => 'Email telah tersedia.',
         'phone_no.numeric' => 'Nomor telepon harus berupa angka.',
         'phone_no.digits_between' => 'Nomor telepon harus berisikan 10 sampai 13 digit.',
         'password.min' => 'Masukkan password minimal 6 karakter.'
@@ -68,7 +69,7 @@ class User extends Authenticatable
             'groups_id' => 'required',
             'name' => 'required',
             'password' => 'nullable|min:6',
-            'email' => 'email|nullable',
+            'email' => 'nullable|email|unique:users,email,' . ($data['id'] ?? null) . ',id,deleted_at,NULL',
             'phone_no' => 'numeric|nullable|digits_between:10,13',
             'status' => 'required'
         );
