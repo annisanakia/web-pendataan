@@ -59,9 +59,7 @@
             </select>
         </div>
     </div>
-    <div id="getData">
-
-    </div>
+    <div id="getData" class="position-relative" style="min-height: 200px;"></div>
 </div>
 @endsection
 
@@ -70,12 +68,22 @@
 <script type="text/javascript">
     getData($('select[name=district_id]').val());
     function getData(district_id){
+
+        $('#getData').append('<div class="loader"><img src="{{asset("assets/images/loading.gif")}}" /></div>');
+
         $.ajax({
             url: "{{ url($controller_name.'/getData') }}",
             type: 'GET',
             data: {district_id : district_id},
             success: function(data) { 
                 $('#getData').html(data);
+            },
+            error: function (e) {
+                swalDeleteButtons.fire(
+                    'Warning !!',
+                    'Terjadi Kesalahan Data',
+                    'error'
+                )
             }
         });
     }

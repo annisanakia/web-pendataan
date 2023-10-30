@@ -63,7 +63,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="getData">
+                <div id="getData" class="position-relative" style="min-height: 200px;">
                     <div class="alert alert-info text-center mt-4">
                         Pilih model laporan kemudian klik preview untuk melihat laporan
                     </div>
@@ -100,12 +100,21 @@
         getDataDetail(url,$('.form-validation').serialize());
     });
     function getDataDetail(url,data){
+        $('#getData').append('<div class="loader"><img src="{{asset("assets/images/loading.gif")}}" /></div>');
+
         $.ajax({
             url: url,
             type: 'GET',
             data: data,
             success: function(data) { 
                 $('#getData').html(data);
+            },
+            error: function (e) {
+                swalDeleteButtons.fire(
+                    'Warning !!',
+                    'Terjadi Kesalahan Data',
+                    'error'
+                )
             }
         });
     }

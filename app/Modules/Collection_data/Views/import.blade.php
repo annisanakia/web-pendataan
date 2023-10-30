@@ -35,49 +35,39 @@
                     </div>
                 </div>
             </form>
-            <div id="preview-import"></div>
+            <div id="preview-import" class="position-relative" style="min-height: 200px;"></div>
         </div>
     </section>
-</div>
-
-<div id="progress-template" class="d-none">
-    <div id="fileProgress">
-        <div class="progress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar" style="width: 25%">25%</div>
-        </div>
-    </div>
 </div>
 @endsection
 
 @section('scripts')
 <script src="{{ asset('assets/plugins/jquery-validation/jquery.form.js')}}" type="text/javascript"></script>
 <script>
-    var progress = $('#progress-template').html();
-
     $('#upload-template .file').on('change', function () {
         var extension = $(this).val().split('.').pop();
         if (extension == 'xls') {
-            $("#upload-template").find('#fileProgress').remove();
-            $("#upload-template .form-group>div").append(progress);
+
+            $('#preview-import').append('<div class="loader"><img src="{{asset("assets/images/loading.gif")}}" /></div>');
 
             $('#upload-template').ajaxForm({
-                xhr: function () {
-                    var xhr = $.ajaxSettings.xhr();
-                    if (xhr.upload) {
-                        xhr.upload.addEventListener('progress', function (evt) {
-                            var percent = (evt.loaded / evt.total) * 100;
-                            $("#upload-template").find(".progress-bar").width(percent + "%");
-                            $("#upload-template").find(".progress-bar").text(percent.toFixed(0) + "%");
-                        }, false);
-                    }
-                    return xhr;
-                },
                 success: function (e) {
                     $('#preview-import').html(e);
+                },
+                error: function (e) {
+                    swalDeleteButtons.fire(
+                        'Warning !!',
+                        'Terjadi Kesalahan Data',
+                        'error'
+                    )
                 }
             }).submit();
         } else {
-            alert('Upload File berformat XLS');
+            swalDeleteButtons.fire(
+                'Warning !!',
+                'Upload File berformat XLS',
+                'error'
+            )
         }
     });
 </script>
