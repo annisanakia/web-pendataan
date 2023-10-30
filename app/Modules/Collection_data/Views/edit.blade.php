@@ -32,7 +32,7 @@
                                 <label class="col-form-label asterisk">NIK</label>
                                 <input name="nik" type="text" class="form-control {{ $errors->has('nik')? 'is-invalid' : '' }}" value="{{ old('nik') ?? $data->nik }}">
                                 {!!$errors->first('nik', ' <span class="invalid-feedback">:message</span>')!!}
-                                <div class="mb-3 mt-2 f-14px text-muted">Cek data NIK sebelum di input ke web : <a href="https://cekdptonline.kpu.go" target="_blank">https://cekdptonline.kpu.go</a></div>
+                                <div class="mb-3 mt-2 f-14px text-muted">Cek data NIK sebelum di input ke web : <a href="https://cekdptonline.kpu.go.id" target="_blank">https://cekdptonline.kpu.go.id</a></div>
                             </div>
                         </div>
                         <div class="col-sm-6">

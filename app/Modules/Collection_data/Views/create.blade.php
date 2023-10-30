@@ -39,7 +39,7 @@
                                     <button class="btn btn-primary" type="button" id="autocomplete"><i class="fa-solid fa-magnifying-glass"></i></button>
                                     {!!$errors->first('nik', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
-                                <div class="mb-3 mt-2 f-14px text-muted">Cek data NIK sebelum di input ke web : <a href="https://cekdptonline.kpu.go" target="_blank">https://cekdptonline.kpu.go</a></div>
+                                <div class="mb-3 mt-2 f-14px text-muted">Cek data NIK sebelum di input ke web : <a href="https://cekdptonline.kpu.go.id" target="_blank">https://cekdptonline.kpu.go.id</a></div>
                             </div>
                         </div>
                         <div class="col-sm-6">

@@ -61,6 +61,7 @@
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps }}</td>
                         <td>
+                            {{ $data->status }}
                             @switch($data->status)
                                 @case(2)
                                     <a class="btn btn-primary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">

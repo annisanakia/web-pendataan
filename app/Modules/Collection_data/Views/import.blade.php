@@ -19,7 +19,7 @@
                     <li>Format File harus sesuai dengan template yg didownload</li>
                     <li>Upload file template excel yang telah diisi</li>
                     <li>Harap dicheck kembali data yang ingin disimpan</li>
-                    <li>Cek data NIK sebelum di input ke web : <a href="https://cekdptonline.kpu.go" target="_blank">https://cekdptonline.kpu.go</a></li>
+                    <li>Cek data NIK sebelum di input ke web : <a href="https://cekdptonline.kpu.go.id" target="_blank">https://cekdptonline.kpu.go.id</a></li>
                 </ul>
             </div>
             <a href="{{ url($controller_name.'/getTemplateAsXls') }}" target="_blank" class="btn btn-primary align-middle py-2">
