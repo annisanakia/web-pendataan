@@ -45,9 +45,19 @@ class Home extends Controller {
         return view($this->controller_name . '::index', $with);
     }
 
-    public function getDataTargetGraph()
+    public function getDataStatusGraph($district_id = null, $start_date = null, $end_date = null)
     {
-        $collection_datas = \Models\collection_data::get();
+        $collection_datas = \Models\collection_data::select(['*']);
+        if($district_id != null){
+            $collection_datas->where('district_id',$district_id);
+        }
+        if($start_date != null){
+            $collection_datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != null){
+            $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        $collection_datas = $collection_datas->get();
 
         $status = [];
         $dataByStatus = [];
@@ -67,7 +77,7 @@ class Home extends Controller {
         return $with;
     }
 
-    public function getDataStatusGraph()
+    public function getDataTargetGraph()
     {
         $collection_datas = \Models\collection_data::get();
 
@@ -102,6 +112,8 @@ class Home extends Controller {
         $dataByDay = $this->getDataGraph($district_id, $groups_id, $start_date, $end_date, $day);
         if($groups_id != 2){
             $with = $this->getDataCoorGraph($district_id, $groups_id, $start_date, $end_date);
+        }else{
+            $with = $this->getDataStatusGraph($district_id, $start_date, $end_date);
         }
 
         $collection_datas = \Models\collection_data::where('district_id',request()->district_id)
@@ -123,6 +135,7 @@ class Home extends Controller {
 
     public function getDataGraph($district_id, $groups_id, $start_date, $end_date, $day)
     {
+        $user_id = \Auth::user()->id ?? null;
         $collection_datas = \Models\collection_data::where('district_id',$district_id)
             ->whereDate('created_at','>=',$start_date)
             ->whereDate('created_at','<=',$end_date)
