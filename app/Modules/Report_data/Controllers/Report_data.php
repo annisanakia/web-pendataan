@@ -31,22 +31,26 @@ class Report_data extends RESTful {
     {
         $model = request()->model ?? null;
         if($model == 1){
-            // NIK
-            return $this->getListByNIK();
+            // Citizens
+            $with = $this->getListByCitizens();
+            return view($this->controller_name . '::listByCitizens', $with);
         }elseif($model == 2){
             // Kecamatan
-            return $this->getListByDistrict();
+            $with = $this->getListByDistrict();
+            return view($this->controller_name . '::listByDistrict', $with);
         }elseif($model == 3){
             // Kelurahan
-            return $this->getListBySubdistrict();
+            $with = $this->getListBySubdistrict();
+            return view($this->controller_name . '::listBySubdistrict', $with);
         // }elseif($model == 4){
             // TPS
         }else{
-            return $this->getListByCoordinator();
+            $with = $this->getListByCoordinator();
+            return view($this->controller_name . '::listByCoordinator', $with);
         }
     }
 
-    public function getListByNIK()
+    public function getListByCitizens()
     {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
@@ -85,6 +89,10 @@ class Report_data extends RESTful {
             $dates[] = dateToIndo($date);
             $dataByDates[] = $collection_datas[$date] ?? 0;
         }
+
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
         
         $with['datas'] = $datas;
         $with['model'] = request()->model;
@@ -93,7 +101,8 @@ class Report_data extends RESTful {
         $with['param'] = request()->all();
         $with['dates'] = $dates;
         $with['dataByDates'] = $dataByDates;
-        return view($this->controller_name . '::list', $with);
+        $with['actions'] = $actions;
+        return $with;
     }
 
     public function getListByDistrict()
@@ -122,6 +131,10 @@ class Report_data extends RESTful {
 
         $collection_datas = $collection_datas->get();
 
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListDistrictAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListDistrictAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+
         $with['model'] = request()->model;
         $with['start_date'] = request()->start_date;
         $with['end_date'] = request()->end_date;
@@ -129,7 +142,8 @@ class Report_data extends RESTful {
         $with['districts'] = $districts;
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
-        return view($this->controller_name . '::listByDistrict', $with);
+        $with['actions'] = $actions;
+        return $with;
     }
 
     public function getListBySubdistrict()
@@ -162,6 +176,10 @@ class Report_data extends RESTful {
 
         $collection_datas = $collection_datas->get();
 
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSubdistrictAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSubdistrictAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+
         $with['subdistrict_ids'] = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
         $with['model'] = request()->model;
         $with['start_date'] = request()->start_date;
@@ -170,7 +188,8 @@ class Report_data extends RESTful {
         $with['subdistricts'] = $subdistricts;
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
-        return view($this->controller_name . '::listBySubdistrict', $with);
+        $with['actions'] = $actions;
+        return $with;
     }
 
     public function getListByCoordinator()
@@ -200,6 +219,10 @@ class Report_data extends RESTful {
 
         $collection_datas = $collection_datas->get();
 
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListCoordinatorAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListCoordinatorAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+
         $with['model'] = request()->model;
         $with['start_date'] = request()->start_date;
         $with['end_date'] = request()->end_date;
@@ -207,7 +230,8 @@ class Report_data extends RESTful {
         $with['coordinators'] = $coordinators;
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
-        return view($this->controller_name . '::listByCoordinator', $with);
+        $with['actions'] = $actions;
+        return $with;
     }
 
     public function customFilter($data, $newFilters)
@@ -223,6 +247,134 @@ class Report_data extends RESTful {
                 });
             }
         }
+    }
+    
+    public function getListAsPdf()
+    {
+        $template = $this->controller_name . '::getListAsPdf';
+        $data = $this->getListByCitizens();
+        $data['title_head_export'] = 'Rekap Berdasarkan NIK';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('legal', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Rekap Berdasarkan NIK ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListAsXls()
+    {
+        $template = $this->controller_name . '::getListAsXls';
+        $data = $this->getListByCitizens();
+        $data['title_head_export'] = 'Rekap Berdasarkan NIK';
+        $data['title_col_sum'] = 17;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan NIK ('.date('d-m-Y').').xls"');
+    }
+    
+    public function getListDistrictAsPdf()
+    {
+        $template = $this->controller_name . '::getListDistrictAsPdf';
+        $data = $this->getListByDistrict();
+        $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('legal', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Rekap Berdasarkan Kecamatan ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListDistrictAsXls()
+    {
+        $template = $this->controller_name . '::getListDistrictAsXls';
+        $data = $this->getListByDistrict();
+        $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
+        $data['title_col_sum'] = 6;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Kecamatan ('.date('d-m-Y').').xls"');
+    }
+    
+    public function getListSubdistrictAsPdf()
+    {
+        $template = $this->controller_name . '::getListSubdistrictAsPdf';
+        $data = $this->getListBySubdistrict();
+        $data['title_head_export'] = 'Rekap Berdasarkan Kelurahan';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('legal', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Rekap Berdasarkan Kelurahan ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListSubdistrictAsXls()
+    {
+        $template = $this->controller_name . '::getListSubdistrictAsXls';
+        $data = $this->getListBySubdistrict();
+        $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
+        $data['title_col_sum'] = 6;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Kecamatan ('.date('d-m-Y').').xls"');
+    }
+    
+    public function getListCoordinatorAsPdf()
+    {
+        $template = $this->controller_name . '::getListCoordinatorAsPdf';
+        $data = $this->getListByCoordinator();
+        $data['title_head_export'] = 'Rekap Berdasarkan Koordinator';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('legal', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Rekap Berdasarkan Koordinator ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListCoordinatorAsXls()
+    {
+        $template = $this->controller_name . '::getListCoordinatorAsXls';
+        $data = $this->getListByCoordinator();
+        $data['title_head_export'] = 'Rekap Berdasarkan Koordinator';
+        $data['title_col_sum'] = 5;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Koordinator ('.date('d-m-Y').').xls"');
     }
     
 }

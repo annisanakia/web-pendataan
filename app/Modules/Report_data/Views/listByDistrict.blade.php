@@ -13,6 +13,9 @@
                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
             </div>
         </div>
+        <div class="d-grid gap-2 d-flex justify-content-end mt-4">
+            @include('component.actions')
+        </div>
         <div class="select-max-row d-inline-block mt-2">
             Show 
             <input type="text" name="max_row" value="{{ $datas->perPage() }}" size="4" maxlength="4" class="text-center"> entries
@@ -39,10 +42,10 @@
                 </tr>
             </thead>
             <tbody>
-                    @php
-                        $i=0;
-                        $dataByDistrict = [];
-                    @endphp
+                @php
+                    $i=0;
+                    $dataByDistrict = [];
+                @endphp
                 @if(count($datas) <= 0)
                     <tr>
                         <td colspan="6" class="text-center">Data Tidak Ditemukan</td>

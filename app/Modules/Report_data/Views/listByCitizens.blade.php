@@ -13,7 +13,10 @@
                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
             </div>
         </div>
-        <div class="select-max-row d-inline-block mt-2">
+        <div class="d-grid gap-2 d-flex justify-content-end mt-4">
+            @include('component.actions')
+        </div>
+        <div class="select-max-row d-inline-block">
             Show 
             <input type="text" name="max_row" value="{{ $datas->perPage() }}" size="4" maxlength="4" class="text-center"> entries
         </div>
@@ -24,7 +27,7 @@
                 <tr>
                     <th width="5%" class="text-center">No</th>
                     <th>NIK</th>
-                    <th>Name</th>
+                    <th>Nama Lengkap</th>
                     <th>Kelurahan</th>
                     <th>TPS</th>
                     <th>Koordinator</th>
