@@ -12,9 +12,9 @@
     }
 </style>
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Data Referensi</h1>
+    <h1 class="mt-4">Data Pendataan</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Data Referensi</li>
+        <li class="breadcrumb-item active">Data Pendataan</li>
     </ol>
     <section class="section">
         <form method="post" action="{{url($controller_name.'/storeImport')}}" id="form-tab-ajax" class="form-validation">

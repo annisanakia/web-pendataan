@@ -2,6 +2,9 @@
 
 <div class="card">
     <div class="card-body">
+        @if(Session::has('message_import'))
+            <div class="alert alert-success" id="hideMe">{{ Session::get('message_import') }}</div>
+        @endif
         <div class="d-grid gap-2 d-flex justify-content-end mt-4">
             @include('component.actions')
         </div>
