@@ -23,7 +23,7 @@
         @else
             @foreach($datas as $data)
             <?php
-                $collection_data = $collection_datas->where('district_id',$data->id);
+                $collection_data = $collection_datas->where('subdistrict_id',$data->id);
                 $verifikasi = $collection_data->where('status',2);
                 $dibagikan = $collection_data->where('status_share',2);
             ?>

@@ -54,6 +54,7 @@ class Report_data extends RESTful {
     {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
+        $status = request()->status;
 
         $datas = $this->model->select(['*']);
         if($start_date != ''){
@@ -61,6 +62,9 @@ class Report_data extends RESTful {
         }
         if($end_date != ''){
             $datas->whereDate('created_at','<=',$end_date);
+        }
+        if($status != ''){
+            $datas->where('status',$status);
         }
 
         $this->filter($datas, request(), 'collection_data');
@@ -72,11 +76,17 @@ class Report_data extends RESTful {
         $start_date = new DateTime($start_date ?? date('Y-m-d', strtotime('-'.($day-1).' days')));
         $end_date = new DateTime($end_date ?? date('Y-m-d', strtotime('+'.(7-$day).' days')));
 
-        $collection_datas = \Models\collection_data::whereDate('created_at','>=',$start_date)
-            ->whereDate('created_at','<=',$end_date)
-            ->select(\DB::raw('DATE(created_at) as date'), \DB::raw('count(*) as total'))
-            ->groupBy('date');
-        $collection_datas = $collection_datas->get()->pluck('total','date')->all();
+        $collection_datas = \Models\collection_data::select(\DB::raw('DATE(created_at) as date'), \DB::raw('count(*) as total'));
+        if($start_date != ''){
+            $collection_datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        if($status != ''){
+            $collection_datas->where('status',$status);
+        }
+        $collection_datas = $collection_datas->groupBy('date')->get()->pluck('total','date')->all();
 
         $interval = DateInterval::createFromDateString('1 day');
         $end_week = new DateTime(date('Y-m-d', strtotime('+'.(8-$day).' days')));
@@ -256,7 +266,7 @@ class Report_data extends RESTful {
         $data['title_head_export'] = 'Rekap Berdasarkan NIK';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'portrait');
+            ->setPaper('legal', 'landscape');
 
         if (request()->has('print_view')) {
             return view($template, $data);

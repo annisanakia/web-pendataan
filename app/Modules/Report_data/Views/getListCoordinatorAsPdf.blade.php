@@ -38,7 +38,6 @@
                     $collection_data = $collection_datas->where('coordinator_id',$data->id)->where('subdistrict_id',$row->subdistrict_id);
                     $verifikasi = $collection_data->where('status',2);
                     $dibagikan = $collection_data->where('status_share',2);
-                    $dataByCoordinators[] = $collection_data->count();
                 ?>
                 <tr>
                     <td class="text-center"></td>

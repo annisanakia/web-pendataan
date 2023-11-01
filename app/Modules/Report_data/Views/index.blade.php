@@ -56,6 +56,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row" id="status">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label class="col-form-label">Status Verifikasi</label>
+                                    <select name="status" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
+                                        <option value="">-- All --</option>
+                                        @foreach(status() as $key => $status))
+                                            <option value="{{ $key }}" {{ $key == old('status')? 'selected' : '' }}>{{ $status }}</option>
+                                        @endforeach
+                                    </select>
+                                    {!!$errors->first('status', ' <span class="invalid-feedback">:message</span>')!!}
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-grid gap-2 d-md-block my-2 text-end">
                             <button type="submit" class="btn btn-primary px-3 btn-submit">
                                 Preview
@@ -86,8 +100,11 @@
         console.log('aw');
         var val = $(this).val();
         $('#coordinator_subdistrict').addClass('d-none');
+        $('#status').addClass('d-none');
         if(val == 3){
             $('#coordinator_subdistrict').removeClass('d-none');
+        }else if(val == 1){
+            $('#status').removeClass('d-none');
         }
     });
     $(".form-validation").submit(function (e) {

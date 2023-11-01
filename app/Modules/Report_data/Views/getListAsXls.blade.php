@@ -30,6 +30,7 @@
             </tr>
         @else
             @foreach ($datas as $data)
+            // belum diverifikasi merah
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td style="mso-number-format: \@;">{{ $data->nik }}</td>
@@ -45,8 +46,8 @@
                     <td>{{ $data->address }}</td>
                     <td>{{ $data->rt }}</td>
                     <td>{{ $data->rw }}</td>
-                    <td>{{ $data->status == 2? 'Sudah diverifikasi' : '' }}</td>
-                    <td>{{ $data->status_share == 2? 'Sudah dibagikan' : '' }}</td>
+                    <td>{{ $data->status == 2? 'Sudah diverifikasi' : 'Belum diverifikasi' }}</td>
+                    <td>{{ $data->status_share == 2? 'Sudah dibagikan' : 'Belum dibagikan' }}</td>
                     <td>{{ $data->coordinator->name ?? null }}</td>
                 </tr>
             @endforeach
