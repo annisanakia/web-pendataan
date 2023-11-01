@@ -21,7 +21,7 @@
                     <div class="col-sm-6">
                         <div class="mb-2">
                             <div class="mb-1 fw-semibold">Nama Lengkap</div>
-                            {{ $data->name ?? null }}
+                            {{ strtoupper($data->name ?? null) }}
                         </div>
                     </div>
                 </div>

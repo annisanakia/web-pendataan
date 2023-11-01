@@ -263,21 +263,23 @@ class Home extends Controller {
         $user_id = \Auth::user()->id ?? null;
         $groups_id = \Auth::user()->groups_id ?? null;
         
-        $input = $this->getParams(request()->all());
+        $input = request()->all();
         // $input['coordinator_id'] = request()->coordinator_id ?? ($groups_id == 2? $user_id : null);
-        $validation = $this->model->validate($input);
+        $model = new \Models\collection_data();
+        $validation = $model->validate($input);
 
         if ($validation->passes()) {
             unset($input['photo']);
             if (request()->hasFile('photo')) {
                 $input['photo'] = $this->store_image();
             }
-            $data = $this->model->create($input);
+            $data = $model->create($input);
 
-            $table_name = $this->model->getTable() ?? null;
+            $table_name = $model->getTable() ?? null;
             $data_id = $data->id ?? null;
             $activity_after = json_encode($data);
-            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'store', date('Y-m-d H:i:s'), $activity_after);
+            $libActivity = new \Lib\activity();
+            $libActivity->addActivity($user_id, $table_name, $data_id, 'storeForm', date('Y-m-d H:i:s'), $activity_after);
 
             return Redirect::route('form')
                     ->with('success', 'Data berhasil disimpan!');

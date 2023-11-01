@@ -33,7 +33,7 @@
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td style="mso-number-format: \@;">{{ $data->nik }}</td>
-                    <td>{{ $data->name }}</td>
+                    <td>{{ strtoupper($data->name) }}</td>
                     <td>{{ $data->district->name ?? null }}</td>
                     <td>{{ $data->subdistrict->name ?? null }}</td>
                     <td>{{ $data->no_tps }}</td>
@@ -45,8 +45,8 @@
                     <td>{{ $data->address }}</td>
                     <td>{{ $data->rt }}</td>
                     <td>{{ $data->rw }}</td>
-                    <td>{{ $data->status == 2? 'Sudah diverifikasi' : '' }}</td>
-                    <td>{{ $data->status_share == 2? 'Sudah dibagikan' : '' }}</td>
+                    <td style="{{ $data->status == 1? 'background:#dc3545;color:#fff' : '' }}">{{ $data->status == 2? 'Sudah diverifikasi' : 'Belum diverifikasi' }}</td>
+                    <td>{{ $data->status_share == 2? 'Sudah dibagikan' : 'Belum dibagikan' }}</td>
                     <td>{{ $data->coordinator->name ?? null }}</td>
                 </tr>
             @endforeach

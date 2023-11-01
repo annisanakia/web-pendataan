@@ -57,7 +57,7 @@
                     <tr>
                         <th width="5%" class="text-center">No</th>
                         <th>NIK</th>
-                        <th>Name</th>
+                        <th>Nama Lengkap</th>
                         <th>Kelurahan</th>
                         <th>TPS</th>
                         <th>Koordinator</th>
@@ -82,7 +82,7 @@
                         <tr>
                             <td class="text-center">{{ (($collection_datas->currentPage() - 1 ) * $collection_datas->perPage() ) + ++$i }}</td>
                             <td>{{ $data->nik ?? null }}</td>
-                            <td>{{ $data->name ?? null }}</td>
+                            <td>{{ strtoupper($data->name ?? null) }}</td>
                             <td>{{ $data->subdistrict->name ?? null }}</td>
                             <td>{{ $data->no_tps ?? null }}</td>
                             <td>{{ $data->coordinator->name ?? null }}</td>

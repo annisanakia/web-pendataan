@@ -69,7 +69,7 @@ class Report_data extends RESTful {
 
         $this->filter($datas, request(), 'collection_data');
         $max_row = request()->input('max_row') ?? 50;
-        $datas = $datas->paginate($max_row);
+        $datas = $datas->orderBy('id','desc')->paginate($max_row);
         $datas->chunk(100);
 
         $day = date('w');
@@ -124,7 +124,7 @@ class Report_data extends RESTful {
 
         $this->filter($datas, request(), 'district');
         $max_row = request()->input('max_row') ?? 50;
-        $datas = $datas->paginate($max_row);
+        $datas = $datas->orderBy('id','desc')->paginate($max_row);
         $datas->chunk(100);
 
         $district_ids = $datas->pluck('id')->all();
@@ -169,7 +169,7 @@ class Report_data extends RESTful {
 
         $this->filter($datas, request(), 'subdistrict');
         $max_row = request()->input('max_row') ?? 50;
-        $datas = $datas->paginate($max_row);
+        $datas = $datas->orderBy('id','desc')->paginate($max_row);
         $datas->chunk(100);
 
         $subdistrict_ids = $datas->pluck('id')->all();
@@ -212,7 +212,7 @@ class Report_data extends RESTful {
 
         $this->filter($datas, request(), 'subdistrict');
         $max_row = request()->input('max_row') ?? 50;
-        $datas = $datas->paginate($max_row);
+        $datas = $datas->orderBy('id','desc')->paginate($max_row);
         $datas->chunk(100);
 
         $coordinator_ids = $datas->pluck('id')->all();

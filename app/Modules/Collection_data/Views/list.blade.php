@@ -68,35 +68,43 @@
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                         <td>{{ $data->nik }}</td>
-                        <td>{{ $data->name }}</td>
+                        <td>{{ strtoupper($data->name) }}</td>
                         <td>{{ $data->coordinator->name ?? null }}</td>
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps }}</td>
-                        <td>
-                            @switch($data->status)
-                                @case(2)
-                                    <a class="btn btn-primary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
-                                        Sudah diverifikasi
-                                    </a>
-                                    @break
-                                @default
-                                    <a class="btn btn-secondary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
-                                        Belum diverifikasi
-                                    </a>
-                            @endswitch
+                        <td nowrap>
+                            @if($groups_id == 1)
+                                @switch($data->status)
+                                    @case(2)
+                                        <a class="btn btn-primary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                            Sudah diverifikasi
+                                        </a>
+                                        @break
+                                    @default
+                                        <a class="btn btn-secondary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
+                                            Belum diverifikasi
+                                        </a>
+                                @endswitch
+                            @else
+                                {!! $data->status == 2? '<span class="bg-primary text-white px-2 py-1 f-14px">Sudah diverifikasi</span>' : '<span class="bg-secondary text-white px-2 py-1 f-14px">Belum diverifikasi</span>' !!}
+                            @endif
                         </td>
-                        <td>
-                            @switch($data->status_share)
-                                @case(2)
-                                    <a class="btn btn-success px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatusShare/'.$data->id) }}" style="font-si">
-                                        Sudah dibagikan
-                                    </a>
-                                    @break
-                                @default
-                                    <a class="btn btn-secondary px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}" href="{{ url($controller_name.'/updateStatusShare/'.$data->id) }}" style="font-si">
-                                        Belum dibagikan
-                                    </a>
-                            @endswitch
+                        <td nowrap>
+                            @if($groups_id == 1)
+                                @switch($data->status_share)
+                                    @case(2)
+                                        <a class="btn btn-success px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatusShare/'.$data->id) }}" style="font-si">
+                                            Sudah dibagikan
+                                        </a>
+                                        @break
+                                    @default
+                                        <a class="btn btn-secondary px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}" href="{{ url($controller_name.'/updateStatusShare/'.$data->id) }}" style="font-si">
+                                            Belum dibagikan
+                                        </a>
+                                @endswitch
+                            @else
+                                {!! $data->status_share == 2? '<span class="bg-success text-white px-2 py-1 f-14px">Sudah dibagikan</span>' : '<span class="bg-secondary text-white px-2 py-1 f-14px">Belum dibagikan</span>' !!}
+                            @endif
                         </td>
                         <td class="action text-center" nowrap>
                             <a class="btn btn-secondary px-2 py-1" href="{{ url($controller_name.'/logActivity/'.$data->id) }}">
@@ -106,7 +114,7 @@
                                 <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
                                     <i class="fa-solid fa-pencil"></i>
                                 </a>
-                                <a class="btn btn-danger px-2 py-1 delete" data-name="{{ $data->name }}" href="{{ url($controller_name.'/delete/'.$data->id) }}">
+                                <a class="btn btn-danger px-2 py-1 delete" data-name="{{ strtoupper($data->name) }}" href="{{ url($controller_name.'/delete/'.$data->id) }}">
                                     <i class="fa-solid fa-trash"></i>
                                 </a>
                             @endif

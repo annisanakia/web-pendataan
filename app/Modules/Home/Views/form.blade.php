@@ -181,6 +181,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="col-form-label">Anda mengetahui info ini dari siapa?</label>
+                                        <select name="coordinator_id" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
+                                            <option value="">-- Pilih --</option>
+                                            @foreach(App\Models\User::where('groups_id',2)->get() as $row)
+                                                <option value="{{ $row->id }}" {{ $row->id == old('coordinator_id')? 'selected' : '' }}>{{ $row->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        {!!$errors->first('coordinator_id', ' <span class="invalid-feedback">:message</span>')!!}
+                                        <div class="text-muted">Diisi jika ada</div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="d-grid gap-2 d-md-block my-2 text-end">
                                 @include('component.actions')
                             </div>

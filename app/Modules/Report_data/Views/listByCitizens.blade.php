@@ -52,7 +52,7 @@
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                         <td>{{ $data->nik ?? null }}</td>
-                        <td>{{ $data->name ?? null }}</td>
+                        <td>{{ strtoupper($data->name ?? null) }}</td>
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps ?? null }}</td>
                         <td>{{ $data->coordinator->name ?? null }}</td>

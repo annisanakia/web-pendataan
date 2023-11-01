@@ -45,7 +45,7 @@ class Collection_data extends RESTful {
 
         $action[] = array('name' => 'Batal', 'url' => strtolower($this->controller_name), 'class' => 'btn btn-secondary px-3 ms-md-1');
         if ($this->priv['delete_priv'])
-            $action[] = array('name' => 'Hapus', 'url' => strtolower($this->controller_name) . '/delete/' . $id, 'class' => 'btn btn-danger px-3 ms-md-1 delete', 'attr' => 'ng-click=confirm($event) data-name='.($data->name ?? $data->code));
+            $action[] = array('name' => 'Hapus', 'url' => strtolower($this->controller_name) . '/delete/' . $id, 'class' => 'btn btn-danger px-3 ms-md-1 delete', 'attr' => 'ng-click=confirm($event) data-name='.strtoupper($data->name ?? $data->code));
         $action[] = array('name' => 'Simpan', 'type' => 'submit', 'url' => '#', 'class' => 'btn btn-success px-3 ms-md-1');
 
         $this->setAction($action);

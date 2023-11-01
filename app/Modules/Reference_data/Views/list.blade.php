@@ -44,7 +44,7 @@
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                         <td>{{ $data->nik }}</td>
-                        <td>{{ $data->name }}</td>
+                        <td>{{ strtoupper($data->name) }}</td>
                         <td>{{ $data->district->name ?? null }}</td>
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td class="action text-center" nowrap>

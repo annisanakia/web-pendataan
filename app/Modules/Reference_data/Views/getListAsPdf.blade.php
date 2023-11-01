@@ -22,7 +22,7 @@
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td>{{ $data->nik }}</td>
-                    <td>{{ $data->name }}</td>
+                    <td>{{ strtoupper($data->name) }}</td>
                     <td>{{ $data->district->name ?? null }}</td>
                     <td>{{ $data->subdistrict->name ?? null }}</td>
                 </tr>
