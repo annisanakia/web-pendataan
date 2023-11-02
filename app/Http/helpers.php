@@ -140,7 +140,20 @@ function weekOfYear($date) {
 function status() {
     $status = [
         1 => 'Belum diverifikasi',
-        2 => 'Sudah diverifikasi'
+        2 => 'Sudah diverifikasi',
+        3 => 'Tidak Teraftar DPT',
+        4 => 'Luar DPT'
+    ];
+
+    return $status;
+}
+
+function statusColor() {
+    $status = [
+        1 => 'secondary',
+        2 => 'primary',
+        3 => 'danger',
+        4 => 'warning'
     ];
 
     return $status;
@@ -154,3 +167,13 @@ function status_share() {
 
     return $status;
 }
+
+function status_shareColor() {
+    $status = [
+        1 => 'secondary',
+        2 => 'success'
+    ];
+
+    return $status;
+}
+

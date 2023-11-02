@@ -114,6 +114,24 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="mb-2">
+                            <div class="mb-1 fw-semibold">Status</div>
+                            <a class="btn btn-{{ statusColor()[$data->status] ?? null }} px-2 py-1 f-14px">
+                                {{ status()[$data->status] ?? null }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="mb-2">
+                            <div class="mb-1 fw-semibold">Status Dibagikan</div>
+                            <a class="btn btn-{{ status_shareColor()[$data->status_share] ?? null }} px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}">
+                                {{ status_share()[$data->status_share] ?? null }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="mb-2">
                             <div class="mb-1 fw-semibold">Koordinator</div>
                             {{ $data->coordinator->name ?? null }}
                         </div>

@@ -69,6 +69,18 @@
                                     {!!$errors->first('status', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
                             </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label class="col-form-label">Status Dibagikan</label>
+                                    <select name="status_share" class="form-select {{ $errors->has('status_share')? 'is-invalid' : '' }}">
+                                        <option value="">-- All --</option>
+                                        @foreach(status_share() as $key => $status))
+                                            <option value="{{ $key }}" {{ $key == old('status_share')? 'selected' : '' }}>{{ $status }}</option>
+                                        @endforeach
+                                    </select>
+                                    {!!$errors->first('status_share', ' <span class="invalid-feedback">:message</span>')!!}
+                                </div>
+                            </div>
                         </div>
                         <div class="d-grid gap-2 d-md-block my-2 text-end">
                             <button type="submit" class="btn btn-primary px-3 btn-submit">

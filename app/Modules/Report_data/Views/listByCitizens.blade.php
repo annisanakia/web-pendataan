@@ -31,6 +31,8 @@
                     <th>Kelurahan</th>
                     <th>TPS</th>
                     <th>Koordinator</th>
+                    <th width="13%">Status</th>
+                    <th width="13%">Status<br>Dibagikan</th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
@@ -39,6 +41,8 @@
                     <th><input type="text" name="filter[subdistrict_name]" value="{{ $param['filter']['subdistrict_name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[no_tps]" value="{{ $param['filter']['no_tps'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[coordinator_name]" value="{{ $param['filter']['coordinator_name'] ?? null }}" class="form-control"></th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -56,6 +60,16 @@
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps ?? null }}</td>
                         <td>{{ $data->coordinator->name ?? null }}</td>
+                        <td nowrap>
+                            <a class="btn btn-{{ statusColor()[$data->status] ?? null }} px-2 py-1 f-14px">
+                                {{ status()[$data->status] ?? null }}
+                            </a>
+                        </td>
+                        <td nowrap>
+                            <a class="btn btn-{{ status_shareColor()[$data->status_share] ?? null }} px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}">
+                                {{ status_share()[$data->status_share] ?? null }}
+                            </a>
+                        </td>
                     </tr>
                     @endforeach
                 @endif

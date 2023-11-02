@@ -23,8 +23,9 @@
                 <tr>
                     <th width="5%" class="text-center">No</th>
                     <th>NIK</th>
+                    <th width="10%">No Whatsapp</th>
                     <th width="20%">Nama Lengkap</th>
-                    <th width="15%">Koordinator</th>
+                    <th width="12%">Koordinator</th>
                     <th width="15%">Kelurahan</th>
                     <th width="7%">TPS</th>
                     <th width="13%">Status</th>
@@ -34,6 +35,7 @@
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
                     <th><input type="text" name="filter[nik]" value="{{ $param['filter']['nik'] ?? null }}" class="form-control"></th>
+                    <th><input type="text" name="filter[whatsapp]" value="{{ $param['filter']['whatsapp'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[name]" value="{{ $param['filter']['name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[coordinator_name]" value="{{ $param['filter']['coordinator_name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[subdistrict_name]" value="{{ $param['filter']['subdistrict_name'] ?? null }}" class="form-control"></th>
@@ -60,7 +62,7 @@
             <tbody>
                 @if(count($datas) <= 0)
                     <tr>
-                        <td colspan="9" class="text-center">Data Tidak Ditemukan</td>
+                        <td colspan="10" class="text-center">Data Tidak Ditemukan</td>
                     </tr>
                 @else
                     @php $i=0 @endphp
@@ -68,42 +70,39 @@
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                         <td>{{ $data->nik }}</td>
+                        <td>{{ $data->whatsapp }}</td>
                         <td>{{ strtoupper($data->name) }}</td>
                         <td>{{ $data->coordinator->name ?? null }}</td>
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps }}</td>
                         <td nowrap>
                             @if($groups_id == 1)
-                                @switch($data->status)
-                                    @case(2)
-                                        <a class="btn btn-primary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
-                                            Sudah diverifikasi
-                                        </a>
-                                        @break
-                                    @default
-                                        <a class="btn btn-secondary px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatus/'.$data->id) }}" style="font-si">
-                                            Belum diverifikasi
-                                        </a>
-                                @endswitch
+                                @if($data->status == 1)
+                                    <select class="form-select btn btn-secondary px-2 py-1 f-14px updateStatus" data-url="{{ url($controller_name.'/updateStatus/'.$data->id) }}">
+                                        @foreach(status() as $key => $status))
+                                            <option value="{{ $key }}" {{ $key == $data->status? 'selected' : '' }}>{{ $status }}</option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    <a class="btn btn-{{ statusColor()[$data->status] ?? null }} px-2 py-1 f-14px">
+                                        {{ status()[$data->status] ?? null }}
+                                    </a>
+                                @endif
                             @else
-                                {!! $data->status == 2? '<span class="bg-primary text-white px-2 py-1 f-14px">Sudah diverifikasi</span>' : '<span class="bg-secondary text-white px-2 py-1 f-14px">Belum diverifikasi</span>' !!}
+                                <a class="btn btn-{{ statusColor()[$data->status] ?? null }} px-2 py-1 f-14px">
+                                    {{ status()[$data->status] ?? null }}
+                                </a>
                             @endif
                         </td>
                         <td nowrap>
                             @if($groups_id == 1)
-                                @switch($data->status_share)
-                                    @case(2)
-                                        <a class="btn btn-success px-2 py-1 f-14px" href="{{ url($controller_name.'/updateStatusShare/'.$data->id) }}" style="font-si">
-                                            Sudah dibagikan
-                                        </a>
-                                        @break
-                                    @default
-                                        <a class="btn btn-secondary px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}" href="{{ url($controller_name.'/updateStatusShare/'.$data->id) }}" style="font-si">
-                                            Belum dibagikan
-                                        </a>
-                                @endswitch
+                                <a class="btn btn-{{ status_shareColor()[$data->status_share] ?? null }} px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}" {!! $data->status_share == 1? 'href='.url($controller_name.'/updateStatusShare/'.$data->id) : '' !!}>
+                                    {{ status_share()[$data->status_share] ?? null }}
+                                </a>
                             @else
-                                {!! $data->status_share == 2? '<span class="bg-success text-white px-2 py-1 f-14px">Sudah dibagikan</span>' : '<span class="bg-secondary text-white px-2 py-1 f-14px">Belum dibagikan</span>' !!}
+                                <a class="btn btn-{{ status_shareColor()[$data->status_share] ?? null }} px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}">
+                                    {{ status_share()[$data->status_share] ?? null }}
+                                </a>
                             @endif
                         </td>
                         <td class="action text-center" nowrap>
@@ -134,3 +133,13 @@
 </div>
 
 </form>
+
+@section('scripts')
+<script type="text/javascript">
+    $('.updateStatus').change(function() {
+        var url = $(this).data('url'),
+            val = $(this).val();
+        window.location.href = url+'?status='+val;
+    });
+</script>
+@endsection

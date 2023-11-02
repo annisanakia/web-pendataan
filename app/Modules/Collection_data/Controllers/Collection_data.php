@@ -259,7 +259,9 @@ class Collection_data extends RESTful {
     {
         $data = $this->model->find($id);
         $activity_before = json_encode($data);
-        if($data->status != 2){
+        if(request()->status != ''){
+            $data->status = request()->status;
+        }elseif($data->status != 2){
             $data->status = 2;
         }
         $data->save();

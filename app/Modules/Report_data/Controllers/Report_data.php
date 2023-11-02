@@ -55,6 +55,7 @@ class Report_data extends RESTful {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $status = request()->status;
+        $status_share = request()->status_share;
 
         $datas = $this->model->select(['*']);
         if($start_date != ''){
@@ -66,7 +67,10 @@ class Report_data extends RESTful {
         if($status != ''){
             $datas->where('status',$status);
         }
-
+        if($status_share != ''){
+            $datas->where('status_share',$status_share);
+        }
+        
         $this->filter($datas, request(), 'collection_data');
         $max_row = request()->input('max_row') ?? 50;
         $datas = $datas->orderBy('id','desc')->paginate($max_row);

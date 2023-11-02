@@ -10,20 +10,21 @@
 <table class="table list_content" width="100%">
     <thead>
         <tr class="ordering">
-            <th width="3%">No</th>
-            <th width="18%">NIK</th>
+            <th width="2%">No</th>
+            <th width="12%">NIK</th>
             <th width="18%">Nama Lengkap</th>
             <th>Koordinator</th>
-            <th width="18%">Kecamatan</th>
-            <th width="18%">Kelurahan</th>
-            <th width="8%">TPS</th>
+            <th width="12%">Kecamatan</th>
+            <th width="12%">Kelurahan</th>
+            <th width="5%">TPS</th>
+            <th width="10%">Status</th>
             <th width="13%">TTD</th>
         </tr>
     </thead>
     <tbody>
         @if ($datas->count() < 1)
             <tr>
-                <td colspan="8" style="text-align: center">Data Tidak Ditemukan</td>
+                <td colspan="9" style="text-align: center">Data Tidak Ditemukan</td>
             </tr>
         @else
             <?php $i = 0;?>
@@ -36,6 +37,7 @@
                     <td>{{ $data->district->name ?? null }}</td>
                     <td>{{ $data->subdistrict->name ?? null }}</td>
                     <td>{{ $data->no_tps }}</td>
+                    <td nowrap>{{ status()[$data->status] ?? null }}</td>
                     <td style="height:40px"></td>
                 </tr>
             @endforeach
