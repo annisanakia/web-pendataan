@@ -37,8 +37,11 @@ class Home extends Controller {
             $withTarget = $this->getDataTargetGraph();
             $withStatus = $this->getDataStatusGraph();
             $with = array_merge($withTarget, $withStatus);
+            $withTargetToday = $this->getDataTargetGraph(date('Y-m-d'), date('Y-m-d'));
+            $with['dataByToday'] = $withTargetToday['dataByDistrict'];
         }
-        
+        // dd($withTargetToday);
+
         $with['groups_id'] = $groups_id;
         $with['districts'] = $districts;
         $with['collection_datas'] = $collection_datas;
@@ -82,9 +85,16 @@ class Home extends Controller {
         return $with;
     }
 
-    public function getDataTargetGraph()
+    public function getDataTargetGraph($start_date = null, $end_date = null)
     {
-        $collection_datas = \Models\collection_data::get();
+        $collection_datas = \Models\collection_data::select(['*']);
+        if($start_date != null){
+            $collection_datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != null){
+            $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        $collection_datas = $collection_datas->get();
 
         $districts = \Models\district::get();
         $district_names = $districts->pluck('name')->all();

@@ -47,6 +47,17 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Grafik Pendataan Hari Ini
+                    </div>
+                    <div class="card-body">
+                        @include(ucwords($controller_name).'::getDataTodayGraph')
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
     <div class="row mb-4">
