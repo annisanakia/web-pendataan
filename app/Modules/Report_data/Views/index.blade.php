@@ -23,6 +23,7 @@
                                         <option value="2">Berdasarkan Kecamatan</option>
                                         <option value="3">Berdasarkan Kelurahan</option>
                                         <option value="4">Berdasarkan Koordinator</option>
+                                        <option value="5">Berdasarkan TPS</option>
                                     </select>
                                     {!!$errors->first('model', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
@@ -30,15 +31,24 @@
                             <div class="col-sm-6 d-none" id="coordinator_subdistrict">
                                 <div class="mb-3">
                                     <label class="col-form-label">Kelurahan</label>
-                                    <?php
-                                        $subdistrict_ids = is_array(old('subdistrict_ids'))? old('subdistrict_ids') : [];
-                                    ?>
                                     <select name="subdistrict_ids[]" class="form-control selectpicker {{ $errors->has('subdistrict_ids')? 'is-invalid' : '' }}" data-size="7" data-live-search="true" data-actions-box="true" data-selected-text-format="count" title="-- Pilih All --" multiple>
                                         @foreach(\Models\subdistrict::all() as $row)
                                             <option value="{{ $row->id }}">{{ $row->name }}</option>
                                         @endforeach
                                     </select>
                                     {!!$errors->first('subdistrict_ids', ' <span class="invalid-feedback">:message</span>')!!}
+                                </div>
+                            </div>
+                            <div class="col-sm-6 d-none" id="tps_subdistrict">
+                                <div class="mb-3">
+                                    <label class="col-form-label">Kelurahan</label>
+                                    <select name="subdistrict_id" class="form-control selectpicker {{ $errors->has('subdistrict_id')? 'is-invalid' : '' }}" data-size="7" data-live-search="true">
+                                        <option value="">-- Pilih --</option>
+                                        @foreach(\Models\subdistrict::all() as $row)
+                                            <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    {!!$errors->first('subdistrict_id', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
                             </div>
                         </div>
@@ -113,10 +123,13 @@
         var val = $(this).val();
         $('#coordinator_subdistrict').addClass('d-none');
         $('#status').addClass('d-none');
-        if(val == 3){
-            $('#coordinator_subdistrict').removeClass('d-none');
-        }else if(val == 1){
+        $('#tps_subdistrict').addClass('d-none');
+        if(val == 1){
             $('#status').removeClass('d-none');
+        }else if(val == 3){
+            $('#coordinator_subdistrict').removeClass('d-none');
+        }else if(val == 5){
+            $('#tps_subdistrict').removeClass('d-none');
         }
     });
     $(".form-validation").submit(function (e) {

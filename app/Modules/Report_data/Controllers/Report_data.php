@@ -42,11 +42,21 @@ class Report_data extends RESTful {
             // Kelurahan
             $with = $this->getListBySubdistrict();
             return view($this->controller_name . '::listBySubdistrict', $with);
-        // }elseif($model == 4){
-            // TPS
-        }else{
+        }elseif($model == 4){
+            // Koordinator
             $with = $this->getListByCoordinator();
             return view($this->controller_name . '::listByCoordinator', $with);
+        }else{
+            // TPS
+            if(request()->subdistrict_id == ''){
+                return '
+                    <div class="alert alert-info text-center mt-4">
+                        Pilih opsi <b>kelurahan</b> terlebih dahulu untuk melihat laporan
+                    </div>
+                ';
+            }
+            $with = $this->getListByTPS();
+            return view($this->controller_name . '::listByTPS', $with);
         }
     }
 
@@ -89,6 +99,9 @@ class Report_data extends RESTful {
         }
         if($status != ''){
             $collection_datas->where('status',$status);
+        }
+        if($status_share != ''){
+            $collection_datas->where('status_share',$status_share);
         }
         $collection_datas = $collection_datas->groupBy('date')->get()->pluck('total','date')->all();
 
@@ -248,6 +261,70 @@ class Report_data extends RESTful {
         return $with;
     }
 
+    public function getListByTPS()
+    {
+        $start_date = request()->start_date;
+        $end_date = request()->end_date;
+        $subdistrict_id = request()->subdistrict_id;
+
+        $datas = $this->model->select('no_tps', \DB::raw('count(*) as total'));
+        if($start_date != ''){
+            $datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $datas->whereDate('created_at','<=',$end_date);
+        }
+        if($subdistrict_id != ''){
+            $datas->where('subdistrict_id',$subdistrict_id);
+        }
+        
+        $this->filter($datas, request(), 'collection_data');
+        $max_row = request()->input('max_row') ?? 50;
+        $datas = $datas->groupBy('no_tps')->orderBy('no_tps','asc')->paginate($max_row);
+        $datas->chunk(100);
+
+        $day = date('w');
+        $start_date = new DateTime($start_date ?? date('Y-m-d', strtotime('-'.($day-1).' days')));
+        $end_date = new DateTime($end_date ?? date('Y-m-d', strtotime('+'.(7-$day).' days')));
+
+        $collection_datas = \Models\collection_data::select(['*']);
+        if($start_date != ''){
+            $collection_datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        if($subdistrict_id != ''){
+            $collection_datas->where('subdistrict_id',$subdistrict_id);
+        }
+        $this->filter($collection_datas, request(), 'collection_data');
+        $collection_datas = $collection_datas->get();
+
+        $datas_tps = array_values($collection_datas->sortBy('no_tps')->pluck('no_tps','no_tps')->all());
+        $dataByTPS = [];
+        $no_tps = [];
+        foreach($datas_tps as $tps){
+            $dataByTPS[] = $collection_datas->where('no_tps',$tps)->count();
+            $no_tps[] = 'TPS '.$tps;
+        }
+
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListTPSAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListTPSAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+        
+        $with['datas'] = $datas;
+        $with['model'] = request()->model;
+        $with['start_date'] = request()->start_date;
+        $with['end_date'] = request()->end_date;
+        $with['subdistrict_id'] = request()->subdistrict_id;
+        $with['param'] = request()->all();
+        $with['collection_datas'] = $collection_datas;
+        $with['no_tps'] = $no_tps;
+        $with['dataByTPS'] = $dataByTPS;
+        $with['actions'] = $actions;
+        return $with;
+    }
+
     public function customFilter($data, $newFilters)
     {
         foreach ($newFilters as $key => $value) {
@@ -389,6 +466,38 @@ class Report_data extends RESTful {
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Koordinator ('.date('d-m-Y').').xls"');
+    }
+    
+    public function getListTPSAsPdf()
+    {
+        $template = $this->controller_name . '::getListTPSAsPdf';
+        $data = $this->getListByTPS();
+        $data['title_head_export'] = 'Rekap Berdasarkan TPS';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('legal', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Rekap Berdasarkan TPS ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListTPSAsXls()
+    {
+        $template = $this->controller_name . '::getListTPSAsXls';
+        $data = $this->getListByTPS();
+        $data['title_head_export'] = 'Rekap Berdasarkan TPS';
+        $data['title_col_sum'] = 5;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan TPS ('.date('d-m-Y').').xls"');
     }
     
 }

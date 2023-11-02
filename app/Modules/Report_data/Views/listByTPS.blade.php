@@ -2,16 +2,14 @@
 <input type="hidden" name="model" value="{{ $model }}">
 <input type="hidden" name="start_date" value="{{ $start_date }}">
 <input type="hidden" name="end_date" value="{{ $end_date }}">
-@foreach($subdistrict_ids as $subdistrict_id)
-    <input type="hidden" name="subdistrict_ids[]" value="{{ $subdistrict_id }}">
-@endforeach
+<input type="hidden" name="subdistrict_id" value="{{ $subdistrict_id }}">
 <div class="card mt-4">
     <div class="card-body">
         <div class="col-xl-12">
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar me-1"></i>
-                    Grafik Kelurahan
+                    Grafik Pendataan Tiap TPS
                 </div>
                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
             </div>
@@ -29,16 +27,14 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>Name</th>
-                    <th width="28%">Kode</th>
+                    <th>No TPS</th>
                     <th class="text-center">Terverifikasi</th>
                     <th class="text-center">Sudah Dibagikan</th>
                     <th class="text-center">Total Data</th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
-                    <th><input type="text" name="filter[name]" value="{{ $param['filter']['name'] ?? null }}" class="form-control"></th>
-                    <th><input type="text" name="filter[code]" value="{{ $param['filter']['code'] ?? null }}" class="form-control"></th>
+                    <th><input type="text" name="filter[no_tps]" value="{{ $param['filter']['no_tps'] ?? null }}" class="form-control"></th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -47,24 +43,21 @@
             <tbody>
                 @php
                     $i=0;
-                    $dataBySubdistrict = [];
                 @endphp
                 @if(count($datas) <= 0)
                     <tr>
-                        <td colspan="6" class="text-center">Data Tidak Ditemukan</td>
+                        <td colspan="5" class="text-center">Data Tidak Ditemukan</td>
                     </tr>
                 @else
                     @foreach($datas as $data)
                     <?php
-                        $collection_data = $collection_datas->where('subdistrict_id',$data->id);
+                        $collection_data = $collection_datas->where('no_tps',$data->no_tps);
                         $verifikasi = $collection_data->where('status',2);
                         $dibagikan = $collection_data->where('status_share',2);
-                        $dataBySubdistrict[] = $collection_data->count();
                     ?>
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
-                        <td>{{ $data->name }}</td>
-                        <td>{{ $data->code }}</td>
+                        <td>{{ $data->no_tps }}</td>
                         <td class="text-center">{{ $verifikasi->count() }}</td>
                         <td class="text-center">{{ $dibagikan->count() }}</td>
                         <td class="text-center">{{ $collection_data->count() }}</td>
@@ -113,12 +106,12 @@
     var myLineChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: {!! json_encode($subdistricts) !!},
+        labels: {!! json_encode($no_tps) !!},
         datasets: [{
-        label: "Rekap Kelurahan",
+        label: "Rekap TPS",
         backgroundColor: "rgba(2,117,216,1)",
         borderColor: "rgba(2,117,216,1)",
-        data: {!! json_encode($dataBySubdistrict) !!},
+        data: {!! json_encode($dataByTPS) !!},
         }],
     },
     options: {

@@ -5,7 +5,7 @@
     <thead>
         <tr style="background: #e5e5e5;">
             <th width="5%" class="text-center">No</th>
-            <th>Name</th>
+            <th>Nama</th>
             <th width="28%">Kode</th>
             <th class="text-center">Terverifikasi</th>
             <th class="text-center">Sudah Dibagikan</th>
@@ -28,7 +28,7 @@
                 $dibagikan = $collection_data->where('status_share',2);
             ?>
             <tr>
-                <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
+                <td class="text-center">{{ ++$i }}</td>
                 <td>{{ $data->name }}</td>
                 <td>{{ $data->code }}</td>
                 <td class="text-center">{{ $verifikasi->count() }}</td>
