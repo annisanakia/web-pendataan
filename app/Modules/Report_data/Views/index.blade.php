@@ -24,6 +24,7 @@
                                         <option value="3">Berdasarkan Kelurahan</option>
                                         <option value="4">Berdasarkan Koordinator</option>
                                         <option value="5">Berdasarkan TPS</option>
+                                        <option value="6">Berdasarkan Jenis Kelamin</option>
                                     </select>
                                     {!!$errors->first('model', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
@@ -126,7 +127,7 @@
         $('#tps_subdistrict').addClass('d-none');
         if(val == 1){
             $('#status').removeClass('d-none');
-        }else if(val == 3){
+        }else if(val == 3 || val == 6){
             $('#coordinator_subdistrict').removeClass('d-none');
         }else if(val == 5){
             $('#tps_subdistrict').removeClass('d-none');

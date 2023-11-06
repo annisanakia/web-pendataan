@@ -46,7 +46,7 @@ class Report_data extends RESTful {
             // Koordinator
             $with = $this->getListByCoordinator();
             return view($this->controller_name . '::listByCoordinator', $with);
-        }else{
+        }elseif($model == 5){
             // TPS
             if(request()->subdistrict_id == ''){
                 return '
@@ -57,6 +57,10 @@ class Report_data extends RESTful {
             }
             $with = $this->getListByTPS();
             return view($this->controller_name . '::listByTPS', $with);
+        }else{
+            // Jenis Kelamin
+            $with = $this->getListByGender();
+            return view($this->controller_name . '::listByGender', $with);
         }
     }
 
@@ -325,6 +329,65 @@ class Report_data extends RESTful {
         return $with;
     }
 
+    public function getListByGender()
+    {
+        $start_date = request()->start_date;
+        $end_date = request()->end_date;
+        $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+
+        $datas = $this->model->select('gender', \DB::raw('count(*) as total'));
+        if($start_date != ''){
+            $datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $datas->whereDate('created_at','<=',$end_date);
+        }
+        if(count($subdistrict_ids) > 0){
+            $datas->whereIn('subdistrict_id',$subdistrict_ids);
+        }
+        
+        $this->filter($datas, request(), 'collection_data');
+        $max_row = request()->input('max_row') ?? 50;
+        $datas = $datas->groupBy('gender')->orderBy('gender','asc')->paginate($max_row);
+        $datas->chunk(100);
+
+        $collection_datas = \Models\collection_data::select(['*']);
+        if($start_date != ''){
+            $collection_datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        if(count($subdistrict_ids) > 0){
+            $collection_datas->whereIn('subdistrict_id',$subdistrict_ids);
+        }
+        $this->filter($collection_datas, request(), 'collection_data');
+        $collection_datas = $collection_datas->get();
+
+        $dataByGender[] = $collection_datas->whereNull('gender')->count();
+        $genders[] = 'NA';
+        $dataByGender[] = $collection_datas->where('gender','L')->count();
+        $genders[] = 'Laki-laki';
+        $dataByGender[] = $collection_datas->where('gender','P')->count();
+        $genders[] = 'Perempuan';
+
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListGenderAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListGenderAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+        
+        $with['subdistrict_ids'] = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+        $with['datas'] = $datas;
+        $with['model'] = request()->model;
+        $with['start_date'] = request()->start_date;
+        $with['end_date'] = request()->end_date;
+        $with['param'] = request()->all();
+        $with['collection_datas'] = $collection_datas;
+        $with['genders'] = $genders;
+        $with['dataByGender'] = $dataByGender;
+        $with['actions'] = $actions;
+        return $with;
+    }
+
     public function customFilter($data, $newFilters)
     {
         foreach ($newFilters as $key => $value) {
@@ -498,6 +561,38 @@ class Report_data extends RESTful {
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan TPS ('.date('d-m-Y').').xls"');
+    }
+    
+    public function getListGenderAsPdf()
+    {
+        $template = $this->controller_name . '::getListGenderAsPdf';
+        $data = $this->getListByGender();
+        $data['title_head_export'] = 'Rekap Berdasarkan Jenis Kelamin';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('legal', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Rekap Berdasarkan Jenis Kelamin ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListGenderAsXls()
+    {
+        $template = $this->controller_name . '::getListGenderAsXls';
+        $data = $this->getListByGender();
+        $data['title_head_export'] = 'Rekap Berdasarkan Jenis Kelamin';
+        $data['title_col_sum'] = 5;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Jenis Kelamin ('.date('d-m-Y').').xls"');
     }
     
 }
