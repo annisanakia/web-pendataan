@@ -141,7 +141,7 @@ function status() {
     $status = [
         1 => 'Belum diverifikasi',
         2 => 'Sudah diverifikasi',
-        3 => 'Tidak Teraftar DPT',
+        3 => 'Tidak Terdaftar DPT',
         4 => 'Luar DPT'
     ];
 

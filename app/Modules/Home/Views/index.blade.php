@@ -8,12 +8,14 @@
     <div class="row">
         <?php
             $colors = ['#4e88d0', '#64b672', '#c05252', '#dd793c', '#52c8c1'];
+            $total_all_data = 0;
         ?>
         @foreach($districts as $key => $district)
         <?php
             $key = $key > 5? $key-5 : $key;
             $total = $collection_datas->where('district_id',$district->id)->count() ?? 0;
             $total_target = $district->subdistrict->sum('target') ?? 0;
+            $total_all_data += $total;
         ?>
         <div class="col-md">
             <div class="card bg-primary text-white mb-4 text-center" style="background-color: {{ $colors[$key] ?? '#4e88d0' }} !important;">
@@ -22,6 +24,22 @@
             </div>
         </div>
         @endforeach
+    </div>
+    <div class="row">
+        <div class="col-md">
+            <div class="card bg-primary text-white mb-4 text-center" style="background-color: #52c8c1 !important;">
+                <div class="card-header border-0">
+                    <b>Total Semua Data</b> : {{ $total_all_data }} Data
+                </div>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card bg-primary text-white mb-4 text-center" style="background-color: #4e88d0 !important;">
+                <div class="card-header border-0">
+                    <b>Total Semua Data Hari ini</b> : {{ array_sum($dataByToday) }} Data
+                </div>
+            </div>
+        </div>
     </div>
     @if($groups_id != 2)
         <div class="row">
