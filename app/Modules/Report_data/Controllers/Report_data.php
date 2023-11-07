@@ -424,7 +424,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListAsXls';
         $data = $this->getListByCitizens();
         $data['title_head_export'] = 'Rekap Berdasarkan NIK';
-        $data['title_col_sum'] = 17;
+        $data['title_col_sum'] = 20;
 
         if (request()->has('print_view')) {
             return view($template, $data);

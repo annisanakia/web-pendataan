@@ -93,4 +93,9 @@ class collection_data extends Model {
     {
         return $this->belongsTo('Models\religion', 'religion_id', 'id');
     }
+
+    public function job_type()
+    {
+        return $this->belongsTo('Models\job_type');
+    }
 }

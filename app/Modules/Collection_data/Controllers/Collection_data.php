@@ -211,12 +211,11 @@ class Collection_data extends RESTful {
         $template = $this->controller_name . '::getListAsXls';
         $data = $this->getList(request());
         $data['title_head_export'] = 'Data Pendataan';
-        $data['title_col_sum'] = 17;
+        $data['title_col_sum'] = 20;
 
         if (request()->has('print_view')) {
             return view($template, $data);
         }
-        // return view($template, $data);
 
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')

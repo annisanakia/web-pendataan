@@ -84,14 +84,16 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label class="col-form-label">Tempat, Tanggal Lahir</label>
-                                <div class="row">
-                                    <div class="col-sm-6">
+                            <label class="col-form-label">Tempat, Tanggal Lahir</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
                                         <input name="pob" type="text" class="form-control {{ $errors->has('pob')? 'is-invalid' : '' }}" value="{{ old('pob') ?? $data->pob }}">
                                         {!!$errors->first('pob', ' <span class="invalid-feedback">:message</span>')!!}
                                     </div>
-                                    <div class="col-sm-6">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
                                         <input name="dob" type="date" class="form-control {{ $errors->has('dob')? 'is-invalid' : '' }}" value="{{ old('dob') ?? $data->dob }}">
                                         {!!$errors->first('dob', ' <span class="invalid-feedback">:message</span>')!!}
                                     </div>
@@ -131,10 +133,26 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label class="col-form-label">Pekerjaan</label>
-                                <input name="job_name" type="text" class="form-control {{ $errors->has('job_name')? 'is-invalid' : '' }}" value="{{ old('job_name') ?? $data->job_name }}">
-                                {!!$errors->first('job_name', ' <span class="invalid-feedback">:message</span>')!!}
+                            <div class="row">
+                                <div class="col-md">
+                                    <div class="mb-3">
+                                        <label class="col-form-label">Pekerjaan</label>
+                                        <select name="job_type_id" class="form-control selectpicker {{ $errors->has('job_type_id')? 'is-invalid' : '' }}" id="job_type_id" data-size="7" data-live-search="true">
+                                            <option value="">-- Pilih --</option>
+                                            @foreach(\Models\job_type::orderBy(DB::raw('FIELD(code, "DLL")'))->get() as $row)
+                                                <option value="{{ $row->id }}" data-code="{{ $row->code }}" {{ $row->id == (old('job_type_id') ?? $data->job_type_id)? 'selected' : '' }}>{{ $row->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        {!!$errors->first('job_type_id', ' <span class="invalid-feedback">:message</span>')!!}
+                                    </div>
+                                </div>
+                                <div class="col-md {{ ($data->job_type->code ?? null) != 'DLL'? 'd-none' : '' }}" id="form_job_name">
+                                    <div class="mb-3">
+                                        <label class="col-form-label">Detail Pekerjaan</label>
+                                        <input name="job_name" type="text" class="form-control {{ $errors->has('job_name')? 'is-invalid' : '' }}" value="{{ old('job_name') ?? $data->job_name }}">
+                                        {!!$errors->first('job_name', ' <span class="invalid-feedback">:message</span>')!!}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -171,7 +189,19 @@
 @endsection
 
 @section('scripts')
+<link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap-select/1.13.14/css/bootstrap-select.min.css')}}">
+<script src="{{ asset('assets/plugins/bootstrap-select/v1.14.0-beta2/bootstrap-select.js')}}"></script>
 <script type="text/javascript">
+    $('.selectpicker').selectpicker('refresh');
+    $('#job_type_id').change(function() {
+        var option = $('option:selected', this).data('code');
+        $('#form_job_name').addClass('d-none');
+        if(option == 'DLL'){
+            //dll
+            $('#form_job_name').removeClass('d-none');
+        }
+    });
+
     $('#city_id').change(function() {
         getDistrict($(this).val());
     });

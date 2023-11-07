@@ -15,6 +15,9 @@
             <th>Tempat Lahir</th>
             <th>Tanggal Lahir</th>
             <th>Jenis Kelamin</th>
+            <th>Agama</th>
+            <th>Pekerjaan</th>
+            <th>Detail Pekerjaan</th>
             <th>Alamat</th>
             <th>RT</th>
             <th>RW</th>
@@ -26,7 +29,7 @@
     <tbody>
         @if ($datas->count() < 1)
             <tr>
-                <td colspan="17" style="text-align: center">Data Tidak Ditemukan</td>
+                <td colspan="20" style="text-align: center">Data Tidak Ditemukan</td>
             </tr>
         @else
             @foreach ($datas as $data)
@@ -42,6 +45,9 @@
                     <td>{{ $data->dob }}</td>
                     <td>{{ $data->pob }}</td>
                     <td>{{ $data->gender == 'L'? 'Laki-laki' : 'Perempuan' }}</td>
+                    <td>{{ $data->religion->name ?? null }}</td>
+                    <td>{{ $data->job_type->name ?? null }}</td>
+                    <td>{{ ($data->job_type->code ?? null) == 'DLL'? $data->job_name : '' }}</td>
                     <td>{{ $data->address }}</td>
                     <td>{{ $data->rt }}</td>
                     <td>{{ $data->rw }}</td>

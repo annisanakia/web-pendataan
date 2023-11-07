@@ -65,4 +65,9 @@ class reference_data extends Model {
     {
         return $this->belongsTo('Models\subdistrict', 'subdistrict_id', 'id');
     }
+
+    public function job_type()
+    {
+        return $this->belongsTo('Models\job_type');
+    }
 }
