@@ -64,7 +64,7 @@ class Report_data extends RESTful {
         }
     }
 
-    public function getListByCitizens()
+    public function getListByCitizens($print = false)
     {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
@@ -90,49 +90,52 @@ class Report_data extends RESTful {
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
         $datas->chunk(100);
 
-        $day = date('w');
-        $start_date = new DateTime($start_date ?? date('Y-m-d', strtotime('-'.($day-1).' days')));
-        $end_date = new DateTime($end_date ?? date('Y-m-d', strtotime('+'.(7-$day).' days')));
+        if(!$print){
+            $day = date('w');
+            $start_date = new DateTime($start_date ?? date('Y-m-d', strtotime('-'.($day-1).' days')));
+            $end_date = new DateTime($end_date ?? date('Y-m-d', strtotime('+'.(7-$day).' days')));
 
-        $collection_datas = \Models\collection_data::select(\DB::raw('DATE(created_at) as date'), \DB::raw('count(*) as total'));
-        if($start_date != ''){
-            $collection_datas->whereDate('created_at','>=',$start_date);
+            $collection_datas = \Models\collection_data::select(\DB::raw('DATE(created_at) as date'), \DB::raw('count(*) as total'));
+            if($start_date != ''){
+                $collection_datas->whereDate('created_at','>=',$start_date);
+            }
+            if($end_date != ''){
+                $collection_datas->whereDate('created_at','<=',$end_date);
+            }
+            if($status != ''){
+                $collection_datas->where('status',$status);
+            }
+            if($status_share != ''){
+                $collection_datas->where('status_share',$status_share);
+            }
+            $collection_datas = $collection_datas->groupBy('date')->get()->pluck('total','date')->all();
+    
+            $interval = DateInterval::createFromDateString('1 day');
+            $end_week = new DateTime(date('Y-m-d', strtotime('+'.(8-$day).' days')));
+            $date_range = new DatePeriod($start_date, $interval, $end_week);
+    
+            $dates = [];
+            $dataByDates = [];
+            foreach ($date_range as $dt) {
+                $date = $dt->format('Y-m-d');
+                $dates[] = dateToIndo($date);
+                $dataByDates[] = $collection_datas[$date] ?? 0;
+            }
+    
+            $this->filter_string = http_build_query(request()->all());
+            $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+            $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+            
+            $with['dates'] = $dates;
+            $with['dataByDates'] = $dataByDates;
+            $with['actions'] = $actions;
         }
-        if($end_date != ''){
-            $collection_datas->whereDate('created_at','<=',$end_date);
-        }
-        if($status != ''){
-            $collection_datas->where('status',$status);
-        }
-        if($status_share != ''){
-            $collection_datas->where('status_share',$status_share);
-        }
-        $collection_datas = $collection_datas->groupBy('date')->get()->pluck('total','date')->all();
-
-        $interval = DateInterval::createFromDateString('1 day');
-        $end_week = new DateTime(date('Y-m-d', strtotime('+'.(8-$day).' days')));
-        $date_range = new DatePeriod($start_date, $interval, $end_week);
-
-        $dates = [];
-        $dataByDates = [];
-        foreach ($date_range as $dt) {
-            $date = $dt->format('Y-m-d');
-            $dates[] = dateToIndo($date);
-            $dataByDates[] = $collection_datas[$date] ?? 0;
-        }
-
-        $this->filter_string = http_build_query(request()->all());
-        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
-        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
         
         $with['datas'] = $datas;
         $with['model'] = request()->model;
         $with['start_date'] = request()->start_date;
         $with['end_date'] = request()->end_date;
         $with['param'] = request()->all();
-        $with['dates'] = $dates;
-        $with['dataByDates'] = $dataByDates;
-        $with['actions'] = $actions;
         return $with;
     }
 
@@ -406,7 +409,7 @@ class Report_data extends RESTful {
     public function getListAsPdf()
     {
         $template = $this->controller_name . '::getListAsPdf';
-        $data = $this->getListByCitizens();
+        $data = $this->getListByCitizens(true);
         $data['title_head_export'] = 'Rekap Berdasarkan NIK';
 
         $pdf = \PDF::loadView($template, $data)
@@ -422,7 +425,7 @@ class Report_data extends RESTful {
     public function getListAsXls()
     {
         $template = $this->controller_name . '::getListAsXls';
-        $data = $this->getListByCitizens();
+        $data = $this->getListByCitizens(true);
         $data['title_head_export'] = 'Rekap Berdasarkan NIK';
         $data['title_col_sum'] = 17;
 
