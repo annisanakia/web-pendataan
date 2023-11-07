@@ -7,6 +7,7 @@ return [
         'City',
         'District',
         'Subdistrict',
+        'Job_type',
         'Users',
         'Reference_data',
         'Collection_data',

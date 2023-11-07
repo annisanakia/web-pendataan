@@ -23,6 +23,10 @@ function menuSidebar()
                     'subdistrict' => [
                         'name' => 'Daftar Kelurahan',
                         'icon' => 'fa-solid fa-newspaper'
+                    ],
+                    'job_type' => [
+                        'name' => 'Daftar Pekerjaan',
+                        'icon' => 'fa-solid fa-newspaper'
                     ]
                 ]
             ],
