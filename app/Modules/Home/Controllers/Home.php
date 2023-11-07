@@ -37,9 +37,9 @@ class Home extends Controller {
             $withTarget = $this->getDataTargetGraph();
             $withStatus = $this->getDataStatusGraph();
             $with = array_merge($withTarget, $withStatus);
-            $withTargetToday = $this->getDataTargetGraph(date('Y-m-d'), date('Y-m-d'));
-            $with['dataByToday'] = $withTargetToday['dataByDistrict'];
         }
+        $withTargetToday = $this->getDataTargetGraph(date('Y-m-d'), date('Y-m-d'));
+        $with['dataByToday'] = $withTargetToday['dataByDistrict'];
         // dd($withTargetToday);
 
         $with['groups_id'] = $groups_id;
