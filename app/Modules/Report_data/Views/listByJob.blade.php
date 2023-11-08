@@ -11,7 +11,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar me-1"></i>
-                    Grafik Jenis Kelamin
+                    Grafik Pekerjaan
                 </div>
                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
             </div>
@@ -29,7 +29,7 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>Jenis Kelamin</th>
+                    <th>Pekerjaan</th>
                     <th class="text-center">Terverifikasi</th>
                     <th class="text-center">Sudah Dibagikan</th>
                     <th class="text-center">Total Data</th>
@@ -54,14 +54,14 @@
                 @else
                     @foreach($datas as $data)
                     <?php
-                        $collection_data = $collection_datas->where('gender',$data->gender);
+                        $collection_data = $collection_datas->where('job_type_id',$data->job_type_id);
                         $verifikasi = $collection_data->where('status',2);
                         $dibagikan = $collection_data->where('status_share',2);
                         $dataBySubdistrict[] = $collection_data->count();
                     ?>
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
-                        <td>{{ $data->gender == 'P'? 'Perempuan' : ($data->gender == 'L'? 'Laki-laki' : 'NA') }}</td>
+                        <td>{{ $data->job_type->name ?? 'NA' }}</td>
                         <td class="text-center">{{ $verifikasi->count() }}</td>
                         <td class="text-center">{{ $dibagikan->count() }}</td>
                         <td class="text-center">{{ $collection_data->count() }}</td>
@@ -110,12 +110,12 @@
     var myLineChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: {!! json_encode($genders) !!},
+        labels: {!! json_encode($job_types) !!},
         datasets: [{
-            label: "Rekap Jenis Kelamin",
+            label: "Rekap Pekerjaan",
             backgroundColor: "rgba(2,117,216,1)",
             borderColor: "rgba(2,117,216,1)",
-            data: {!! json_encode($dataByGender) !!},
+            data: {!! json_encode($dataByJob) !!},
         }],
     },
     options: {

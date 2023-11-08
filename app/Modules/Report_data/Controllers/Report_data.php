@@ -57,10 +57,14 @@ class Report_data extends RESTful {
             }
             $with = $this->getListByTPS();
             return view($this->controller_name . '::listByTPS', $with);
-        }else{
+        }elseif($model == 5){
             // Jenis Kelamin
             $with = $this->getListByGender();
             return view($this->controller_name . '::listByGender', $with);
+        }else{
+            // Pekerjaan
+            $with = $this->getListByJob();
+            return view($this->controller_name . '::listByJob', $with);
         }
     }
 
@@ -388,6 +392,66 @@ class Report_data extends RESTful {
         return $with;
     }
 
+    public function getListByJob()
+    {
+        $start_date = request()->start_date;
+        $end_date = request()->end_date;
+        $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+
+        $datas = $this->model->select('job_type_id', \DB::raw('count(*) as total'));
+        if($start_date != ''){
+            $datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $datas->whereDate('created_at','<=',$end_date);
+        }
+        if(count($subdistrict_ids) > 0){
+            $datas->whereIn('subdistrict_id',$subdistrict_ids);
+        }
+        
+        $this->filter($datas, request(), 'collection_data');
+        $max_row = request()->input('max_row') ?? 50;
+        $datas = $datas->groupBy('job_type_id')->orderBy('job_type_id','asc')->paginate($max_row);
+        $datas->chunk(100);
+
+        $collection_datas = \Models\collection_data::select(['*']);
+        if($start_date != ''){
+            $collection_datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        if(count($subdistrict_ids) > 0){
+            $collection_datas->whereIn('subdistrict_id',$subdistrict_ids);
+        }
+        $this->filter($collection_datas, request(), 'collection_data');
+        $collection_datas = $collection_datas->get();
+
+        $job_type = \Models\job_type::orderBy(\DB::raw('FIELD(code, "DLL")'))->get();
+        $job_types = ['NA'];
+        $dataByJob = [$collection_datas->whereNull('job_type_id')->count()];
+        foreach($job_type as $job_type){
+            $job_types[] = $job_type->name;
+            $dataByJob[] = $collection_datas->where('job_type_id',$job_type->id)->count();
+        }
+
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListJobAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListJobAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+        
+        $with['subdistrict_ids'] = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+        $with['datas'] = $datas;
+        $with['model'] = request()->model;
+        $with['start_date'] = request()->start_date;
+        $with['end_date'] = request()->end_date;
+        $with['param'] = request()->all();
+        $with['collection_datas'] = $collection_datas;
+        $with['job_types'] = $job_types;
+        $with['dataByJob'] = $dataByJob;
+        $with['actions'] = $actions;
+        return $with;
+    }
+
     public function customFilter($data, $newFilters)
     {
         foreach ($newFilters as $key => $value) {
@@ -593,6 +657,38 @@ class Report_data extends RESTful {
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Jenis Kelamin ('.date('d-m-Y').').xls"');
+    }
+    
+    public function getListJobAsPdf()
+    {
+        $template = $this->controller_name . '::getListJobAsPdf';
+        $data = $this->getListByJob();
+        $data['title_head_export'] = 'Rekap Berdasarkan Pekerjaan';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('legal', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Rekap Berdasarkan Pekerjaan ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListJobAsXls()
+    {
+        $template = $this->controller_name . '::getListJobAsXls';
+        $data = $this->getListByJob();
+        $data['title_head_export'] = 'Rekap Berdasarkan Pekerjaan';
+        $data['title_col_sum'] = 5;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Pekerjaan ('.date('d-m-Y').').xls"');
     }
     
 }

@@ -26,7 +26,7 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>Name</th>
+                    <th>Nama</th>
                     <th class="text-center">Terverifikasi</th>
                     <th class="text-center">Sudah Dibagikan</th>
                     <th class="text-center">Total Data</th>

@@ -25,6 +25,7 @@
                                         <option value="4">Berdasarkan Koordinator</option>
                                         <option value="5">Berdasarkan TPS</option>
                                         <option value="6">Berdasarkan Jenis Kelamin</option>
+                                        <option value="7">Berdasarkan Pekerjaan</option>
                                     </select>
                                     {!!$errors->first('model', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>

@@ -29,7 +29,7 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>Name</th>
+                    <th>Kelurahan</th>
                     <th width="28%">Kode</th>
                     <th class="text-center">Terverifikasi</th>
                     <th class="text-center">Sudah Dibagikan</th>
