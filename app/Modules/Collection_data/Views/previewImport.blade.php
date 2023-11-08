@@ -7,6 +7,9 @@
     .table-import textarea{
         width:180px
     }
+    input:read-only {
+        background-color: #e9ecef !important;
+    }
 </style>
 
 <form method="post" action="{{url($controller_name.'/storeImport')}}" id="form-tab-ajax" class="form-validation">
@@ -39,6 +42,7 @@
             <th>Jenis Kelamin</th>
             <th>Agama</th>
             <th>Pekerjaan</th>
+            <th>Detail Pekerjaan</th>
             <th>Alamat</th>
             <th>RT</th>
             <th>RW</th>
@@ -51,9 +55,10 @@
         </thead>
         <tbody>
         <tr></tr>
-        @if (count($datas) <= 0) <tr>
-            <td colspan="{{ $groups_id != 2? 20 : 17 }}" style="text-align: center">Data Tidak Ditemukan</td>
-        </tr>
+        @if (count($datas) <= 0)
+            <tr>
+                <td colspan="{{ $groups_id != 2? 21 : 18 }}" style="text-align: center">Data Tidak Ditemukan</td>
+            </tr>
         @else
             @php
                 $i = 0;
@@ -124,37 +129,45 @@
                             </select>
                         </td>
                         <td nowrap>
-                            <input value="{{ $data[12] ?? null }}" type="text" name="job_name[]" class="form-control">
+                            <select name="job_type_id[]" data-no="{{ $i }}" class="form-select job_type_id {{ $errors->has('job_type_id')? 'is-invalid' : '' }}" id="job_type_id{{ $i }}">
+                                <option value="">-- Pilih --</option>
+                                @foreach(\Models\job_type::orderBy(DB::raw('FIELD(code, "DLL")'))->get() as $row)
+                                    <option value="{{ $row->id }}" data-code="{{ $row->code }}" {{ $row->code == ($data[12] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
+                                @endforeach
+                            </select>
                         </td>
                         <td nowrap>
-                            <textarea rows="3" name="address[]" class="form-control">{{ $data[13] ?? null }}</textarea>
+                            <input value="{{ ($data[12] ?? null) == 'DLL'? ($data[13] ?? null) : '' }}" type="text" name="job_name[]" class="form-control" {!! ($data[12] ?? null) != 'DLL'? 'readonly' : '' !!} id="job_name{{ $i }}">
                         </td>
                         <td nowrap>
-                            <input value="{{ $data[14] ?? null }}" type="text" name="rt[]" class="form-control" style="width:80px">
+                            <textarea rows="3" name="address[]" class="form-control">{{ $data[14] ?? null }}</textarea>
                         </td>
                         <td nowrap>
-                            <input value="{{ $data[15] ?? null }}" type="text" name="rw[]" class="form-control" style="width:80px">
+                            <input value="{{ $data[15] ?? null }}" type="text" name="rt[]" class="form-control" style="width:80px">
+                        </td>
+                        <td nowrap>
+                            <input value="{{ $data[16] ?? null }}" type="text" name="rw[]" class="form-control" style="width:80px">
                         </td>
                         @if($groups_id != 2)
                             <td nowrap>
                                 <select name="coordinator_id[]" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
                                     <option value="">-- Pilih --</option>
                                     @foreach(\App\Models\User::where('groups_id',2)->get() as $row)
-                                        <option value="{{ $row->id }}" {{ $row->username == ($data[16] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
+                                        <option value="{{ $row->id }}" {{ $row->username == ($data[17] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td nowrap>
                                 <select name="status[]" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
                                     @foreach(status() as $key_status => $status_name)
-                                        <option value="{{ $key_status }}" {{ $status_name == ($data[17] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
+                                        <option value="{{ $key_status }}" {{ $status_name == ($data[18] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td nowrap>
                                 <select name="status_share[]" class="form-select {{ $errors->has('status_share')? 'is-invalid' : '' }}">
                                     @foreach(status_share() as $key_status => $status_name)
-                                        <option value="{{ $key_status }}" {{ $status_name == ($data[18] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
+                                        <option value="{{ $key_status }}" {{ $status_name == ($data[19] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
                                     @endforeach
                                 </select>
                             </td>

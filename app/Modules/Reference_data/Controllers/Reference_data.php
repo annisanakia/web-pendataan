@@ -183,7 +183,7 @@ class Reference_data extends RESTful {
         $subdistricts = $subdistricts->get();
         $subdistrict_codes = $subdistricts->pluck('id','code')->all();
 
-        $with['datas'] = array_slice($excel[0], 16, count($excel[0]));
+        $with['datas'] = array_slice($excel[0], 18, count($excel[0]));
         $with['district_codes'] = $district_codes;
         $with['subdistrict_codes'] = $subdistrict_codes;
         $with['districts'] = $districts;
@@ -205,6 +205,7 @@ class Reference_data extends RESTful {
         $dob = is_array(request()->dob)? request()->dob : [];
         $gender = is_array(request()->gender)? request()->gender : [];
         $religion_id = is_array(request()->religion_id)? request()->religion_id : [];
+        $job_type_id = is_array(request()->job_type_id)? request()->job_type_id : [];
         $job_name = is_array(request()->job_name)? request()->job_name : [];
         $address = is_array(request()->address)? request()->address : [];
         $rt = is_array(request()->rt)? request()->rt : [];
@@ -238,6 +239,7 @@ class Reference_data extends RESTful {
                 $input['dob'] = $dob[$key];
                 $input['gender'] = $gender[$key];
                 $input['religion_id'] = $religion_id[$key];
+                $input['job_type_id'] = $job_type_id[$key];
                 $input['job_name'] = $job_name[$key];
                 $input['address'] = $address[$key];
                 $input['rt'] = $rt[$key];

@@ -16,6 +16,8 @@
             ->all();
         $religions = \Models\religion::orderBy('id','asc')->pluck('code')->all();
         $religions = sprintf('"%s"', implode('","', $religions));
+        $job_types = \Models\job_type::orderBy(DB::raw('FIELD(code, "DLL")'))->pluck('code')->all();
+        $job_types = sprintf('"%s"', implode('","', $job_types));
     ?>
     <tr>
         <td width="10px" style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
@@ -71,6 +73,18 @@
         </td>
     </tr>
     <tr>
+        <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
+        <td colspan="{{ $colspan }}">
+            Kolom "Pekerjaan" diisi kode ({{ $job_types }}) tanpa tanda petik
+        </td>
+    </tr>
+    <tr>
+        <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
+        <td colspan="{{ $colspan }}">
+            Kolom "Detail Pekerjaan" diisi jika kolom "Pekerjaan" diisi dengan "DLL"
+        </td>
+    </tr>
+    <tr>
         <td colspan="{{ $colspan }}"></td>
     </tr>
 </table>
@@ -89,6 +103,7 @@
             <th>Jenis Kelamin</th>
             <th>Agama</th>
             <th>Pekerjaan</th>
+            <th>Detail Pekerjaan</th>
             <th>Alamat</th>
             <th>RT</th>
             <th>RW</th>
@@ -96,6 +111,7 @@
     </thead>
     <tbody>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

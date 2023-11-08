@@ -7,6 +7,9 @@
     .table-import textarea{
         width:180px
     }
+    input:read-only {
+        background-color: #e9ecef !important;
+    }
 </style>
 
 <form method="post" action="{{url($controller_name.'/storeImport')}}" id="form-tab-ajax" class="form-validation">
@@ -38,6 +41,7 @@
             <th>Jenis Kelamin</th>
             <th>Agama</th>
             <th>Pekerjaan</th>
+            <th>Detail Pekerjaan</th>
             <th>Alamat</th>
             <th>RT</th>
             <th>RW</th>
@@ -46,7 +50,7 @@
         <tbody>
         <tr></tr>
         @if (count($datas) <= 0) <tr>
-            <td colspan="15" style="text-align: center">Data Tidak Ditemukan</td>
+            <td colspan="16" style="text-align: center">Data Tidak Ditemukan</td>
         </tr>
         @else
             @php
@@ -114,16 +118,24 @@
                             </select>
                         </td>
                         <td nowrap>
-                            <input value="{{ $data[11] ?? null }}" type="text" name="job_name[]" class="form-control">
+                            <select name="job_type_id[]" data-no="{{ $i }}" class="form-select job_type_id {{ $errors->has('job_type_id')? 'is-invalid' : '' }}" id="job_type_id{{ $i }}">
+                                <option value="">-- Pilih --</option>
+                                @foreach(\Models\job_type::orderBy(DB::raw('FIELD(code, "DLL")'))->get() as $row)
+                                    <option value="{{ $row->id }}" data-code="{{ $row->code }}" {{ $row->code == ($data[11] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
+                                @endforeach
+                            </select>
                         </td>
                         <td nowrap>
-                            <textarea rows="3" name="address[]" class="form-control">{{ $data[12] ?? null }}</textarea>
+                            <input value="{{ ($data[11] ?? null) == 'DLL'? ($data[12] ?? null) : '' }}" type="text" name="job_name[]" class="form-control" {!! ($data[11] ?? null) != 'DLL'? 'readonly' : '' !!} id="job_name{{ $i }}">
                         </td>
                         <td nowrap>
-                            <input value="{{ $data[13] ?? null }}" type="text" name="rt[]" class="form-control" style="width:80px">
+                            <textarea rows="3" name="address[]" class="form-control">{{ $data[13] ?? null }}</textarea>
                         </td>
                         <td nowrap>
-                            <input value="{{ $data[14] ?? null }}" type="text" name="rw[]" class="form-control" style="width:80px">
+                            <input value="{{ $data[14] ?? null }}" type="text" name="rt[]" class="form-control" style="width:80px">
+                        </td>
+                        <td nowrap>
+                            <input value="{{ $data[15] ?? null }}" type="text" name="rw[]" class="form-control" style="width:80px">
                         </td>
                     </tr>
                     <?php
@@ -140,6 +152,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.job_type_id').change(function() {
+            var num = $(this).data('no'),
+                option = $('option:selected', this).data('code');
+            if(option == 'DLL'){
+                //dll
+                $('#job_name'+num).prop("readonly", false);
+            }else{
+                $('#job_name'+num).prop("readonly", true);
+                $('#job_name'+num).val("");
+            }
+        });
         // $('.city_id').each(function() {
         //     var num = $(this).data('no');
         //     getDistrict(num, $('#text_district_id'+num).val());

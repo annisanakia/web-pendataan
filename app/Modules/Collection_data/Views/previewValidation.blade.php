@@ -10,6 +10,9 @@
     .table-import textarea{
         width:200px
     }
+    input:read-only {
+        background-color: #e9ecef !important;
+    }
 </style>
 <div class="container-fluid px-4">
     <h1 class="mt-4">Data Pendataan</h1>
@@ -49,6 +52,7 @@
                     <th>Jenis Kelamin</th>
                     <th>Agama</th>
                     <th>Pekerjaan</th>
+                    <th>Detail Pekerjaan</th>
                     <th>Alamat</th>
                     <th>RT</th>
                     <th>RW</th>
@@ -61,9 +65,10 @@
                 </thead>
                 <tbody id="data-import">
                 <tr></tr>
-                @if (count($keys) <= 0) <tr>
-                    <td colspan="{{ $groups_id != 2? 20 : 17 }}" style="text-align: center">Data Tidak Ditemukan</td>
-                </tr>
+                @if (count($keys) <= 0)
+                    <tr>
+                        <td colspan="{{ $groups_id != 2? 21 : 18 }}" style="text-align: center">Data Tidak Ditemukan</td>
+                    </tr>
                 @else
                     @php
                         $i = 0;
@@ -134,7 +139,7 @@
                                     {!!$errors->first('gender.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                 </td>
                                 <td>
-                                    <select name="religion_id[{{ $key }}]" class="form-select {{ $errors->has('religion_id')? 'is-invalid' : '' }}">
+                                    <select name="religion_id[{{ $key }}]" class="form-select {{ $errors->has('religion_id.'.$key)? 'is-invalid' : '' }}">
                                         @foreach(\Models\religion::all() as $row)
                                             <option value="{{ $row->id }}" {{ $row->id == ($religion_id[$key] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
                                         @endforeach
@@ -142,7 +147,16 @@
                                     {!!$errors->first('religion_id.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                 </td>
                                 <td>
-                                    <input value="{{ $job_name[$key] ?? null }}" type="text" name="job_name[{{ $key }}]" class="form-control {{ $errors->has('job_name.'.$key)? 'is-invalid' : '' }}">
+                                    <select name="job_type_id[{{ $key }}]" data-no="{{ $i }}" class="form-select job_type_id {{ $errors->has('job_type_id.'.$key)? 'is-invalid' : '' }}" id="job_type_id{{ $i }}">
+                                        <option value="">-- Pilih --</option>
+                                        @foreach(\Models\job_type::orderBy(DB::raw('FIELD(code, "DLL")'))->get() as $row)
+                                            <option value="{{ $row->id }}" data-code="{{ $row->code }}" {{ $row->id == ($job_type_id[$key] ?? null)? 'selected' : '' }}>{{ $row->name }}</option> 
+                                        @endforeach
+                                    </select>
+                                    {!!$errors->first('job_type_id.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
+                                </td>
+                                <td>
+                                    <input value="{{ $job_name[$key] ?? null }}" type="text" name="job_name[{{ $key }}]" class="form-control {{ $errors->has('job_name.'.$key)? 'is-invalid' : '' }}" {!! ($job_type_id[$key] ?? null) != '1'? 'readonly' : '' !!} id="job_name{{ $i }}">
                                     {!!$errors->first('job_name.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                 </td>
                                 <td>
@@ -166,14 +180,6 @@
                                             @endforeach
                                         </select>
                                         {!!$errors->first('coordinator_id.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
-                                    </td>
-                                    <td nowrap>
-                                        <select name="status[{{ $key }}]" class="form-select {{ $errors->has('status.'.$key)? 'is-invalid' : '' }}">
-                                            @foreach(status() as $key_status => $status_name)
-                                                <option value="{{ $key_status }}" {{ $key_status == ($status[$key] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
-                                            @endforeach
-                                        </select>
-                                        {!!$errors->first('status.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                     </td>
                                     <td nowrap>
                                         <select name="status[{{ $key }}]" class="form-select {{ $errors->has('status.'.$key)? 'is-invalid' : '' }}">
@@ -210,6 +216,17 @@
     $(document).ready(function () {
         $('#data-import').on("click", ".remove-tr", function () {
             $(this).parents('tr').remove();
+        });
+        $('.job_type_id').change(function() {
+            var num = $(this).data('no'),
+                option = $('option:selected', this).data('code');
+            if(option == 'DLL'){
+                //dll
+                $('#job_name'+num).prop("readonly", false);
+            }else{
+                $('#job_name'+num).prop("readonly", true);
+                $('#job_name'+num).val("");
+            }
         });
         // $('.city_id').each(function() {
         //     var num = $(this).data('no');
