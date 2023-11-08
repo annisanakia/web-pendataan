@@ -46,10 +46,10 @@
             <th>Alamat</th>
             <th>RT</th>
             <th>RW</th>
+            <th>Status</th>
             @if($groups_id != 2)
-                <th>Koordinator</th>
-                <th>Status</th>
                 <th>Status<br>Dibagikan</th>
+                <th>Koordinator</th>
             @endif
         </tr>
         </thead>
@@ -148,26 +148,26 @@
                         <td nowrap>
                             <input value="{{ $data[16] ?? null }}" type="text" name="rw[]" class="form-control" style="width:80px">
                         </td>
+                        <td nowrap>
+                            <select name="status[]" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
+                                @foreach(status() as $key_status => $status_name)
+                                    <option value="{{ $key_status }}" {{ $status_name == ($data[17] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
                         @if($groups_id != 2)
                             <td nowrap>
-                                <select name="coordinator_id[]" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
-                                    <option value="">-- Pilih --</option>
-                                    @foreach(\App\Models\User::where('groups_id',2)->get() as $row)
-                                        <option value="{{ $row->id }}" {{ $row->username == ($data[17] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td nowrap>
-                                <select name="status[]" class="form-select {{ $errors->has('status')? 'is-invalid' : '' }}">
-                                    @foreach(status() as $key_status => $status_name)
+                                <select name="status_share[]" class="form-select {{ $errors->has('status_share')? 'is-invalid' : '' }}">
+                                    @foreach(status_share() as $key_status => $status_name)
                                         <option value="{{ $key_status }}" {{ $status_name == ($data[18] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td nowrap>
-                                <select name="status_share[]" class="form-select {{ $errors->has('status_share')? 'is-invalid' : '' }}">
-                                    @foreach(status_share() as $key_status => $status_name)
-                                        <option value="{{ $key_status }}" {{ $status_name == ($data[19] ?? null)? 'selected' : '' }}>{{ $status_name }}</option>
+                                <select name="coordinator_id[]" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
+                                    <option value="">-- Pilih --</option>
+                                    @foreach(\App\Models\User::where('groups_id',2)->get() as $row)
+                                        <option value="{{ $row->id }}" {{ $row->username == ($data[19] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                             </td>

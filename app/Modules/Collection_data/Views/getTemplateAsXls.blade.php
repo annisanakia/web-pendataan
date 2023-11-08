@@ -86,23 +86,23 @@
             Kolom "Detail Pekerjaan" diisi jika kolom "Pekerjaan" diisi dengan "DLL"
         </td>
     </tr>
+    <tr>
+        <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
+        <td colspan="{{ $colspan }}">
+            Kolom "Status" diisi nama status ({{ sprintf('"%s"', implode('","', status())) }}) tanpa tanda petik
+        </td>
+    </tr>
     @if($groups_id != 2)
         <tr>
             <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
             <td colspan="{{ $colspan }}">
-                Kolom "Koordinator" diisi kode username ({{ $coordinators }}) tanpa tanda petik
-            </td>
-        </tr>
-        <tr>
-            <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
-            <td colspan="{{ $colspan }}">
-                Kolom "Status" diisi nama status ({{ sprintf('"%s"', implode('","', status())) }}) tanpa tanda petik
-            </td>
-        </tr>
-        <tr>
-            <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
-            <td colspan="{{ $colspan }}">
                 Kolom "Status Dibagikan" diisi nama status ({{ sprintf('"%s"', implode('","', status_share())) }}) tanpa tanda petik
+            </td>
+        </tr>
+        <tr>
+            <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
+            <td colspan="{{ $colspan }}">
+                Kolom "Koordinator" diisi kode username ({{ $coordinators }}) tanpa tanda petik
             </td>
         </tr>
     @endif
@@ -130,10 +130,10 @@
             <th>Alamat</th>
             <th>RT</th>
             <th>RW</th>
-            @if($groups_id != 2)
-            <th>Koordinator</th>
             <th>Status</th>
+            @if($groups_id != 2)
             <th>Status Dibagikan</th>
+            <th>Koordinator</th>
             @endif
         </tr>
     </thead>
@@ -156,8 +156,8 @@
             <td></td>
             <td></td>
             <td></td>
-            @if($groups_id != 2)
             <td></td>
+            @if($groups_id != 2)
             <td></td>
             <td></td>
             @endif

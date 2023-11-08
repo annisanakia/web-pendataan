@@ -361,7 +361,7 @@ class Collection_data extends RESTful {
         $subdistricts = $subdistricts->get();
         $subdistrict_codes = $subdistricts->pluck('id','code')->all();
 
-        $with['datas'] = array_slice($excel[0], 18, count($excel[0]));
+        $with['datas'] = array_slice($excel[0], 19, count($excel[0]));
         if($groups_id != 2){
             $with['datas'] = array_slice($excel[0], 21, count($excel[0]));
         }
@@ -394,9 +394,9 @@ class Collection_data extends RESTful {
         $address = is_array(request()->address)? request()->address : [];
         $rt = is_array(request()->rt)? request()->rt : [];
         $rw = is_array(request()->rw)? request()->rw : [];
-        $coordinator_id = is_array(request()->coordinator_id)? request()->coordinator_id : [];
         $status = is_array(request()->status)? request()->status : [];
         $status_share = is_array(request()->status_share)? request()->status_share : [];
+        $coordinator_id = is_array(request()->coordinator_id)? request()->coordinator_id : [];
 
         $input = request()->all();
         $validation = $this->model->validateMultiple($input);
@@ -431,9 +431,9 @@ class Collection_data extends RESTful {
                 $input['job_name'] = $job_name[$key];
                 $input['address'] = $address[$key];
                 $input['rt'] = $rt[$key];
-                $input['coordinator_id'] = ($coordinator_id[$key] ?? null) ?? ($groups_id == 2? $user_id : null);
                 $input['status'] = ($status[$key] ?? null) ?? ($groups_id == 2? 1 : null);;
-                $input['status_share'] = ($status_share[$key] ?? null) ?? ($groups_id == 2? 1 : null);;
+                $input['status_share'] = ($status_share[$key] ?? null) ?? ($groups_id == 2? 1 : null);
+                $input['coordinator_id'] = ($coordinator_id[$key] ?? null) ?? ($groups_id == 2? $user_id : null);
                 $data = $this->model->create($input);
             }
 
