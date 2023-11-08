@@ -57,7 +57,7 @@ class Report_data extends RESTful {
             }
             $with = $this->getListByTPS();
             return view($this->controller_name . '::listByTPS', $with);
-        }elseif($model == 5){
+        }elseif($model == 6){
             // Jenis Kelamin
             $with = $this->getListByGender();
             return view($this->controller_name . '::listByGender', $with);
