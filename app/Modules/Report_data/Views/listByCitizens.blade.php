@@ -33,6 +33,7 @@
                     <th>Koordinator</th>
                     <th width="13%">Status</th>
                     <th width="13%">Status<br>Dibagikan</th>
+                    <th>Tanggal<br> Data Masuk</th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
@@ -43,12 +44,13 @@
                     <th><input type="text" name="filter[coordinator_name]" value="{{ $param['filter']['coordinator_name'] ?? null }}" class="form-control"></th>
                     <th></th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @if(count($datas) <= 0)
                     <tr>
-                        <td colspan="6" class="text-center">Data Tidak Ditemukan</td>
+                        <td colspan="7" class="text-center">Data Tidak Ditemukan</td>
                     </tr>
                 @else
                     @php $i=0 @endphp
@@ -70,6 +72,7 @@
                                 {{ status_share()[$data->status_share] ?? null }}
                             </a>
                         </td>
+                        <td nowrap>{{ dateToIndo($data->created_at ?? null) }}</td>
                     </tr>
                     @endforeach
                 @endif
