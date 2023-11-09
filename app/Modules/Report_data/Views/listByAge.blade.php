@@ -43,6 +43,9 @@
                     $i=0;
                     $ages = [];
                     $dataByAge = [];
+                    $total_verifikasi = 0;
+                    $total_dibagikan = 0;
+                    $total = 0;
                 @endphp
                 @if(count($datas) <= 0)
                     <tr>
@@ -57,6 +60,10 @@
                         $dibagikan = $collection_data->where('status_share',2);
                         $ages[] = $data['name'] ?? 'NA';
                         $dataByAge[] = $collection_data->count();
+
+                        $total_verifikasi += $verifikasi->count();
+                        $total_dibagikan += $dibagikan->count();
+                        $total += $collection_data->count();
                     ?>
                     <tr>
                         <td class="text-center">{{ ++$i }}</td>
@@ -68,6 +75,14 @@
                     @endforeach
                 @endif
             </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="2" class="text-center">Subtotal</th>
+                    <th class="text-center">{{ $total_verifikasi }}</th>
+                    <th class="text-center">{{ $total_dibagikan }}</th>
+                    <th class="text-center">{{ $total }}</th>
+                </tr>
+            </tfoot>
         </table>
         </div>
     </div>

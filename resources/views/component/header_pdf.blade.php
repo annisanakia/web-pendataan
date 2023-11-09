@@ -32,7 +32,10 @@
         text-align: center;
     }
     .text-center{
-        text-align:center
+        text-align:center !important
+    }
+    .text-end{
+        text-align:right !important
     }
 </style>
 <?php

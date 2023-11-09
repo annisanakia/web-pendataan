@@ -14,6 +14,9 @@
     <tbody>
         @php
             $i=0;
+            $total_verifikasi = 0;
+            $total_dibagikan = 0;
+            $total = 0;
         @endphp
         @if(count($datas) <= 0)
             <tr>
@@ -25,6 +28,10 @@
                 $collection_data = $collection_datas->where('job_type_id',$data->id);
                 $verifikasi = $collection_data->where('status',2);
                 $dibagikan = $collection_data->where('status_share',2);
+
+                $total_verifikasi += $verifikasi->count();
+                $total_dibagikan += $dibagikan->count();
+                $total += $collection_data->count();
             ?>
             <tr>
                 <td class="text-center">{{ ++$i }}</td>
@@ -36,4 +43,12 @@
             @endforeach
         @endif
     </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="2" class="text-center">Subtotal</th>
+            <th class="text-center">{{ $total_verifikasi }}</th>
+            <th class="text-center">{{ $total_dibagikan }}</th>
+            <th class="text-center">{{ $total }}</th>
+        </tr>
+    </tfoot>
 </table>

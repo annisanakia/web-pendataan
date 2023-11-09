@@ -14,6 +14,7 @@
     <tbody>
         @php
             $i=0;
+            $j=4;
         @endphp
         @if(count($datas) <= 0)
             <tr>
@@ -26,6 +27,7 @@
                                 ->where('age','<=',$data['age_end'] ?? null);
                 $verifikasi = $collection_data->where('status',2);
                 $dibagikan = $collection_data->where('status_share',2);
+                $j++;
             ?>
             <tr>
                 <td class="text-center">{{ ++$i }}</td>
@@ -37,4 +39,12 @@
             @endforeach
         @endif
     </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="2" class="text-center">Subtotal</th>
+            <th class="text-center">=SUM(C5:C{{ $j }})</th>
+            <th class="text-center">=SUM(D5:D{{ $j }})</th>
+            <th class="text-center">=SUM(E5:E{{ $j }})</th>
+        </tr>
+    </tfoot>
 </table>

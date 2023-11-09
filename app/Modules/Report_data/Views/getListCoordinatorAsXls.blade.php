@@ -14,6 +14,8 @@
     <tbody>
         @php
             $i=0;
+            $j=4;
+            $array_excel = [];
         @endphp
         @if(count($datas) <= 0)
             <tr>
@@ -25,6 +27,8 @@
                 $collection_data = $collection_datas->where('coordinator_id',$data->id);
                 $verifikasi = $collection_data->where('status',2);
                 $dibagikan = $collection_data->where('status_share',2);
+                $j++;
+                $array_excel[] = $j;
             ?>
             <tr>
                 <td class="text-center">{{ ++$i }}</td>
@@ -38,6 +42,7 @@
                     $collection_data = $collection_datas->where('coordinator_id',$data->id)->where('subdistrict_id',$row->subdistrict_id);
                     $verifikasi = $collection_data->where('status',2);
                     $dibagikan = $collection_data->where('status_share',2);
+                    $j++;
                 ?>
                 <tr>
                     <td class="text-center"></td>
@@ -50,4 +55,12 @@
             @endforeach
         @endif
     </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="2" class="text-center">Subtotal</th>
+            <th class="text-center">=SUM({{ sprintf('C%s', implode(';C', $array_excel)) }})</th>
+            <th class="text-center">=SUM({{ sprintf('D%s', implode(';D', $array_excel)) }})</th>
+            <th class="text-center">=SUM({{ sprintf('E%s', implode(';E', $array_excel)) }})</th>
+        </tr>
+    </tfoot>
 </table>
