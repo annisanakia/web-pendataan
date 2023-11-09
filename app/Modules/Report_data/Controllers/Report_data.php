@@ -114,7 +114,9 @@ class Report_data extends RESTful {
         $collection_datas = $collection_datas->groupBy('date')->get()->pluck('total','date')->all();
 
         $interval = DateInterval::createFromDateString('1 day');
-        $end_week = new DateTime(date('Y-m-d', strtotime('+'.(8-$day).' days')));
+        // $end_week = new DateTime(date('Y-m-d', strtotime('+'.(8-$day).' days')));
+        $end_week = request()->end_date ?? date('Y-m-d', strtotime('+'.(7-$day).' days'));
+        $end_week = new DateTime(date('Y-m-d', strtotime($end_week . ' +1 day')));
         $date_range = new DatePeriod($start_date, $interval, $end_week);
 
         $dates = [];
@@ -290,10 +292,6 @@ class Report_data extends RESTful {
         $max_row = request()->input('max_row') ?? 50;
         $datas = $datas->groupBy('no_tps')->orderBy('no_tps','asc')->paginate($max_row);
         $datas->chunk(100);
-
-        $day = date('w');
-        $start_date = new DateTime($start_date ?? date('Y-m-d', strtotime('-'.($day-1).' days')));
-        $end_date = new DateTime($end_date ?? date('Y-m-d', strtotime('+'.(7-$day).' days')));
 
         $collection_datas = \Models\collection_data::select(['*']);
         if($start_date != ''){

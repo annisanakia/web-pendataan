@@ -67,27 +67,25 @@
                 @else
                     @php $i=0 @endphp
                     @foreach($datas as $data)
+                    <?php
+                        $first_character = mb_substr($data->whatsapp, 0, 1);
+                        $whatsapp = $first_character == 0? '+62'.substr($data->whatsapp, 1) : $data->whatsapp;
+                    ?>
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                         <td>{{ $data->nik }}</td>
-                        <td>{{ $data->whatsapp }}</td>
+                        <td><a href="https://wa.me/{{ $whatsapp }}" target="_blank">{{ $data->whatsapp }}</a></td>
                         <td>{{ strtoupper($data->name) }}</td>
                         <td>{{ $data->coordinator->name ?? null }}</td>
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps }}</td>
                         <td nowrap>
-                            @if($groups_id == 1)
-                                @if($data->status == 1)
-                                    <select class="form-select btn btn-secondary px-2 py-1 f-14px updateStatus" data-url="{{ url($controller_name.'/updateStatus/'.$data->id) }}">
-                                        @foreach(status() as $key => $status))
-                                            <option value="{{ $key }}" {{ $key == $data->status? 'selected' : '' }}>{{ $status }}</option>
-                                        @endforeach
-                                    </select>
-                                @else
-                                    <a class="btn btn-{{ statusColor()[$data->status] ?? null }} px-2 py-1 f-14px">
-                                        {{ status()[$data->status] ?? null }}
-                                    </a>
-                                @endif
+                            @if($data->status == 1)
+                                <select class="form-select btn btn-secondary px-2 py-1 f-14px updateStatus" data-url="{{ url($controller_name.'/updateStatus/'.$data->id) }}">
+                                    @foreach(status() as $key => $status))
+                                        <option value="{{ $key }}" {{ $key == $data->status? 'selected' : '' }}>{{ $status }}</option>
+                                    @endforeach
+                                </select>
                             @else
                                 <a class="btn btn-{{ statusColor()[$data->status] ?? null }} px-2 py-1 f-14px">
                                     {{ status()[$data->status] ?? null }}
