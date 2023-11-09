@@ -22,14 +22,13 @@
         @else
             @foreach($datas as $data)
             <?php
-                $collection_data = $collection_datas->where('gender',$data->gender);
+                $collection_data = $collection_datas->where('gender',$data['gender']);
                 $verifikasi = $collection_data->where('status',2);
                 $dibagikan = $collection_data->where('status_share',2);
-                $dataBySubdistrict[] = $collection_data->count();
             ?>
             <tr>
                 <td class="text-center">{{ ++$i }}</td>
-                <td>{{ $data->gender == 'P'? 'Perempuan' : ($data->gender == 'L'? 'Laki-laki' : 'NA') }}</td>
+                <td>{{ $data['name'] ?? null }}</td>
                 <td class="text-center">{{ $verifikasi->count() }}</td>
                 <td class="text-center">{{ $dibagikan->count() }}</td>
                 <td class="text-center">{{ $collection_data->count() }}</td>

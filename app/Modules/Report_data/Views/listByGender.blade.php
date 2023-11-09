@@ -19,10 +19,6 @@
         <div class="d-grid gap-2 d-flex justify-content-end mt-4">
             @include('component.actions')
         </div>
-        <div class="select-max-row d-inline-block mt-2">
-            Show 
-            <input type="text" name="max_row" value="{{ $datas->perPage() }}" size="4" maxlength="4" class="text-center"> entries
-        </div>
         <!-- Table with stripped rows -->
         <div class="table-responsive">
         <table class="table table-striped mt-3">
@@ -45,7 +41,8 @@
             <tbody>
                 @php
                     $i=0;
-                    $dataBySubdistrict = [];
+                    $genders = [];
+                    $dataByGender = [];
                 @endphp
                 @if(count($datas) <= 0)
                     <tr>
@@ -54,14 +51,15 @@
                 @else
                     @foreach($datas as $data)
                     <?php
-                        $collection_data = $collection_datas->where('gender',$data->gender);
+                        $collection_data = $collection_datas->where('gender',$data['gender']);
                         $verifikasi = $collection_data->where('status',2);
                         $dibagikan = $collection_data->where('status_share',2);
-                        $dataBySubdistrict[] = $collection_data->count();
+                        $genders[] = $data['name'] ?? 'NA';
+                        $dataByGender[] = $collection_data->count();
                     ?>
                     <tr>
-                        <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
-                        <td>{{ $data->gender == 'P'? 'Perempuan' : ($data->gender == 'L'? 'Laki-laki' : 'NA') }}</td>
+                        <td class="text-center">{{ ++$i }}</td>
+                        <td>{{ $data['name'] ?? null }}</td>
                         <td class="text-center">{{ $verifikasi->count() }}</td>
                         <td class="text-center">{{ $dibagikan->count() }}</td>
                         <td class="text-center">{{ $collection_data->count() }}</td>
@@ -70,11 +68,6 @@
                 @endif
             </tbody>
         </table>
-        </div>
-        <!-- End Table with stripped rows -->
-        <div class="table-list-footer">
-            <span class="result-count">Showing {{$datas->firstItem()}} to {{$datas->lastItem()}} of {{$datas->total()}} entries</span>
-            {{ $datas->appends($param)->links('component.pagination')}}        
         </div>
     </div>
 </div>

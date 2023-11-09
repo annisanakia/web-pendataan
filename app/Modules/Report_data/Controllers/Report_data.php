@@ -341,21 +341,20 @@ class Report_data extends RESTful {
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
 
-        $datas = $this->model->select('gender', \DB::raw('count(*) as total'));
-        if($start_date != ''){
-            $datas->whereDate('created_at','>=',$start_date);
-        }
-        if($end_date != ''){
-            $datas->whereDate('created_at','<=',$end_date);
-        }
-        if(count($subdistrict_ids) > 0){
-            $datas->whereIn('subdistrict_id',$subdistrict_ids);
-        }
-        
-        $this->filter($datas, request(), 'collection_data');
-        $max_row = request()->input('max_row') ?? 50;
-        $datas = $datas->groupBy('gender')->orderBy('gender','asc')->paginate($max_row);
-        $datas->chunk(100);
+        $genders = collect([
+            [
+                'name'=>'NA',
+                'gender'=>null
+            ],
+            [
+                'name'=>'Laki-laki',
+                'gender'=>'L'
+            ],
+            [
+                'name'=>'Perempuan',
+                'gender'=>'P'
+            ]
+        ]);
 
         $collection_datas = \Models\collection_data::select(['*']);
         if($start_date != ''){
@@ -370,26 +369,17 @@ class Report_data extends RESTful {
         $this->filter($collection_datas, request(), 'collection_data');
         $collection_datas = $collection_datas->get();
 
-        $dataByGender[] = $collection_datas->whereNull('gender')->count();
-        $genders[] = 'NA';
-        $dataByGender[] = $collection_datas->where('gender','L')->count();
-        $genders[] = 'Laki-laki';
-        $dataByGender[] = $collection_datas->where('gender','P')->count();
-        $genders[] = 'Perempuan';
-
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListGenderAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListGenderAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
         
         $with['subdistrict_ids'] = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
-        $with['datas'] = $datas;
+        $with['datas'] = $genders;
         $with['model'] = request()->model;
         $with['start_date'] = request()->start_date;
         $with['end_date'] = request()->end_date;
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
-        $with['genders'] = $genders;
-        $with['dataByGender'] = $dataByGender;
         $with['actions'] = $actions;
         return $with;
     }
@@ -400,21 +390,12 @@ class Report_data extends RESTful {
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
 
-        $datas = $this->model->select('job_type_id', \DB::raw('count(*) as total'));
-        if($start_date != ''){
-            $datas->whereDate('created_at','>=',$start_date);
-        }
-        if($end_date != ''){
-            $datas->whereDate('created_at','<=',$end_date);
-        }
-        if(count($subdistrict_ids) > 0){
-            $datas->whereIn('subdistrict_id',$subdistrict_ids);
-        }
-        
-        $this->filter($datas, request(), 'collection_data');
-        $max_row = request()->input('max_row') ?? 50;
-        $datas = $datas->groupBy('job_type_id')->orderBy('job_type_id','asc')->paginate($max_row);
-        $datas->chunk(100);
+        $job_type = new \Models\job_type();
+        $job_type->id = null;
+        $job_type->code = 'NA';
+        $job_type->name = 'NA';
+        $job_types[] = $job_type;
+        $job_types = array_merge($job_types,\Models\job_type::get()->all());
 
         $collection_datas = \Models\collection_data::select(['*']);
         if($start_date != ''){
@@ -429,27 +410,17 @@ class Report_data extends RESTful {
         $this->filter($collection_datas, request(), 'collection_data');
         $collection_datas = $collection_datas->get();
 
-        $job_type = \Models\job_type::orderBy(\DB::raw('FIELD(code, "DLL")'))->get();
-        $job_types = ['NA'];
-        $dataByJob = [$collection_datas->whereNull('job_type_id')->count()];
-        foreach($job_type as $job_type){
-            $job_types[] = $job_type->name;
-            $dataByJob[] = $collection_datas->where('job_type_id',$job_type->id)->count();
-        }
-
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListJobAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListJobAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
         
         $with['subdistrict_ids'] = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
-        $with['datas'] = $datas;
+        $with['datas'] = $job_types;
         $with['model'] = request()->model;
         $with['start_date'] = request()->start_date;
         $with['end_date'] = request()->end_date;
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
-        $with['job_types'] = $job_types;
-        $with['dataByJob'] = $dataByJob;
         $with['actions'] = $actions;
         return $with;
     }
