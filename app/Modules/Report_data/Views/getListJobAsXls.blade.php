@@ -28,7 +28,7 @@
                 $dataBySubdistrict[] = $collection_data->count();
             ?>
             <tr>
-                <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
+                <td class="text-center">{{ ++$i }}</td>
                 <td>{{ $data->job_type->name ?? 'NA' }}</td>
                 <td class="text-center">{{ $verifikasi->count() }}</td>
                 <td class="text-center">{{ $dibagikan->count() }}</td>
