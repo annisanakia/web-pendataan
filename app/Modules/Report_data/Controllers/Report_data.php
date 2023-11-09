@@ -61,10 +61,14 @@ class Report_data extends RESTful {
             // Jenis Kelamin
             $with = $this->getListByGender();
             return view($this->controller_name . '::listByGender', $with);
-        }else{
+        }elseif($model == 7){
             // Pekerjaan
             $with = $this->getListByJob();
             return view($this->controller_name . '::listByJob', $with);
+        }else{
+            // Umur
+            $with = $this->getListByAge();
+            return view($this->controller_name . '::listByAge', $with);
         }
     }
 
@@ -450,6 +454,63 @@ class Report_data extends RESTful {
         return $with;
     }
 
+    public function getListByAge()
+    {
+        $start_date = request()->start_date;
+        $end_date = request()->end_date;
+        $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+
+        $ages = collect([
+            [
+                'name'=>'NA',
+                'age_start'=>null,
+                'age_end'=>null
+            ],
+            [
+                'name'=>'17 - 30',
+                'age_start'=>17,
+                'age_end'=>30
+            ],
+            [
+                'name'=>'31 - 45',
+                'age_start'=>31,
+                'age_end'=>45
+            ],
+            [
+                'name'=>'46 - seterusnya',
+                'age_start'=>46,
+                'age_end'=>200
+            ]
+        ]);
+
+        $collection_datas = \Models\collection_data::select(['*', \DB::raw('TIMESTAMPDIFF (YEAR, dob , CURDATE()) AS age')]);
+        if($start_date != ''){
+            $collection_datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        if(count($subdistrict_ids) > 0){
+            $collection_datas->whereIn('subdistrict_id',$subdistrict_ids);
+        }
+        $this->filter($collection_datas, request(), 'collection_data');
+        $collection_datas = $collection_datas->orderBy('age','desc')->get();
+
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAgeAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAgeAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+        
+        $with['subdistrict_ids'] = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+        $with['datas'] = $ages;
+        $with['model'] = request()->model;
+        $with['start_date'] = request()->start_date;
+        $with['end_date'] = request()->end_date;
+        $with['param'] = request()->all();
+        $with['collection_datas'] = $collection_datas;
+        $with['actions'] = $actions;
+        return $with;
+    }
+
     public function customFilter($data, $newFilters)
     {
         foreach ($newFilters as $key => $value) {
@@ -687,6 +748,38 @@ class Report_data extends RESTful {
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Pekerjaan ('.date('d-m-Y').').xls"');
+    }
+    
+    public function getListAgeAsPdf()
+    {
+        $template = $this->controller_name . '::getListAgeAsPdf';
+        $data = $this->getListByAge();
+        $data['title_head_export'] = 'Rekap Berdasarkan Umur';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('A4', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Rekap Berdasarkan Umur ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListAgeAsXls()
+    {
+        $template = $this->controller_name . '::getListAgeAsXls';
+        $data = $this->getListByAge();
+        $data['title_head_export'] = 'Rekap Berdasarkan Umur';
+        $data['title_col_sum'] = 5;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Umur ('.date('d-m-Y').').xls"');
     }
     
 }

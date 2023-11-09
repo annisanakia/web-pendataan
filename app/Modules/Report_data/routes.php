@@ -27,4 +27,6 @@ Route::group(['prefix' => 'report_data', 'namespace' => 'App\Modules\Report_data
     Route::get('/getListGenderAsXls', ['as' => 'report_data.getListGenderAsXls', 'uses' => 'Report_data@getListGenderAsXls']);
     Route::get('/getListJobAsPdf', ['as' => 'report_data.getListJobAsPdf', 'uses' => 'Report_data@getListJobAsPdf']);
     Route::get('/getListJobAsXls', ['as' => 'report_data.getListJobAsXls', 'uses' => 'Report_data@getListJobAsXls']);
+    Route::get('/getListAgeAsPdf', ['as' => 'report_data.getListAgeAsPdf', 'uses' => 'Report_data@getListAgeAsPdf']);
+    Route::get('/getListAgeAsXls', ['as' => 'report_data.getListAgeAsXls', 'uses' => 'Report_data@getListAgeAsXls']);
 });
