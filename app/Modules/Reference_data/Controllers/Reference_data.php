@@ -109,7 +109,7 @@ class Reference_data extends RESTful {
         $data['title_head_export'] = 'Data Referensi';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'portrait');
+            ->setPaper('A4', 'portrait');
 
         if (request()->has('print_view')) {
             return view($template, $data);

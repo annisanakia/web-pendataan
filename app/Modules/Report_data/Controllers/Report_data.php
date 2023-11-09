@@ -472,7 +472,7 @@ class Report_data extends RESTful {
         $data['title_head_export'] = 'Rekap Berdasarkan NIK';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'landscape');
+            ->setPaper('A4', 'landscape');
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -504,7 +504,7 @@ class Report_data extends RESTful {
         $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'portrait');
+            ->setPaper('A4', 'portrait');
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -536,7 +536,7 @@ class Report_data extends RESTful {
         $data['title_head_export'] = 'Rekap Berdasarkan Kelurahan';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'portrait');
+            ->setPaper('A4', 'portrait');
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -568,7 +568,7 @@ class Report_data extends RESTful {
         $data['title_head_export'] = 'Rekap Berdasarkan Koordinator';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'portrait');
+            ->setPaper('A4', 'portrait');
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -600,7 +600,7 @@ class Report_data extends RESTful {
         $data['title_head_export'] = 'Rekap Berdasarkan TPS';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'portrait');
+            ->setPaper('A4', 'portrait');
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -632,7 +632,7 @@ class Report_data extends RESTful {
         $data['title_head_export'] = 'Rekap Berdasarkan Jenis Kelamin';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'portrait');
+            ->setPaper('A4', 'portrait');
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -664,7 +664,7 @@ class Report_data extends RESTful {
         $data['title_head_export'] = 'Rekap Berdasarkan Pekerjaan';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'portrait');
+            ->setPaper('A4', 'portrait');
 
         if (request()->has('print_view')) {
             return view($template, $data);

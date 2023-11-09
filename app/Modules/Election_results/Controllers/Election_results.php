@@ -44,7 +44,7 @@ class Election_results extends RESTful {
         $data['title_head_export'] = 'Data Hasil Pemilu';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('legal', 'portrait');
+            ->setPaper('A4', 'portrait');
 
         if (request()->has('print_view')) {
             return view($template, $data);
