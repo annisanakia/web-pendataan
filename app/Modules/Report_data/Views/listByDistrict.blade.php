@@ -1,7 +1,38 @@
+<style>
+    .order-link{
+        position: relative;
+        cursor:pointer
+    }
+    .order-link:before,
+    .order-link:after{
+        position: absolute;
+        display: block;
+        opacity: .125;
+        right: 10px;
+        line-height: 9px;
+        font-size: .8em;
+    }
+    .order-link:before{
+        bottom: 50%;
+        content: "▲";
+        content: "▲"/"";
+    }
+    .order-link:after{
+        top: 50%;
+        content: "▼";
+        content: "▼"/"";
+    }
+    .order-link.sort-asc:before,
+    .order-link.sort-desc:after{
+        opacity: .6;
+    }
+</style>
 <form method="GET" action="{{ url($controller_name) }}" accept-charset="UTF-8" class="form-validation-ajax">
 <input type="hidden" name="model" value="{{ $model }}">
 <input type="hidden" name="start_date" value="{{ $start_date }}">
 <input type="hidden" name="end_date" value="{{ $end_date }}">
+<input type="hidden" name="orderBy" value="{{ $orderBy }}" class="order-input">
+<input type="hidden" name="order" value="{{ $order }}" class="order-input">
 <div class="card mt-4">
     <div class="card-body">
         <div class="col-xl-12">
@@ -26,11 +57,21 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>Kecamatan</th>
-                    <th width="28%">Kode</th>
-                    <th class="text-center">Terverifikasi</th>
-                    <th class="text-center">Sudah Dibagikan</th>
-                    <th class="text-center">Total Data</th>
+                    <th class="text-center order-link {{ ($orderBy == 'name'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=name&order='.($orderBy == 'name'? $order : 0)+1) }}">
+                        Kecamatan
+                    </th>
+                    <th width="28%" class="text-center order-link {{ ($orderBy == 'code'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=code&order='.($orderBy == 'code'? $order : 0)+1) }}">
+                        Kode
+                    </th>
+                    <th class="text-center order-link {{ ($orderBy == 'verif'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=verif&order='.($orderBy == 'verif'? $order : 0)+1) }}">
+                        Terverifikasi
+                    </th>
+                    <th class="text-center order-link {{ ($orderBy == 'share'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=share&order='.($orderBy == 'share'? $order : 0)+1) }}" >
+                        Sudah Dibagikan
+                    </th>
+                    <th class="text-center order-link {{ ($orderBy == 'total'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=total&order='.($orderBy == 'total'? $order : 0)+1) }}">
+                        Total Data
+                    </th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
@@ -108,6 +149,11 @@
         e.preventDefault();
         var url = $(this).attr('href');
         getDataDetail(url,$('.form-validation-ajax').serialize());
+    });
+    $(".order-link").click(function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        getDataDetail(url,$('.form-validation-ajax :not(.order-input)').serialize());
     });
     function getDataDetail(url,data){
         $.ajax({

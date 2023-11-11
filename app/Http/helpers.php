@@ -181,3 +181,12 @@ function status_shareColor() {
     return $status;
 }
 
+function orders() {
+    $orders = [
+        1 => 'asc',
+        2 => 'desc'
+    ];
+
+    return $orders;
+}
+

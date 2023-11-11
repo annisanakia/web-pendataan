@@ -37,4 +37,19 @@ class district extends Model {
     {
         return $this->hasMany('Models\subdistrict');
     }
+
+    public function collection_datas()
+    {
+        return $this->hasMany('Models\collection_data');
+    }
+
+    public function collections_verif()
+    {
+        return $this->hasMany('Models\collection_data')->where('status',2);
+    }
+
+    public function collections_share()
+    {
+        return $this->hasMany('Models\collection_data')->where('status_share',2);
+    }
 }
