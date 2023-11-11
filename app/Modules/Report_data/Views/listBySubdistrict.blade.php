@@ -92,7 +92,7 @@
         <!-- End Table with stripped rows -->
         <div class="table-list-footer">
             <span class="result-count">Showing {{$datas->firstItem()}} to {{$datas->lastItem()}} of {{$datas->total()}} entries</span>
-            {{ $datas->appends($param)->links('component.pagination')}}        
+            {{ $datas->onEachSide(0)->appends($param)->links('component.pagination')}}        
         </div>
     </div>
 </div>

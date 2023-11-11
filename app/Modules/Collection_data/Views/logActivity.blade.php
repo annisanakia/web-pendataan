@@ -180,7 +180,7 @@
                 <!-- End Table with stripped rows -->
                 <div class="table-list-footer">
                     <span class="result-count">Showing {{$log_activitys->firstItem()}} to {{$log_activitys->lastItem()}} of {{$log_activitys->total()}} entries</span>
-                    {{ $log_activitys->appends($param)->links('component.pagination')}}        
+                    {{ $log_activitys->onEachSide(0)->appends($param)->links('component.pagination')}}        
                 </div>
                 </form>
             </div>
