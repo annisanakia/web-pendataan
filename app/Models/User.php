@@ -92,4 +92,19 @@ class User extends Authenticatable
     {
         return $this->hasMany('Models\users_subdistrict', 'user_id', 'id');
     }
+
+    public function collections_data()
+    {
+        return $this->hasMany('Models\collection_data', 'coordinator_id', 'id');
+    }
+
+    public function collections_verif()
+    {
+        return $this->hasMany('Models\collection_data', 'coordinator_id', 'id')->where('status',2);
+    }
+
+    public function collections_share()
+    {
+        return $this->hasMany('Models\collection_data', 'coordinator_id', 'id')->where('status_share',2);
+    }
 }

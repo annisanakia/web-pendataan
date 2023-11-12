@@ -2,6 +2,8 @@
 <input type="hidden" name="model" value="{{ $model }}">
 <input type="hidden" name="start_date" value="{{ $start_date }}">
 <input type="hidden" name="end_date" value="{{ $end_date }}">
+<input type="hidden" name="sort_field" value="{{ $sort_field }}" class="order-input">
+<input type="hidden" name="sort_type" value="{{ $sort_type }}" class="order-input">
 <div class="card mt-4">
     <div class="card-body">
         <div class="col-xl-12">
@@ -26,10 +28,18 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>Nama</th>
-                    <th class="text-center">Terverifikasi</th>
-                    <th class="text-center">Sudah Dibagikan</th>
-                    <th class="text-center">Total Data</th>
+                    <th class="text-center order-link {{ ($sort_field == 'name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=name&sort_type='.($sort_field == 'name'? $sort_type : 0)+1) }}">
+                        Nama
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=verif&sort_type='.($sort_field == 'verif'? $sort_type : 0)+1) }}">
+                        Terverifikasi
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=share&sort_type='.($sort_field == 'share'? $sort_type : 0)+1) }}" >
+                        Sudah Dibagikan
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'data'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=data&sort_type='.($sort_field == 'data'? $sort_type : 0)+1) }}">
+                        Total Data
+                    </th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
@@ -119,6 +129,11 @@
         e.preventDefault();
         var url = $(this).attr('href');
         getDataDetail(url,$('.form-validation-ajax').serialize());
+    });
+    $(".order-link").click(function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        getDataDetail(url,$('.form-validation-ajax :not(.order-input)').serialize());
     });
     function getDataDetail(url,data){
         $.ajax({
