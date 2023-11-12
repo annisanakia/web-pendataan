@@ -206,6 +206,8 @@ class Report_data extends RESTful {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
 
         $datas = \Models\subdistrict::select(['*']);
         if(count($subdistrict_ids) > 0){
@@ -214,6 +216,16 @@ class Report_data extends RESTful {
 
         $this->filter($datas, request(), 'subdistrict');
         $max_row = request()->input('max_row') ?? 50;
+        
+        $sort_type = $sort_type > 2? 0 : $sort_type;
+        $order_field = orders()[$sort_type] ?? null;
+        if(in_array($sort_field,['code','name']) && $order_field){
+            $datas->orderBy($sort_field, $order_field ?? 'desc');
+        }
+        if(in_array($sort_field,['verif','share','data']) && $order_field){
+            $datas->withCount('collections_'.$sort_field)->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
+        }
+        
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
         $datas->chunk(100);
 
@@ -244,6 +256,8 @@ class Report_data extends RESTful {
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
         $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
         return $with;
     }
 

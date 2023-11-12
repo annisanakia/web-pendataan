@@ -5,6 +5,8 @@
 @foreach($subdistrict_ids as $subdistrict_id)
     <input type="hidden" name="subdistrict_ids[]" value="{{ $subdistrict_id }}">
 @endforeach
+<input type="hidden" name="sort_field" value="{{ $sort_field }}" class="order-input">
+<input type="hidden" name="sort_type" value="{{ $sort_type }}" class="order-input">
 <div class="card mt-4">
     <div class="card-body">
         <div class="col-xl-12">
@@ -29,11 +31,21 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>Kelurahan</th>
-                    <th width="28%">Kode</th>
-                    <th class="text-center">Terverifikasi</th>
-                    <th class="text-center">Sudah Dibagikan</th>
-                    <th class="text-center">Total Data</th>
+                    <th class="text-center order-link {{ ($sort_field == 'name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=name&sort_type='.($sort_field == 'name'? $sort_type : 0)+1) }}">
+                        Kelurahan
+                    </th>
+                    <th width="28%" class="text-center order-link {{ ($sort_field == 'code'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=code&sort_type='.($sort_field == 'code'? $sort_type : 0)+1) }}">
+                        Kode
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=verif&sort_type='.($sort_field == 'verif'? $sort_type : 0)+1) }}">
+                        Terverifikasi
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=share&sort_type='.($sort_field == 'share'? $sort_type : 0)+1) }}" >
+                        Sudah Dibagikan
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'data'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=data&sort_type='.($sort_field == 'data'? $sort_type : 0)+1) }}">
+                        Total Data
+                    </th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
@@ -108,6 +120,11 @@
         e.preventDefault();
         var url = $(this).attr('href');
         getDataDetail(url,$('.form-validation-ajax').serialize());
+    });
+    $(".order-link").click(function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        getDataDetail(url,$('.form-validation-ajax :not(.order-input)').serialize());
     });
     function getDataDetail(url,data){
         $.ajax({
