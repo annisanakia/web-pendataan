@@ -98,4 +98,19 @@ class collection_data extends Model {
     {
         return $this->belongsTo('Models\job_type');
     }
+
+    public function collections_tps_data()
+    {
+        return $this->hasMany('Models\collection_data', 'no_tps', 'no_tps');
+    }
+
+    public function collections_tps_verif()
+    {
+        return $this->hasMany('Models\collection_data', 'no_tps', 'no_tps')->where('status',2);
+    }
+
+    public function collections_tps_share()
+    {
+        return $this->hasMany('Models\collection_data', 'no_tps', 'no_tps')->where('status_share',2);
+    }
 }

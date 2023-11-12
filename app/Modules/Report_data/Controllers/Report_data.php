@@ -161,10 +161,10 @@ class Report_data extends RESTful {
         $sort_type = $sort_type > 2? 0 : $sort_type;
         $order_field = orders()[$sort_type] ?? null;
         if(in_array($sort_field,['code','name']) && $order_field){
-            $datas->orderBy($sort_field, $order_field ?? 'DESC');
+            $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount('collections_'.$sort_field)->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'DESC');
+            $datas->withCount('collections_'.$sort_field)->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
         }
 
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
@@ -294,6 +294,8 @@ class Report_data extends RESTful {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_id = request()->subdistrict_id;
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
 
         $datas = $this->model->select('no_tps', \DB::raw('count(*) as total'));
         if($start_date != ''){
@@ -308,6 +310,18 @@ class Report_data extends RESTful {
         
         $this->filter($datas, request(), 'collection_data');
         $max_row = request()->input('max_row') ?? 50;
+        
+        $sort_type = $sort_type > 2? 0 : $sort_type;
+        $order_field = orders()[$sort_type] ?? null;
+        if(in_array($sort_field,['no_tps']) && $order_field){
+            $datas->orderBy($sort_field, $order_field ?? 'desc');
+        }
+        if(in_array($sort_field,['verif','share','data']) && $order_field){
+            $datas->withCount(['collections_tps_'.$sort_field  => function($query) use ($subdistrict_id){
+                $query->where('subdistrict_id',$subdistrict_id);
+            }])->orderBy('collections_tps_'.$sort_field.'_count', $order_field ?? 'desc');
+        }
+
         $datas = $datas->groupBy('no_tps')->orderBy('no_tps','asc')->paginate($max_row);
         $datas->chunk(100);
 
@@ -346,6 +360,8 @@ class Report_data extends RESTful {
         $with['no_tps'] = $no_tps;
         $with['dataByTPS'] = $dataByTPS;
         $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
         return $with;
     }
 
