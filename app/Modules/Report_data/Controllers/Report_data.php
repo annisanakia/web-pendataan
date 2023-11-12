@@ -571,8 +571,10 @@ class Report_data extends RESTful {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
 
-        $ages = collect([
+        $ages = [
             [
                 'name'=>'NA',
                 'age_start'=>null,
@@ -593,7 +595,7 @@ class Report_data extends RESTful {
                 'age_start'=>46,
                 'age_end'=>200
             ]
-        ]);
+        ];
 
         $collection_datas = \Models\collection_data::select(['*', \DB::raw('TIMESTAMPDIFF (YEAR, dob , CURDATE()) AS age')]);
         if($start_date != ''){
@@ -608,6 +610,21 @@ class Report_data extends RESTful {
         $this->filter($collection_datas, request(), 'collection_data');
         $collection_datas = $collection_datas->orderBy('age','desc')->get();
 
+        foreach($ages as $key => $data){
+            $collection_data = $collection_datas->where('age','>=',$data['age_start'] ?? null)
+                            ->where('age','<=',$data['age_end'] ?? null);
+            $ages[$key]['verif'] = $collection_data->where('status',2)->count();
+            $ages[$key]['share'] = $collection_data->where('status_share',2)->count();
+            $ages[$key]['data'] = $collection_data->count();
+        }
+
+        $sort_type = $sort_type > 2? 0 : $sort_type;
+        $order_field = orders()[$sort_type] ?? null;
+        if($sort_field != '' && $order_field){
+            $keys = array_column($ages, $sort_field);
+            array_multisort($keys, ($order_field == 'asc'? SORT_ASC : SORT_DESC), $ages);
+        }
+
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAgeAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListAgeAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
@@ -620,6 +637,8 @@ class Report_data extends RESTful {
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
         $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
         return $with;
     }
 

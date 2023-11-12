@@ -5,6 +5,8 @@
 @foreach($subdistrict_ids as $subdistrict_id)
     <input type="hidden" name="subdistrict_ids[]" value="{{ $subdistrict_id }}">
 @endforeach
+<input type="hidden" name="sort_field" value="{{ $sort_field }}" class="order-input">
+<input type="hidden" name="sort_type" value="{{ $sort_type }}" class="order-input">
 <div class="card mt-4">
     <div class="card-body">
         <div class="col-xl-12">
@@ -26,9 +28,15 @@
                 <tr>
                     <th width="5%" class="text-center">No</th>
                     <th>Umur</th>
-                    <th class="text-center">Terverifikasi</th>
-                    <th class="text-center">Sudah Dibagikan</th>
-                    <th class="text-center">Total Data</th>
+                    <th class="text-center order-link {{ ($sort_field == 'verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=verif&sort_type='.($sort_field == 'verif'? $sort_type : 0)+1) }}">
+                        Terverifikasi
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=share&sort_type='.($sort_field == 'share'? $sort_type : 0)+1) }}" >
+                        Sudah Dibagikan
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'data'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=data&sort_type='.($sort_field == 'data'? $sort_type : 0)+1) }}">
+                        Total Data
+                    </th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
@@ -54,23 +62,19 @@
                 @else
                     @foreach($datas as $data)
                     <?php
-                        $collection_data = $collection_datas->where('age','>=',$data['age_start'] ?? null)
-                                        ->where('age','<=',$data['age_end'] ?? null);
-                        $verifikasi = $collection_data->where('status',2);
-                        $dibagikan = $collection_data->where('status_share',2);
                         $ages[] = $data['name'] ?? 'NA';
-                        $dataByAge[] = $collection_data->count();
+                        $dataByAge[] = $data['data'];
 
-                        $total_verifikasi += $verifikasi->count();
-                        $total_dibagikan += $dibagikan->count();
-                        $total += $collection_data->count();
+                        $total_verifikasi += $data['verif'];
+                        $total_dibagikan += $data['share'];
+                        $total += $data['data'];
                     ?>
                     <tr>
                         <td class="text-center">{{ ++$i }}</td>
                         <td>{{ $data['name'] ?? 'NA' }}</td>
-                        <td class="text-center">{{ $verifikasi->count() }}</td>
-                        <td class="text-center">{{ $dibagikan->count() }}</td>
-                        <td class="text-center">{{ $collection_data->count() }}</td>
+                        <td class="text-center">{{ $data['verif'] }}</td>
+                        <td class="text-center">{{ $data['share'] }}</td>
+                        <td class="text-center">{{ $data['data'] }}</td>
                     </tr>
                     @endforeach
                 @endif
@@ -99,6 +103,11 @@
         e.preventDefault();
         var url = $(this).attr('href');
         getDataDetail(url,$('.form-validation-ajax').serialize());
+    });
+    $(".order-link").click(function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        getDataDetail(url,$('.form-validation-ajax :not(.order-input)').serialize());
     });
     function getDataDetail(url,data){
         $.ajax({
