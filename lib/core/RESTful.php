@@ -60,8 +60,11 @@ class RESTful extends Controller
 
     public function getList(Request $request, $start = '', $end = '')
     {
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
         $data = $this->model->select(['*']);
 
+        $sort_type = request()->sort_type > 2? 0 : request()->sort_type;
         $table = $this->table_name != '' ? $this->table_name : strtolower($this->controller_name);
         $this->filter($data, $request, $table);
         $this->order($data, $request);
@@ -104,10 +107,16 @@ class RESTful extends Controller
         if (method_exists($this, 'customParam')) {
             $with = $this->customParam();
         }
+
+        $url_param = $request->all();
+        unset($url_param['sort_field'],$url_param['sort_type']);
+        
         $with['datas'] = $data;
         $with['param'] = $request->all();
-
+        $with['url_param'] = $url_param;
         $with['actions'] = $this->actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
 
         return $with;
     }
@@ -134,7 +143,7 @@ class RESTful extends Controller
                         }
                         if (array_key_exists($key, $tables)) {
                             if ($tables[$key]->getType()->getName() == 'string' || $tables[$key]->getType()->getName() == 'text') {
-                                $data->where($key, 'LIKE', '%' . $value . '%');
+                                $data->where($table.'.'.$key, 'LIKE', '%' . $value . '%');
                             } elseif ($tables[$key]->getType()->getName() == 'date' || $tables[$key]->getType()->getName() == 'time') {
                                 if ($key == 'start' || $key == 'start_date') {
                                     $data->where($key, '>=', $value);
@@ -168,8 +177,10 @@ class RESTful extends Controller
     public function order($data, $request)
     {
         if ($request->isMethod('post') || $request->isMethod('get')) {
-            if ($request->input('sort_field') != '' && $request->input('sort_type') != '') {
-                $data->orderBy($request->input('sort_field'), $request->input('sort_type'));
+            $sort_type = $request->input('sort_type') > 2? 0 : $request->input('sort_type');
+            $order_field = orders()[$sort_type] ?? null;
+            if ($request->input('sort_field') != '' && $order_field) {
+                $data->orderBy($request->input('sort_field'), $order_field);
             } else {
                 $data->orderBy('id', 'desc');
             }

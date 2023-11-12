@@ -1,4 +1,6 @@
 <form method="GET" action="{{ url($controller_name) }}" accept-charset="UTF-8">
+<input type="hidden" name="sort_field" value="{{ $sort_field }}" class="order-input">
+<input type="hidden" name="sort_type" value="{{ $sort_type }}" class="order-input">
 
 <div class="card">
     <div class="card-body">
@@ -18,10 +20,26 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>NIK</th>
-                    <th width="20%">Nama Lengkap</th>
-                    <th width="20%">Kecamatan</th>
-                    <th width="20%">Kelurahan</th>
+                    <th class="order-link {{ ($sort_field == 'nik'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=nik&sort_type='.(($sort_field == 'nik'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            NIK
+                        </a>
+                    </th>
+                    <th width="20%" class="order-link {{ ($sort_field == 'name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=name&sort_type='.(($sort_field == 'name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Nama Lengkap
+                        </a>
+                    </th>
+                    <th width="20%" class="order-link {{ ($sort_field == 'district_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=district_name&sort_type='.(($sort_field == 'district_name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Kecamatan
+                        </a>
+                    </th>
+                    <th width="20%" class="order-link {{ ($sort_field == 'subdistrict_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=subdistrict_name&sort_type='.(($sort_field == 'subdistrict_name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Kelurahan
+                        </a>
+                    </th>
                     <th width="12%" class="text-center">Aksi</th>
                 </tr>
                 <tr>

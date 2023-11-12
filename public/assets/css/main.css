@@ -133,3 +133,14 @@
 .order-link.sort-desc:after{
     opacity: .6;
 }
+
+.order-link a{
+    display:block;
+    width:100%;
+    text-decoration: none;
+    color:inherit !important
+}
+
+table thead tr th{
+    vertical-align: middle;
+}

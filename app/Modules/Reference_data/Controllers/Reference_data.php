@@ -26,6 +26,16 @@ class Reference_data extends RESTful {
         parent::__construct($model, $controller_name);
     }
 
+    public function beforeIndex($data)
+    {
+        $data->select(['reference_data.*','subdistrict.name as subdistrict_name','district.name as district_name'])
+            ->leftJoin('subdistrict', function ($join) {
+                $join->on('subdistrict.id', '=', 'reference_data.subdistrict_id');
+            })->leftJoin('district', function ($join) {
+                $join->on('district.id', '=', 'reference_data.district_id');
+            });
+    }
+
     public function filterDistrict()
     {
         $globalTools = new \Lib\core\globalTools();

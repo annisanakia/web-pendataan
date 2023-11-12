@@ -78,8 +78,15 @@ class Report_data extends RESTful {
         $end_date = request()->end_date;
         $status = request()->status;
         $status_share = request()->status_share;
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
 
-        $datas = $this->model->select(['*']);
+        $datas = $this->model->select(['collection_data.*','subdistrict.name as subdistrict_name','users.name as coordinator_name']);
+        $datas->leftJoin('subdistrict', function ($join) {
+            $join->on('subdistrict.id', '=', 'collection_data.subdistrict_id');
+        })->leftJoin('users', function ($join) {
+            $join->on('users.id', '=', 'collection_data.coordinator_id');
+        });
         if($start_date != ''){
             $datas->whereDate('created_at','>=',$start_date);
         }
@@ -93,8 +100,11 @@ class Report_data extends RESTful {
             $datas->where('status_share',$status_share);
         }
         
+        $sort_type = request()->sort_type > 2? 0 : request()->sort_type;
         $this->filter($datas, request(), 'collection_data');
+        $this->order($datas, request());
         $max_row = request()->input('max_row') ?? 50;
+
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
         $datas->chunk(100);
 
@@ -143,6 +153,8 @@ class Report_data extends RESTful {
         $with['dates'] = $dates;
         $with['dataByDates'] = $dataByDates;
         $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
         return $with;
     }
 

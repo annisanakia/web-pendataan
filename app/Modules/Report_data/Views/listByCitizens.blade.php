@@ -2,6 +2,8 @@
 <input type="hidden" name="model" value="{{ $model }}">
 <input type="hidden" name="start_date" value="{{ $start_date }}">
 <input type="hidden" name="end_date" value="{{ $end_date }}">
+<input type="hidden" name="sort_field" value="{{ $sort_field }}" class="order-input">
+<input type="hidden" name="sort_type" value="{{ $sort_type }}" class="order-input">
 <div class="card mt-4">
     <div class="card-body">
         <div class="col-xl-12">
@@ -26,14 +28,30 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>NIK</th>
-                    <th>Nama Lengkap</th>
-                    <th>Kelurahan</th>
-                    <th>TPS</th>
-                    <th>Koordinator</th>
-                    <th width="13%">Status</th>
-                    <th width="13%">Status<br>Dibagikan</th>
-                    <th>Tanggal<br> Data Masuk</th>
+                    <th class="text-center order-link {{ ($sort_field == 'nik'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=nik&sort_type='.($sort_field == 'nik'? $sort_type : 0)+1) }}">
+                        NIK
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=name&sort_type='.($sort_field == 'name'? $sort_type : 0)+1) }}">
+                        Nama Lengkap
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'subdistrict_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=subdistrict_name&sort_type='.($sort_field == 'subdistrict_name'? $sort_type : 0)+1) }}">
+                        Kelurahan
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'no_tps'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=no_tps&sort_type='.($sort_field == 'no_tps'? $sort_type : 0)+1) }}">
+                        TPS
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'coordinator_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=coordinator_name&sort_type='.($sort_field == 'coordinator_name'? $sort_type : 0)+1) }}">
+                        Koordinator
+                    </th>
+                    <th width="13%" class="text-center order-link {{ ($sort_field == 'status'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=status&sort_type='.($sort_field == 'status'? $sort_type : 0)+1) }}">
+                        Status
+                    </th>
+                    <th width="13%" class="text-center order-link {{ ($sort_field == 'status_share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=status_share&sort_type='.($sort_field == 'status_share'? $sort_type : 0)+1) }}">
+                        Status<br>Dibagikan
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'created_at'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=created_at&sort_type='.($sort_field == 'created_at'? $sort_type : 0)+1) }}">
+                        Tanggal<br> Data Masuk
+                    </th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
@@ -101,6 +119,11 @@
         e.preventDefault();
         var url = $(this).attr('href');
         getDataDetail(url,$('.form-validation-ajax').serialize());
+    });
+    $(".order-link").click(function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        getDataDetail(url,$('.form-validation-ajax :not(.order-input)').serialize());
     });
     function getDataDetail(url,data){
         $('#getData').append('<div class="loader"><img src="{{asset("assets/images/loading.gif")}}" /></div>');

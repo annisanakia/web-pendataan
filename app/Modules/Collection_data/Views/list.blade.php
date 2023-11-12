@@ -1,4 +1,6 @@
 <form method="GET" action="{{ url($controller_name) }}" accept-charset="UTF-8">
+<input type="hidden" name="sort_field" value="{{ $sort_field }}" class="order-input">
+<input type="hidden" name="sort_type" value="{{ $sort_type }}" class="order-input">
 
 <div class="card">
     <div class="card-body">
@@ -22,14 +24,46 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th>NIK</th>
-                    <th width="10%">No Whatsapp</th>
-                    <th width="20%">Nama Lengkap</th>
-                    <th width="12%">Koordinator</th>
-                    <th width="15%">Kelurahan</th>
-                    <th width="7%">TPS</th>
-                    <th width="13%">Status</th>
-                    <th width="13%">Status<br>Dibagikan</th>
+                    <th class="order-link {{ ($sort_field == 'nik'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=nik&sort_type='.(($sort_field == 'nik'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            NIK
+                        </a>
+                    </th>
+                    <th width="10%" class="order-link {{ ($sort_field == 'whatsapp'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=whatsapp&sort_type='.(($sort_field == 'whatsapp'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            No Whatsapp
+                        </a>
+                    </th>
+                    <th width="20%" class="order-link {{ ($sort_field == 'name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=name&sort_type='.(($sort_field == 'name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Nama Lengkap
+                        </a>
+                    </th>
+                    <th width="12%" class="order-link {{ ($sort_field == 'coordinator_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=coordinator_name&sort_type='.(($sort_field == 'coordinator_name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Koordinator
+                        </a>
+                    </th>
+                    <th width="15%" class="order-link {{ ($sort_field == 'subdistrict_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=subdistrict_name&sort_type='.(($sort_field == 'subdistrict_name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Kelurahan
+                        </a>
+                    </th>
+                    <th width="7%" class="order-link {{ ($sort_field == 'no_tps'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=no_tps&sort_type='.(($sort_field == 'no_tps'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            TPS
+                        </a>
+                    </th>
+                    <th width="13%" class="order-link {{ ($sort_field == 'status'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=status&sort_type='.(($sort_field == 'status'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Status
+                        </a>
+                    </th>
+                    <th width="13%" class="order-link {{ ($sort_field == 'status_share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=status_share&sort_type='.(($sort_field == 'status_share'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Status<br>Dibagikan
+                        </a>
+                    </th>
                     <th width="10%" class="text-center">Aksi</th>
                 </tr>
                 <tr>
