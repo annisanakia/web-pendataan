@@ -101,3 +101,35 @@
     background: #e49d0d;
     border-color: #e49d0d;
 }
+
+.order-link{
+    position: relative;
+    cursor:pointer
+}
+
+.order-link:before,
+.order-link:after{
+    position: absolute;
+    display: block;
+    opacity: .125;
+    right: 10px;
+    line-height: 9px;
+    font-size: .8em;
+}
+
+.order-link:before{
+    bottom: 50%;
+    content: "▲";
+    content: "▲"/"";
+}
+
+.order-link:after{
+    top: 50%;
+    content: "▼";
+    content: "▼"/"";
+}
+
+.order-link.sort-asc:before,
+.order-link.sort-desc:after{
+    opacity: .6;
+}

@@ -1,32 +1,3 @@
-<style>
-    .order-link{
-        position: relative;
-        cursor:pointer
-    }
-    .order-link:before,
-    .order-link:after{
-        position: absolute;
-        display: block;
-        opacity: .125;
-        right: 10px;
-        line-height: 9px;
-        font-size: .8em;
-    }
-    .order-link:before{
-        bottom: 50%;
-        content: "▲";
-        content: "▲"/"";
-    }
-    .order-link:after{
-        top: 50%;
-        content: "▼";
-        content: "▼"/"";
-    }
-    .order-link.sort-asc:before,
-    .order-link.sort-desc:after{
-        opacity: .6;
-    }
-</style>
 <form method="GET" action="{{ url($controller_name) }}" accept-charset="UTF-8" class="form-validation-ajax">
 <input type="hidden" name="model" value="{{ $model }}">
 <input type="hidden" name="start_date" value="{{ $start_date }}">
