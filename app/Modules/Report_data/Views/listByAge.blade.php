@@ -110,12 +110,20 @@
         getDataDetail(url,$('.form-validation-ajax :not(.order-input)').serialize());
     });
     function getDataDetail(url,data){
+        $('#getData').append('<div class="loader"><img src="{{asset("assets/images/loading.gif")}}" /></div>');
         $.ajax({
             url: url,
             type: 'GET',
             data: data,
             success: function(data) { 
                 $('#getData').html(data);
+            },
+            error: function (e) {
+                swalDeleteButtons.fire(
+                    'Warning !!',
+                    'Terjadi Kesalahan Data',
+                    'error'
+                )
             }
         });
     }
