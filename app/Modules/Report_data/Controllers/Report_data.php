@@ -164,7 +164,14 @@ class Report_data extends RESTful {
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount('collections_'.$sort_field)->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
+            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date){
+                if($start_date != ''){
+                    $query->whereDate('created_at','>=',$start_date);
+                }
+                if($end_date != ''){
+                    $query->whereDate('created_at','<=',$end_date);
+                }
+            }])->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
         }
 
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
@@ -223,7 +230,14 @@ class Report_data extends RESTful {
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount('collections_'.$sort_field)->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
+            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date){
+                if($start_date != ''){
+                    $query->whereDate('created_at','>=',$start_date);
+                }
+                if($end_date != ''){
+                    $query->whereDate('created_at','<=',$end_date);
+                }
+            }])->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
         }
         
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
@@ -280,7 +294,14 @@ class Report_data extends RESTful {
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount('collections_'.$sort_field)->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
+            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date){
+                if($start_date != ''){
+                    $query->whereDate('created_at','>=',$start_date);
+                }
+                if($end_date != ''){
+                    $query->whereDate('created_at','<=',$end_date);
+                }
+            }])->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
         }
 
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
@@ -345,8 +366,16 @@ class Report_data extends RESTful {
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount(['collections_tps_'.$sort_field  => function($query) use ($subdistrict_id){
-                $query->where('subdistrict_id',$subdistrict_id);
+            $datas->withCount(['collections_tps_'.$sort_field  => function($query) use ($subdistrict_id,$start_date,$end_date){
+                if($subdistrict_id != ''){
+                    $query->where('subdistrict_id',$subdistrict_id);
+                }
+                if($start_date != ''){
+                    $query->whereDate('created_at','>=',$start_date);
+                }
+                if($end_date != ''){
+                    $query->whereDate('created_at','<=',$end_date);
+                }
             }])->orderBy('collections_tps_'.$sort_field.'_count', $order_field ?? 'desc');
         }
 
@@ -465,13 +494,8 @@ class Report_data extends RESTful {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
-
-        $job_type = new \Models\job_type();
-        $job_type->id = null;
-        $job_type->code = 'NA';
-        $job_type->name = 'NA';
-        $job_types[] = $job_type;
-        $job_types = array_merge($job_types,\Models\job_type::get()->all());
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
 
         $collection_datas = \Models\collection_data::select(['*']);
         if($start_date != ''){
@@ -486,6 +510,45 @@ class Report_data extends RESTful {
         $this->filter($collection_datas, request(), 'collection_data');
         $collection_datas = $collection_datas->get();
 
+        $jobs = \Models\job_type::select(['*']);
+
+        $sort_type = $sort_type > 2? 0 : $sort_type;
+        $order_field = orders()[$sort_type] ?? null;
+        if(in_array($sort_field,['verif','share','data']) && $order_field){
+            $jobs->withCount(['collections_'.$sort_field  => function($query) use ($subdistrict_ids,$start_date,$end_date){
+                if(count($subdistrict_ids) > 0){
+                    $query->whereIn('subdistrict_id',$subdistrict_ids);
+                }
+                if($start_date != ''){
+                    $query->whereDate('created_at','>=',$start_date);
+                }
+                if($end_date != ''){
+                    $query->whereDate('created_at','<=',$end_date);
+                }
+            }]);
+        }
+        $jobs = $jobs->get();
+
+        $collection_data = $collection_datas->where('job_type_id',null);
+        $job_type = new \Models\job_type();
+        $job_type->id = null;
+        $job_type->code = 'NA';
+        $job_type->name = 'NA';
+        $job_type->collections_data_count = $collection_data->count();
+        $job_type->collections_verif_count = $collection_data->where('status',2)->count();
+        $job_type->collections_share_count = $collection_data->where('status_share',2)->count();
+
+        $job_types[] = $job_type;
+        $job_types = collect(array_merge($job_types,$jobs->all()));
+
+        if(in_array($sort_field,['verif','share','data']) && $order_field){
+            if(($order_field ?? 'desc') == 'asc'){
+                $job_types = $job_types->sortBy('collections_'.$sort_field.'_count');
+            }else{
+                $job_types = $job_types->sortByDesc('collections_'.$sort_field.'_count');
+            }
+        }
+
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListJobAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListJobAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
@@ -498,6 +561,8 @@ class Report_data extends RESTful {
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
         $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
         return $with;
     }
 

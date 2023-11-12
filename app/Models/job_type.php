@@ -27,4 +27,19 @@ class job_type extends Model {
         $v = Validator::make($data, job_type::$rules, job_type::$customMessages);
         return $v;
     }
+
+    public function collections_data()
+    {
+        return $this->hasMany('Models\collection_data');
+    }
+
+    public function collections_verif()
+    {
+        return $this->hasMany('Models\collection_data')->where('status',2);
+    }
+
+    public function collections_share()
+    {
+        return $this->hasMany('Models\collection_data')->where('status_share',2);
+    }
 }
