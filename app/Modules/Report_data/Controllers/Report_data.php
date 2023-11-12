@@ -150,27 +150,21 @@ class Report_data extends RESTful {
     {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
-        $orderBy = request()->orderBy;
-        $order = request()->order;
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
 
         $datas = \Models\district::select(['*']);
 
         $this->filter($datas, request(), 'district');
         $max_row = request()->input('max_row') ?? 50;
         
-        $order = $order > 2? 0 : $order;
-        $order_field = orders()[$order] ?? null;
-        if(in_array($orderBy,['code','name']) && $order_field){
-            $datas->orderBy($orderBy, $order_field ?? 'DESC');
+        $sort_type = $sort_type > 2? 0 : $sort_type;
+        $order_field = orders()[$sort_type] ?? null;
+        if(in_array($sort_field,['code','name']) && $order_field){
+            $datas->orderBy($sort_field, $order_field ?? 'DESC');
         }
-        if($orderBy == 'verif' && $order_field){
-            $datas->withCount('collections_verif')->orderBy('collections_verif_count', $order_field ?? 'DESC');
-        }
-        if($orderBy == 'share' && $order_field){
-            $datas->withCount('collections_share')->orderBy('collections_share_count', $order_field ?? 'DESC');
-        }
-        if($orderBy == 'total' && $order_field){
-            $datas->withCount('collection_datas')->orderBy('collection_datas_count', $order_field ?? 'DESC');
+        if(in_array($sort_field,['verif','share','data']) && $order_field){
+            $datas->withCount('collections_'.$sort_field)->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'DESC');
         }
 
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
@@ -202,8 +196,8 @@ class Report_data extends RESTful {
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
         $with['actions'] = $actions;
-        $with['orderBy'] = $orderBy;
-        $with['order'] = $order;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
         return $with;
     }
 

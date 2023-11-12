@@ -38,7 +38,7 @@ class district extends Model {
         return $this->hasMany('Models\subdistrict');
     }
 
-    public function collection_datas()
+    public function collections_data()
     {
         return $this->hasMany('Models\collection_data');
     }

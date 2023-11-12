@@ -31,8 +31,8 @@
 <input type="hidden" name="model" value="{{ $model }}">
 <input type="hidden" name="start_date" value="{{ $start_date }}">
 <input type="hidden" name="end_date" value="{{ $end_date }}">
-<input type="hidden" name="orderBy" value="{{ $orderBy }}" class="order-input">
-<input type="hidden" name="order" value="{{ $order }}" class="order-input">
+<input type="hidden" name="sort_field" value="{{ $sort_field }}" class="order-input">
+<input type="hidden" name="sort_type" value="{{ $sort_type }}" class="order-input">
 <div class="card mt-4">
     <div class="card-body">
         <div class="col-xl-12">
@@ -57,19 +57,19 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th class="text-center order-link {{ ($orderBy == 'name'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=name&order='.($orderBy == 'name'? $order : 0)+1) }}">
+                    <th class="text-center order-link {{ ($sort_field == 'name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=name&sort_type='.($sort_field == 'name'? $sort_type : 0)+1) }}">
                         Kecamatan
                     </th>
-                    <th width="28%" class="text-center order-link {{ ($orderBy == 'code'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=code&order='.($orderBy == 'code'? $order : 0)+1) }}">
+                    <th width="28%" class="text-center order-link {{ ($sort_field == 'code'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=code&sort_type='.($sort_field == 'code'? $sort_type : 0)+1) }}">
                         Kode
                     </th>
-                    <th class="text-center order-link {{ ($orderBy == 'verif'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=verif&order='.($orderBy == 'verif'? $order : 0)+1) }}">
+                    <th class="text-center order-link {{ ($sort_field == 'verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=verif&sort_type='.($sort_field == 'verif'? $sort_type : 0)+1) }}">
                         Terverifikasi
                     </th>
-                    <th class="text-center order-link {{ ($orderBy == 'share'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=share&order='.($orderBy == 'share'? $order : 0)+1) }}" >
+                    <th class="text-center order-link {{ ($sort_field == 'share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=share&sort_type='.($sort_field == 'share'? $sort_type : 0)+1) }}" >
                         Sudah Dibagikan
                     </th>
-                    <th class="text-center order-link {{ ($orderBy == 'total'? 'sort-'.(orders()[$order] ?? null) : null) }}" href="{{ url($controller_name.'/getData?orderBy=total&order='.($orderBy == 'total'? $order : 0)+1) }}">
+                    <th class="text-center order-link {{ ($sort_field == 'data'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=data&sort_type='.($sort_field == 'data'? $sort_type : 0)+1) }}">
                         Total Data
                     </th>
                 </tr>
