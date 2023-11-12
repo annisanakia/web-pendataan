@@ -16,6 +16,8 @@
             ->all();
         $religions = \Models\religion::orderBy('id','asc')->pluck('code')->all();
         $religions = sprintf('"%s"', implode('","', $religions));
+        $volunteer_datas = \Models\volunteer_data::orderBy('name','asc')->pluck('code')->all();
+        $volunteer_datas = sprintf('"%s"', implode('","', $volunteer_datas));
         $coordinators = \App\Models\User::where('groups_id',2)->pluck('username')->all();
         $coordinators = sprintf('"%s"', implode('","', $coordinators));
         $job_types = \Models\job_type::orderBy(DB::raw('FIELD(code, "DLL")'))->pluck('code')->all();
@@ -89,6 +91,12 @@
     <tr>
         <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
         <td colspan="{{ $colspan }}">
+            Kolom "Relawan Data" diisi kode relawan data ({{ $volunteer_datas }}) tanpa tanda petik
+        </td>
+    </tr>
+    <tr>
+        <td style="mso-number-format: \@;text-align:center">{{ ++$no }}.</td>
+        <td colspan="{{ $colspan }}">
             Kolom "Status" diisi nama status ({{ sprintf('"%s"', implode('","', status())) }}) tanpa tanda petik
         </td>
     </tr>
@@ -130,6 +138,7 @@
             <th>Alamat</th>
             <th>RT</th>
             <th>RW</th>
+            <th>Relawan Data</th>
             <th>Status</th>
             @if($groups_id != 2)
             <th>Status Dibagikan</th>
@@ -139,6 +148,7 @@
     </thead>
     <tbody>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

@@ -27,6 +27,10 @@ function menuSidebar()
                     'job_type' => [
                         'name' => 'Daftar Pekerjaan',
                         'icon' => 'fa-solid fa-newspaper'
+                    ],
+                    'volunteer_data' => [
+                        'name' => 'Daftar Relawan Data',
+                        'icon' => 'fa-solid fa-newspaper'
                     ]
                 ]
             ],

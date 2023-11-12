@@ -234,7 +234,9 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                     <div class="row">
+                        @if($groups_id == 1)
                         <div class="col-sm-6">
                             <div class="mb-3">
                                 <label class="col-form-label">Koordinator</label>
@@ -247,8 +249,20 @@
                                 {!!$errors->first('coordinator_id', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
+                        @endif
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Relawan Data</label>
+                                <select name="volunteer_data_id" class="form-control selectpicker {{ $errors->has('volunteer_data_id')? 'is-invalid' : '' }}" data-size="7" data-live-search="true">
+                                    <option value="">-- Pilih --</option>
+                                    @foreach(\Models\volunteer_data::all() as $row)
+                                        <option value="{{ $row->id }}" {{ $row->id == old('volunteer_data_id')? 'selected' : '' }}>{{ $row->name }}</option>
+                                    @endforeach
+                                </select>
+                                {!!$errors->first('volunteer_data_id', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
                     </div>
-                    @endif
                 </div>
             </form>
         </div>

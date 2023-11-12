@@ -8,6 +8,7 @@ return [
         'District',
         'Subdistrict',
         'Job_type',
+        'Volunteer_data',
         'Users',
         'Reference_data',
         'Collection_data',

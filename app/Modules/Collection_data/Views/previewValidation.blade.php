@@ -56,6 +56,7 @@
                     <th>Alamat</th>
                     <th>RT</th>
                     <th>RW</th>
+                    <th>Relawan Data</th>
                     <th>Status</th>
                     @if($groups_id != 2)
                         <th>Status<br>Dibagikan</th>
@@ -67,7 +68,7 @@
                 <tr></tr>
                 @if (count($keys) <= 0)
                     <tr>
-                        <td colspan="{{ $groups_id != 2? 21 : 18 }}" style="text-align: center">Data Tidak Ditemukan</td>
+                        <td colspan="{{ $groups_id != 2? 22 : 19 }}" style="text-align: center">Data Tidak Ditemukan</td>
                     </tr>
                 @else
                     @php
@@ -170,6 +171,15 @@
                                 <td>
                                     <input value="{{ $rw[$key] ?? null }}" type="text" name="rw[{{ $key }}]" class="form-control {{ $errors->has('rw.'.$key)? 'is-invalid' : '' }}" style="width:80px">
                                     {!!$errors->first('rw.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
+                                </td>
+                                <td nowrap>
+                                    <select name="volunteer_data_id[{{ $key }}]" class="form-select {{ $errors->has('volunteer_data_id.'.$key)? 'is-invalid' : '' }}">
+                                        <option value="">-- Pilih --</option>
+                                        @foreach(\Models\volunteer_data::all() as $row)
+                                            <option value="{{ $row->id }}" {{ $row->id == ($volunteer_data_id[$key] ?? null)? 'selected' : '' }}>{{ $row->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    {!!$errors->first('volunteer_data_id.'.$key, ' <span class="invalid-feedback">:message</span>')!!}
                                 </td>
                                 <td nowrap>
                                     <select name="status[{{ $key }}]" class="form-select {{ $errors->has('status.'.$key)? 'is-invalid' : '' }}">
