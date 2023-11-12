@@ -185,10 +185,13 @@
                                 <div class="col-sm-6">
                                     <div class="mb-3">
                                         <label class="col-form-label">Anda mengetahui info ini dari siapa?</label>
-                                        <select name="coordinator_id" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
+                                        <select name="info_data_from" class="form-control selectpicker {{ $errors->has('info_data_from')? 'is-invalid' : '' }}" data-size="7" data-live-search="true">
                                             <option value="">-- Pilih --</option>
                                             @foreach(App\Models\User::where('groups_id',2)->get() as $row)
-                                                <option value="{{ $row->id }}" {{ $row->id == old('coordinator_id')? 'selected' : '' }}>{{ $row->name }}</option>
+                                                <option value="coordinator#{{ $row->id }}" {{ ('coordinator#'.$row->id) == old('info_data_from')? 'selected' : '' }}>{{ $row->name }}</option>
+                                            @endforeach
+                                            @foreach(\Models\volunteer_data::all() as $row)
+                                                <option value="volunteer#{{ $row->id }}" {{ ('volunteer#'.$row->id) == old('info_data_from')? 'selected' : '' }}>{{ $row->name }}</option>
                                             @endforeach
                                         </select>
                                         {!!$errors->first('coordinator_id', ' <span class="invalid-feedback">:message</span>')!!}
@@ -209,7 +212,10 @@
 @endsection
 
 @section('scripts')
+<link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap-select/1.13.14/css/bootstrap-select.min.css')}}">
+<script src="{{ asset('assets/plugins/bootstrap-select/v1.14.0-beta2/bootstrap-select.js')}}"></script>
 <script type="text/javascript">
+    $('.selectpicker').selectpicker('refresh');
     $('#city_id').change(function() {
         getDistrict($(this).val());
     });

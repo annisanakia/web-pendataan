@@ -274,7 +274,18 @@ class Home extends Controller {
         $groups_id = \Auth::user()->groups_id ?? null;
         
         $input = request()->all();
-        // $input['coordinator_id'] = request()->coordinator_id ?? ($groups_id == 2? $user_id : null);
+        unset($input['info_data_from']);
+        if(request()->info_data_from != ''){
+            $info_data_from = explode('#',request()->info_data_from);
+            $key = $info_data_from[0] ?? null;
+            $value = $info_data_from[1] ?? null;
+            if($key == 'coordinator'){
+                $input['coordinator_id'] = $value;
+            }else{
+                $input['volunteer_data_id'] = $value;
+            }
+        }
+
         $model = new \Models\collection_data();
         $validation = $model->validate($input);
 
