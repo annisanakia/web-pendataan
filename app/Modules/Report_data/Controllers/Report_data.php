@@ -370,8 +370,10 @@ class Report_data extends RESTful {
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
 
-        $genders = collect([
+        $genders = [
             [
                 'name'=>'NA',
                 'gender'=>null
@@ -384,7 +386,7 @@ class Report_data extends RESTful {
                 'name'=>'Perempuan',
                 'gender'=>'P'
             ]
-        ]);
+        ];
 
         $collection_datas = \Models\collection_data::select(['*']);
         if($start_date != ''){
@@ -399,18 +401,34 @@ class Report_data extends RESTful {
         $this->filter($collection_datas, request(), 'collection_data');
         $collection_datas = $collection_datas->get();
 
+        foreach($genders as $key => $data){
+            $collection_data = $collection_datas->where('gender',$data['gender']);
+            $genders[$key]['verif'] = $collection_data->where('status',2)->count();
+            $genders[$key]['share'] = $collection_data->where('status_share',2)->count();
+            $genders[$key]['data'] = $collection_data->count();
+        }
+
+        $sort_type = $sort_type > 2? 0 : $sort_type;
+        $order_field = orders()[$sort_type] ?? null;
+        if($sort_field != '' && $order_field){
+            $keys = array_column($genders, $sort_field);
+            array_multisort($keys, ($order_field == 'asc'? SORT_ASC : SORT_DESC), $genders);
+        }
+
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListGenderAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListGenderAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
         
         $with['subdistrict_ids'] = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
-        $with['datas'] = $genders;
+        $with['datas'] = collect($genders);
         $with['model'] = request()->model;
         $with['start_date'] = request()->start_date;
         $with['end_date'] = request()->end_date;
         $with['param'] = request()->all();
         $with['collection_datas'] = $collection_datas;
         $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
         return $with;
     }
 
