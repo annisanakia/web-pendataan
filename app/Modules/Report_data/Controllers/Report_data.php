@@ -88,16 +88,16 @@ class Report_data extends RESTful {
             $join->on('users.id', '=', 'collection_data.coordinator_id');
         });
         if($start_date != ''){
-            $datas->whereDate('created_at','>=',$start_date);
+            $datas->whereDate('collection_data.created_at','>=',$start_date);
         }
         if($end_date != ''){
-            $datas->whereDate('created_at','<=',$end_date);
+            $datas->whereDate('collection_data.created_at','<=',$end_date);
         }
         if($status != ''){
-            $datas->where('status',$status);
+            $datas->where('collection_data.status',$status);
         }
         if($status_share != ''){
-            $datas->where('status_share',$status_share);
+            $datas->where('collection_data.status_share',$status_share);
         }
         
         $sort_type = request()->sort_type > 2? 0 : request()->sort_type;
@@ -114,16 +114,16 @@ class Report_data extends RESTful {
 
         $collection_datas = \Models\collection_data::select(\DB::raw('DATE(created_at) as date'), \DB::raw('count(*) as total'));
         if($start_date != ''){
-            $collection_datas->whereDate('created_at','>=',$start_date);
+            $collection_datas->whereDate('collection_data.created_at','>=',$start_date);
         }
         if($end_date != ''){
-            $collection_datas->whereDate('created_at','<=',$end_date);
+            $collection_datas->whereDate('collection_data.created_at','<=',$end_date);
         }
         if($status != ''){
-            $collection_datas->where('status',$status);
+            $collection_datas->where('collection_data.status',$status);
         }
         if($status_share != ''){
-            $collection_datas->where('status_share',$status_share);
+            $collection_datas->where('collection_data.status_share',$status_share);
         }
         $collection_datas = $collection_datas->groupBy('date')->get()->pluck('total','date')->all();
 
