@@ -74,6 +74,11 @@ class collection_data extends Model {
         return $this->belongsTo('App\Models\User', 'coordinator_id', 'id');
     }
 
+    public function volunteer_data()
+    {
+        return $this->belongsTo('Models\volunteer_data');
+    }
+
     public function city()
     {
         return $this->belongsTo('Models\city', 'city_id', 'id');

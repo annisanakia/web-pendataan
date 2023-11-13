@@ -14,6 +14,7 @@
             <th width="12%">NIK</th>
             <th width="18%">Nama Lengkap</th>
             <th>Koordinator</th>
+            <th>Relawan Data</th>
             <th width="12%">Kecamatan</th>
             <th width="12%">Kelurahan</th>
             <th width="5%">TPS</th>
@@ -24,7 +25,7 @@
     <tbody>
         @if ($datas->count() < 1)
             <tr>
-                <td colspan="9" style="text-align: center">Data Tidak Ditemukan</td>
+                <td colspan="10" style="text-align: center">Data Tidak Ditemukan</td>
             </tr>
         @else
             <?php $i = 0;?>
@@ -34,6 +35,7 @@
                     <td>{{ $data->nik }}</td>
                     <td>{{ strtoupper($data->name) }}</td>
                     <td>{{ $data->coordinator->name ?? null }}</td>
+                    <td>{{ $data->volunteer_data->name ?? null }}</td>
                     <td>{{ $data->district->name ?? null }}</td>
                     <td>{{ $data->subdistrict->name ?? null }}</td>
                     <td>{{ $data->no_tps }}</td>

@@ -81,12 +81,15 @@ class Report_data extends RESTful {
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
-        $datas = $this->model->select(['collection_data.*','subdistrict.name as subdistrict_name','users.name as coordinator_name']);
+        $datas = $this->model->select(['collection_data.*','subdistrict.name as subdistrict_name','users.name as coordinator_name','volunteer_data.name as volunteer_name']);
         $datas->leftJoin('subdistrict', function ($join) {
             $join->on('subdistrict.id', '=', 'collection_data.subdistrict_id');
         })->leftJoin('users', function ($join) {
             $join->on('users.id', '=', 'collection_data.coordinator_id');
+        })->leftJoin('volunteer_data', function ($join) {
+            $join->on('volunteer_data.id', '=', 'collection_data.volunteer_data_id');
         });
+
         if($start_date != ''){
             $datas->whereDate('collection_data.created_at','>=',$start_date);
         }
@@ -663,6 +666,10 @@ class Report_data extends RESTful {
                 });
             } elseif ($key == 'coordinator_name') {
                 $data->whereHas('coordinator', function($builder) use($value){
+                    $builder->where('name', 'LIKE', '%' . $value . '%');
+                });
+            } elseif ($key == 'volunteer_name') {
+                $data->whereHas('volunteer_data', function($builder) use($value){
                     $builder->where('name', 'LIKE', '%' . $value . '%');
                 });
             }

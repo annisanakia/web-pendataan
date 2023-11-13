@@ -43,6 +43,9 @@
                     <th class="text-center order-link {{ ($sort_field == 'coordinator_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=coordinator_name&sort_type='.($sort_field == 'coordinator_name'? $sort_type : 0)+1) }}">
                         Koordinator
                     </th>
+                    <th class="text-center order-link {{ ($sort_field == 'volunteer_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=volunteer_name&sort_type='.($sort_field == 'volunteer_name'? $sort_type : 0)+1) }}">
+                        Relawan Data
+                    </th>
                     <th width="13%" class="text-center order-link {{ ($sort_field == 'status'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=status&sort_type='.($sort_field == 'status'? $sort_type : 0)+1) }}">
                         Status
                     </th>
@@ -60,6 +63,7 @@
                     <th><input type="text" name="filter[subdistrict_name]" value="{{ $param['filter']['subdistrict_name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[no_tps]" value="{{ $param['filter']['no_tps'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[coordinator_name]" value="{{ $param['filter']['coordinator_name'] ?? null }}" class="form-control"></th>
+                    <th><input type="text" name="filter[volunteer_name]" value="{{ $param['filter']['volunteer_name'] ?? null }}" class="form-control"></th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -68,7 +72,7 @@
             <tbody>
                 @if(count($datas) <= 0)
                     <tr>
-                        <td colspan="7" class="text-center">Data Tidak Ditemukan</td>
+                        <td colspan="10" class="text-center">Data Tidak Ditemukan</td>
                     </tr>
                 @else
                     @php $i=0 @endphp
@@ -80,6 +84,7 @@
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps ?? null }}</td>
                         <td>{{ $data->coordinator->name ?? null }}</td>
+                        <td>{{ $data->volunteer_data->name ?? null }}</td>
                         <td nowrap>
                             <a class="btn btn-{{ statusColor()[$data->status] ?? null }} px-2 py-1 f-14px">
                                 {{ status()[$data->status] ?? null }}

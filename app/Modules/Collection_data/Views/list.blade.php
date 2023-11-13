@@ -23,48 +23,53 @@
         <table class="table table-striped mt-3">
             <thead>
                 <tr>
-                    <th width="5%" class="text-center">No</th>
+                    <th width="10px" class="text-center">No</th>
                     <th class="order-link {{ ($sort_field == 'nik'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
                         <a href="{{ url($controller_name.'?sort_field=nik&sort_type='.(($sort_field == 'nik'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
                             NIK
                         </a>
                     </th>
-                    <th width="10%" class="order-link {{ ($sort_field == 'whatsapp'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                    <th width="100px" class="order-link {{ ($sort_field == 'whatsapp'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
                         <a href="{{ url($controller_name.'?sort_field=whatsapp&sort_type='.(($sort_field == 'whatsapp'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
                             No Whatsapp
                         </a>
                     </th>
-                    <th width="20%" class="order-link {{ ($sort_field == 'name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                    <th width="100px" class="order-link {{ ($sort_field == 'name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
                         <a href="{{ url($controller_name.'?sort_field=name&sort_type='.(($sort_field == 'name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
                             Nama Lengkap
                         </a>
                     </th>
-                    <th width="12%" class="order-link {{ ($sort_field == 'coordinator_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                    <th width="100px" class="order-link {{ ($sort_field == 'coordinator_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
                         <a href="{{ url($controller_name.'?sort_field=coordinator_name&sort_type='.(($sort_field == 'coordinator_name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
                             Koordinator
                         </a>
                     </th>
-                    <th width="15%" class="order-link {{ ($sort_field == 'subdistrict_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                    <th width="100px" class="order-link {{ ($sort_field == 'volunteer_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=volunteer_name&sort_type='.(($sort_field == 'volunteer_name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Relawan Data
+                        </a>
+                    </th>
+                    <th width="100px" class="order-link {{ ($sort_field == 'subdistrict_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
                         <a href="{{ url($controller_name.'?sort_field=subdistrict_name&sort_type='.(($sort_field == 'subdistrict_name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
                             Kelurahan
                         </a>
                     </th>
-                    <th width="7%" class="order-link {{ ($sort_field == 'no_tps'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                    <th width="50px" class="order-link {{ ($sort_field == 'no_tps'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
                         <a href="{{ url($controller_name.'?sort_field=no_tps&sort_type='.(($sort_field == 'no_tps'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
                             TPS
                         </a>
                     </th>
-                    <th width="13%" class="order-link {{ ($sort_field == 'status'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                    <th width="100px" class="order-link {{ ($sort_field == 'status'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
                         <a href="{{ url($controller_name.'?sort_field=status&sort_type='.(($sort_field == 'status'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
                             Status
                         </a>
                     </th>
-                    <th width="13%" class="order-link {{ ($sort_field == 'status_share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                    <th width="100px" class="order-link {{ ($sort_field == 'status_share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
                         <a href="{{ url($controller_name.'?sort_field=status_share&sort_type='.(($sort_field == 'status_share'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
                             Status<br>Dibagikan
                         </a>
                     </th>
-                    <th width="10%" class="text-center">Aksi</th>
+                    <th width="100px" class="text-center">Aksi</th>
                 </tr>
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
@@ -72,6 +77,7 @@
                     <th><input type="text" name="filter[whatsapp]" value="{{ $param['filter']['whatsapp'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[name]" value="{{ $param['filter']['name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[coordinator_name]" value="{{ $param['filter']['coordinator_name'] ?? null }}" class="form-control"></th>
+                    <th><input type="text" name="filter[volunteer_name]" value="{{ $param['filter']['volunteer_name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[subdistrict_name]" value="{{ $param['filter']['subdistrict_name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[no_tps]" value="{{ $param['filter']['no_tps'] ?? null }}" class="form-control"></th>
                     <th>
@@ -96,7 +102,7 @@
             <tbody>
                 @if(count($datas) <= 0)
                     <tr>
-                        <td colspan="10" class="text-center">Data Tidak Ditemukan</td>
+                        <td colspan="11" class="text-center">Data Tidak Ditemukan</td>
                     </tr>
                 @else
                     @php $i=0 @endphp
@@ -111,6 +117,7 @@
                         <td><a href="https://wa.me/{{ $whatsapp }}" target="_blank">{{ $data->whatsapp }}</a></td>
                         <td>{{ strtoupper($data->name) }}</td>
                         <td>{{ $data->coordinator->name ?? null }}</td>
+                        <td>{{ $data->volunteer_data->name ?? null }}</td>
                         <td>{{ $data->subdistrict->name ?? null }}</td>
                         <td>{{ $data->no_tps }}</td>
                         <td nowrap>

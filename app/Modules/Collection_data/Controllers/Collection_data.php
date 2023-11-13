@@ -26,11 +26,13 @@ class Collection_data extends RESTful {
 
     public function beforeIndex($data)
     {
-        $data->select(['collection_data.*','subdistrict.name as subdistrict_name','users.name as coordinator_name'])
+        $data->select(['collection_data.*','subdistrict.name as subdistrict_name','users.name as coordinator_name','volunteer_data.name as volunteer_name'])
             ->leftJoin('subdistrict', function ($join) {
                 $join->on('subdistrict.id', '=', 'collection_data.subdistrict_id');
             })->leftJoin('users', function ($join) {
                 $join->on('users.id', '=', 'collection_data.coordinator_id');
+            })->leftJoin('volunteer_data', function ($join) {
+                $join->on('volunteer_data.id', '=', 'collection_data.volunteer_data_id');
             });
             
         $user_id = \Auth::user()->id ?? null;
@@ -181,6 +183,10 @@ class Collection_data extends RESTful {
             if ($key == 'coordinator_name') {
                 $data->whereHas('coordinator', function ($builder) use ($value){
                     $builder->where('name', 'like', '%' . $value . '%');
+                });
+            } elseif ($key == 'volunteer_name') {
+                $data->whereHas('volunteer_data', function($builder) use($value){
+                    $builder->where('name', 'LIKE', '%' . $value . '%');
                 });
             } elseif ($key == 'subdistrict_name') {
                 $data->whereHas('subdistrict', function ($builder) use ($value){

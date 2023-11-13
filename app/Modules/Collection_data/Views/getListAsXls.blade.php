@@ -24,12 +24,13 @@
             <th>Status</th>
             <th>Status Dibagikan</th>
             <th>Koordinator</th>
+            <th>Relawan Data</th>
         </tr>
     </thead>
     <tbody>
         @if ($datas->count() < 1)
             <tr>
-                <td colspan="20" style="text-align: center">Data Tidak Ditemukan</td>
+                <td colspan="21" style="text-align: center">Data Tidak Ditemukan</td>
             </tr>
         @else
             @foreach ($datas as $data)
@@ -54,6 +55,7 @@
                     <td style="{{ $data->status == 1? 'background:#dc3545;color:#fff' : '' }}">{{ $data->status == 2? 'Sudah diverifikasi' : 'Belum diverifikasi' }}</td>
                     <td>{{ $data->status_share == 2? 'Sudah dibagikan' : 'Belum dibagikan' }}</td>
                     <td>{{ $data->coordinator->name ?? null }}</td>
+                    <td>{{ $data->volunteer_data->name ?? null }}</td>
                 </tr>
             @endforeach
         @endif
