@@ -18,7 +18,7 @@ class Home extends Controller {
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['form','store']]);
+        $this->middleware('auth', ['except' => ['form','store','monitoring','getDataMonitoring']]);
         $this->controller_name = 'Home';
 
         view::share('controller_name', strtolower($this->controller_name));
@@ -186,7 +186,7 @@ class Home extends Controller {
         }
         $collection_datas = $collection_datas->get()->pluck('total','coordinator_id')->all();
 
-        $user_coordinators = \app\Models\User::where('groups_id',2)->get();
+        $user_coordinators = \App\Models\User::where('groups_id',2)->get();
         $coordinators = $user_coordinators->pluck('id')->all();
         $coordinators[''] = '';
 
@@ -329,5 +329,71 @@ class Home extends Controller {
         }
 
         return $url;
+    }
+
+    public function monitoring()
+    {
+        $groups_id = \Auth::user()->groups_id ?? null;
+        $districts = \Models\district::all();
+        $collection_datas = \Models\collection_data::all();
+
+        $withTarget = $this->getDataTargetGraph();
+        $withStatus = $this->getDataStatusGraph();
+        $with = array_merge($withTarget, $withStatus);
+
+        $withSubdistrict = $this->getDataDistrictGraph();
+        $with = array_merge($with, $withSubdistrict);
+
+        $withTargetToday = $this->getDataTargetGraph(date('Y-m-d'), date('Y-m-d'));
+        $with['dataByToday'] = $withTargetToday['dataByDistrict'];
+        // dd($withTargetToday);
+
+        $with['groups_id'] = $groups_id;
+        $with['districts'] = $districts;
+        $with['collection_datas'] = $collection_datas;
+        return view($this->controller_name . '::monitoring', $with);
+    }
+
+    public function getDataMonitoring()
+    {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+        $district_id = request()->district_id;
+
+        $day = date('N');
+        $start_date = new DateTime(date('Y-m-d', strtotime('-'.($day-1).' days')));
+        $end_date = new DateTime(date('Y-m-d', strtotime('+'.(7-$day).' days')));
+
+        $dataByDay = $this->getDataGraph($district_id, $groups_id, $start_date, $end_date, $day);
+        $with = $this->getDataCoorGraph($district_id, $groups_id, $start_date, $end_date);
+
+        $collection_datas = \Models\collection_data::where('district_id',request()->district_id)
+                ->whereDate('created_at',date('Y-m-d'));
+        $this->filter($collection_datas, request(), 'collection_data');
+        $max_row = request()->input('max_row') ?? 50;
+        $collection_datas = $collection_datas->paginate($max_row);
+        $collection_datas->chunk(100);
+
+        $with['district_id'] = $district_id;
+        $with['dataByDay'] = $dataByDay;
+        $with['collection_datas'] = $collection_datas;
+        $with['param'] = request()->all();
+        return view($this->controller_name . '::getDataMonitoring', $with);
+    }
+
+    public function getDataDistrictGraph(){
+        $subdistricts = \Models\subdistrict::get();
+        $subdistrict_names = $subdistricts->pluck('name')->all();
+        
+        $collection_datas = \Models\collection_data::select(['*'])->get();
+
+        $dataBySubdistrict = [];
+        foreach ($subdistricts as $subdistrict) {
+            $dataBySubdistrict[] = $collection_datas->where('subdistrict_id',$subdistrict->id)->count();
+        }
+
+        $with['subdistrict_names'] = $subdistrict_names;
+        $with['dataBySubdistrict'] = $dataBySubdistrict;
+        return $with;
     }
 }

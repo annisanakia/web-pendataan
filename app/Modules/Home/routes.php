@@ -13,4 +13,5 @@
 Route::group(['prefix' => 'home', 'namespace' => 'App\Modules\Home\Controllers', 'middleware' => ['web']], function () {
     Route::get('/', ['as' => 'home.index', 'uses' => 'Home@index']);
     Route::get('/getData', ['as' => 'home.getData', 'uses' => 'Home@getData']);
+    Route::get('/getDataMonitoring', ['as' => 'home.getDataMonitoring', 'uses' => 'Home@getDataMonitoring']);
 });
