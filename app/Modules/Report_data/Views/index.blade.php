@@ -35,7 +35,7 @@
                                 <div class="mb-3">
                                     <label class="col-form-label">Kelurahan</label>
                                     <select name="subdistrict_ids[]" class="form-control selectpicker {{ $errors->has('subdistrict_ids')? 'is-invalid' : '' }}" data-size="7" data-live-search="true" data-actions-box="true" data-selected-text-format="count" title="-- Pilih All --" multiple>
-                                        @foreach(\Models\subdistrict::all() as $row)
+                                        @foreach(\Models\subdistrict::whereIn('id',$subdistrict_ids)->get() as $row)
                                             <option value="{{ $row->id }}">{{ $row->name }}</option>
                                         @endforeach
                                     </select>
@@ -47,7 +47,7 @@
                                     <label class="col-form-label">Kelurahan</label>
                                     <select name="subdistrict_id" class="form-control selectpicker {{ $errors->has('subdistrict_id')? 'is-invalid' : '' }}" data-size="7" data-live-search="true">
                                         <option value="">-- Pilih --</option>
-                                        @foreach(\Models\subdistrict::all() as $row)
+                                        @foreach(\Models\subdistrict::whereIn('id',$subdistrict_ids)->get() as $row)
                                             <option value="{{ $row->id }}">{{ $row->name }}</option>
                                         @endforeach
                                     </select>

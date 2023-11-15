@@ -23,7 +23,12 @@ class Report_data extends RESTful {
 
     public function index()
     {
-        $with = [];
+        $groups_id = \Auth::user()->groups_id;
+        $subdistrict_ids = \Models\subdistrict::pluck('id')->all();
+        if($groups_id == 2){
+            $subdistrict_ids = \Models\users_subdistrict::where('user_id',$user->id ?? null)->pluck('subdistrict_id')->all();
+        }
+        $with['subdistrict_ids'] = $subdistrict_ids;
         return view($this->controller_name . '::index', $with);
     }
 
@@ -74,6 +79,9 @@ class Report_data extends RESTful {
 
     public function getListByCitizens()
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $status = request()->status;
@@ -102,6 +110,9 @@ class Report_data extends RESTful {
         if($status_share != ''){
             $datas->where('collection_data.status_share',$status_share);
         }
+        if($groups_id == 2){
+            $datas->where('coordinator_id',$user_id);
+        }
         
         $sort_type = request()->sort_type > 2? 0 : request()->sort_type;
         $this->filter($datas, request(), 'collection_data');
@@ -127,6 +138,9 @@ class Report_data extends RESTful {
         }
         if($status_share != ''){
             $collection_datas->where('collection_data.status_share',$status_share);
+        }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
         }
         $collection_datas = $collection_datas->groupBy('date')->get()->pluck('total','date')->all();
 
@@ -163,6 +177,9 @@ class Report_data extends RESTful {
 
     public function getListByDistrict()
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $sort_field = request()->sort_field;
@@ -179,12 +196,15 @@ class Report_data extends RESTful {
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date){
+            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date,$groups_id,$user_id){
                 if($start_date != ''){
                     $query->whereDate('created_at','>=',$start_date);
                 }
                 if($end_date != ''){
                     $query->whereDate('created_at','<=',$end_date);
+                }
+                if($groups_id == 2){
+                    $query->where('coordinator_id',$user_id);
                 }
             }])->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
         }
@@ -202,6 +222,9 @@ class Report_data extends RESTful {
         }
         if($end_date != ''){
             $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
         }
 
         $collection_datas = $collection_datas->get();
@@ -225,6 +248,9 @@ class Report_data extends RESTful {
 
     public function getListBySubdistrict()
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
@@ -245,12 +271,15 @@ class Report_data extends RESTful {
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date){
+            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date,$groups_id,$user_id){
                 if($start_date != ''){
                     $query->whereDate('created_at','>=',$start_date);
                 }
                 if($end_date != ''){
                     $query->whereDate('created_at','<=',$end_date);
+                }
+                if($groups_id == 2){
+                    $query->where('coordinator_id',$user_id);
                 }
             }])->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
         }
@@ -268,6 +297,9 @@ class Report_data extends RESTful {
         }
         if($end_date != ''){
             $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
         }
 
         $collection_datas = $collection_datas->get();
@@ -292,6 +324,9 @@ class Report_data extends RESTful {
 
     public function getListByCoordinator()
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $sort_field = request()->sort_field;
@@ -299,6 +334,9 @@ class Report_data extends RESTful {
 
         $datas = \app\Models\User::select(['*'])
                 ->where('groups_id',2);
+        if($groups_id == 2){
+            $datas->where('id',$user_id);
+        }
 
         $this->filter($datas, request(), 'subdistrict');
         $max_row = request()->input('max_row') ?? 50;
@@ -309,12 +347,15 @@ class Report_data extends RESTful {
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date){
+            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date,$groups_id,$user_id){
                 if($start_date != ''){
                     $query->whereDate('created_at','>=',$start_date);
                 }
                 if($end_date != ''){
                     $query->whereDate('created_at','<=',$end_date);
+                }
+                if($groups_id == 2){
+                    $query->where('coordinator_id',$user_id);
                 }
             }])->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
         }
@@ -332,6 +373,9 @@ class Report_data extends RESTful {
         }
         if($end_date != ''){
             $collection_datas->whereDate('created_at','<=',$end_date);
+        }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
         }
 
         $collection_datas = $collection_datas->get();
@@ -355,6 +399,9 @@ class Report_data extends RESTful {
 
     public function getListByTPS()
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_id = request()->subdistrict_id;
@@ -371,6 +418,9 @@ class Report_data extends RESTful {
         if($subdistrict_id != ''){
             $datas->where('subdistrict_id',$subdistrict_id);
         }
+        if($groups_id == 2){
+            $datas->where('coordinator_id',$user_id);
+        }
         
         $this->filter($datas, request(), 'collection_data');
         $max_row = request()->input('max_row') ?? 50;
@@ -381,7 +431,7 @@ class Report_data extends RESTful {
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount(['collections_tps_'.$sort_field  => function($query) use ($subdistrict_id,$start_date,$end_date){
+            $datas->withCount(['collections_tps_'.$sort_field  => function($query) use ($subdistrict_id,$start_date,$end_date,$groups_id,$user_id){
                 if($subdistrict_id != ''){
                     $query->where('subdistrict_id',$subdistrict_id);
                 }
@@ -390,6 +440,9 @@ class Report_data extends RESTful {
                 }
                 if($end_date != ''){
                     $query->whereDate('created_at','<=',$end_date);
+                }
+                if($groups_id == 2){
+                    $query->where('coordinator_id',$user_id);
                 }
             }])->orderBy('collections_tps_'.$sort_field.'_count', $order_field ?? 'desc');
         }
@@ -406,6 +459,9 @@ class Report_data extends RESTful {
         }
         if($subdistrict_id != ''){
             $collection_datas->where('subdistrict_id',$subdistrict_id);
+        }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
         }
         $this->filter($collection_datas, request(), 'collection_data');
         $collection_datas = $collection_datas->get();
@@ -439,6 +495,9 @@ class Report_data extends RESTful {
 
     public function getListByGender()
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
@@ -469,6 +528,9 @@ class Report_data extends RESTful {
         }
         if(count($subdistrict_ids) > 0){
             $collection_datas->whereIn('subdistrict_id',$subdistrict_ids);
+        }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
         }
         $this->filter($collection_datas, request(), 'collection_data');
         $collection_datas = $collection_datas->get();
@@ -506,6 +568,9 @@ class Report_data extends RESTful {
 
     public function getListByJob()
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
@@ -522,6 +587,9 @@ class Report_data extends RESTful {
         if(count($subdistrict_ids) > 0){
             $collection_datas->whereIn('subdistrict_id',$subdistrict_ids);
         }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
+        }
         $this->filter($collection_datas, request(), 'collection_data');
         $collection_datas = $collection_datas->get();
 
@@ -530,7 +598,7 @@ class Report_data extends RESTful {
         $sort_type = $sort_type > 2? 0 : $sort_type;
         $order_field = orders()[$sort_type] ?? null;
         if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $jobs->withCount(['collections_'.$sort_field  => function($query) use ($subdistrict_ids,$start_date,$end_date){
+            $jobs->withCount(['collections_'.$sort_field  => function($query) use ($subdistrict_ids,$start_date,$end_date,$groups_id,$user_id){
                 if(count($subdistrict_ids) > 0){
                     $query->whereIn('subdistrict_id',$subdistrict_ids);
                 }
@@ -539,6 +607,9 @@ class Report_data extends RESTful {
                 }
                 if($end_date != ''){
                     $query->whereDate('created_at','<=',$end_date);
+                }
+                if($groups_id == 2){
+                    $query->where('coordinator_id',$user_id);
                 }
             }]);
         }
@@ -583,6 +654,9 @@ class Report_data extends RESTful {
 
     public function getListByAge()
     {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
         $start_date = request()->start_date;
         $end_date = request()->end_date;
         $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
@@ -621,6 +695,9 @@ class Report_data extends RESTful {
         }
         if(count($subdistrict_ids) > 0){
             $collection_datas->whereIn('subdistrict_id',$subdistrict_ids);
+        }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
         }
         $this->filter($collection_datas, request(), 'collection_data');
         $collection_datas = $collection_datas->orderBy('age','desc')->get();
