@@ -149,13 +149,13 @@ class RESTful extends Controller
                                     $data->where($key, '>=', $value);
                                 }
                                 if ($key == 'end' || $key == 'end_date') {
-                                    $data->where($key, '<=', $value);
+                                    $data->where($table.'.'.$key, '<=', $value);
                                 }
                                 if ($key == 'date') {
-                                    $data->whereDate($key, $value);
+                                    $data->whereDate($table.'.'.$key, $value);
                                 }
                             } else {
-                                $data->where($key, '=', $value);
+                                $data->where($table.'.'.$key, '=', $value);
                             }
                         } else {
                             $newFilters[$key] = $value;
