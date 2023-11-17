@@ -69,12 +69,76 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="col-form-label">Upload bukti gambar</label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-primary add-data mb-3" type="button">
+                                        Tambah Gambar <i class="fa-solid fa-plus px-2"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <table class="w-100">
+                                        @php
+                                            $i = 0;
+                                            $key_form = 0;
+                                            $files = $data->election_results_files ?? [];
+                                        @endphp
+                                        <tbody id="body-data">
+                                            @if(count($files) > 0)
+                                                @foreach($files as $file)
+                                                    <tr>
+                                                        <td class="pb-3">
+                                                            <input name="file_key[]" type="text" class="d-none form-key">
+                                                            @if(($file->id ?? null))
+                                                                <input name="election_results_file_id[{{ $key_form }}]" type="text" class="form-id d-none" value="{{ $file->id }}">
+                                                            @endif
+                                                            @if(($file->url_file ?? null))
+                                                                <a href="{{ $file->url_file ?? null }}" target="_blank" class="btn btn-outline-primary btn-sm mb-2">Download File <i class="fa-solid fa-download"></i></a>
+                                                            @endif
+                                                            <input name="url_file[{{ $key_form }}]" type="file" class="form-control text-center form-file {{ $errors->has('sequence.'.($key_form))? 'is-invalid' : '' }}" value="{{ old('sequence')[$key_form] ?? ($file->url_file ?? null) }}">
+                                                            {!!$errors->first('sequence.'.($key_form), ' <span class="invalid-feedback">:message</span>')!!}
+                                                        </td>
+                                                        <td class="action text-center align-bottom" nowrap>
+                                                            <button class="btn btn-outline-danger px-1 py-2 remove-data mb-3" type="button">
+                                                                <i class="fa-solid fa-minus px-2"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                        $key_form++;
+                                                    ?>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
     </section>
 </div>
 @endsection
+
+<table class="d-none">
+    <tbody id="template-data">
+        <tr>
+            <td class="pb-3">
+                <input type="text" class="d-none form-key">
+                <input type="file" class="form-control text-center form-file">
+            </td>
+            <td class="action text-center align-bottom" nowrap>
+                <button class="btn btn-outline-danger px-1 py-2 remove-data mb-3" type="button">
+                    <i class="fa-solid fa-minus px-2"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 @section('scripts')
 <script type="text/javascript">
@@ -119,6 +183,31 @@
                 $('#subdistrict_id').html(e);
                 $('.selectpicker').selectpicker('refresh');
             }
+        });
+    }
+
+    var maxGroup = 10;
+    $(".add-data").click(function(){
+        if($('#body-data').find('tr').length < maxGroup){
+            $('#template-data tr').clone(false).appendTo('#body-data');
+            setNameInput();
+        }else{
+            swalSaveButtons.fire('Perhatian!', 'Maksimal opsi jawaban sebanyak '+maxGroup+' opsi.', 'warning')
+        }
+    });
+    
+    $('#body-data').on("click", ".remove-data", function () {
+        $(this).parents('tr').remove();
+        setNameInput();
+    });
+
+    function setNameInput(){
+        var i = 0;
+        $('#body-data tr').each(function() {
+            $(this).find('.form-id').attr('name', 'election_results_file_id['+i+']');
+            $(this).find('.form-key').attr('name', 'file_key['+i+']');
+            $(this).find('.form-file').attr('name', 'url_file['+i+']');
+            i++;
         });
     }
 </script>

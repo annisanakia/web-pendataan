@@ -4,8 +4,11 @@ namespace Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class election_results extends Model {
+
+    use SoftDeletes;
 
     protected $table = 'election_results';
     protected $guarded = ['id'];
@@ -41,5 +44,10 @@ class election_results extends Model {
     public function subdistrict()
     {
         return $this->belongsTo('Models\subdistrict', 'subdistrict_id', 'id');
+    }
+
+    public function election_results_files()
+    {
+        return $this->hasMany('Models\election_results_file')->orderBy('id','desc');
     }
 }

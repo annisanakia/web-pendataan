@@ -7,6 +7,7 @@ use Lib\core\RESTful;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use PDF;
+use File;
 
 class Election_results extends RESTful {
 
@@ -20,6 +21,105 @@ class Election_results extends RESTful {
         $this->enable_pdf_button = true;
         $this->enable_xls_button = true;
         parent::__construct($model, $controller_name);
+    }
+
+    public function store()
+    {
+        $input = $this->getParams(request()->all());
+        $validation = $this->model->validate($input);
+
+        if ($validation->passes()) {
+            $data = $this->model->create($input);
+
+            $model = new \Models\election_results_file();
+            $files = is_array(request()->file('url_file'))? request()->file('url_file') : [];
+            $sequence = 0;
+            foreach($files as $file){
+                $input['election_results_id'] = $data->id;
+                $input['url_file'] = $this->store_image($file,++$sequence);
+                $election_results_file = $model->create($input);
+            }
+
+            $user_id = \Auth::user()->id ?? null;
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_after = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'store', date('Y-m-d H:i:s'), $activity_after);
+
+            return Redirect::route(strtolower($this->controller_name) . '.index');
+        }
+        return Redirect::route(strtolower($this->controller_name) . '.create')
+            ->withInput()
+            ->withErrors($validation)
+            ->with('message', 'There were validation errors.');
+    }
+
+    public function update($id)
+    {
+        $input = $this->getParams(request()->all());
+        $validation = $this->model->validate($input);
+
+        if ($validation->passes()) {
+            $data = $this->model->find($id);
+            $activity_before = json_encode($data);
+
+            $data->update($input);
+
+            $model = new \Models\election_results_file();
+            $files = is_array(request()->file('url_file'))? request()->file('url_file') : [];
+            $file_keys = is_array(request()->file_key)? request()->file_key : [];
+            $election_results_file_ids = is_array(request()->election_results_file_id)? request()->election_results_file_id : [];
+            
+            $file_ids = [];
+            $sequence = 0;
+            foreach($file_keys as $key => $file_key){
+                $file = $files[$key] ?? null;
+                $election_results_file_id = $election_results_file_ids[$key] ?? null;
+                if($file || $election_results_file_id){
+                    $election_results_file = \Models\election_results_file::find($election_results_file_id);
+                    if($file){
+                        $input['election_results_id'] = $id;
+                        $input['url_file'] = $this->store_image($file,++$sequence);
+                        $election_results_file = $model->create($input);
+                    }
+                    $file_ids[] = $election_results_file->id ?? null;
+                }
+            }
+            $election_results_file_deletes = \Models\election_results_file::where('election_results_id',$id)
+                ->whereNotIn('id',$file_ids)
+                ->delete();
+
+            $user_id = \Auth::user()->id ?? null;
+            $table_name = $this->model->getTable() ?? null;
+            $data_id = $data->id ?? null;
+            $activity_after = json_encode($data);
+            $this->lib_activity->addActivity($user_id, $table_name, $data_id, 'update', date('Y-m-d H:i:s'), $activity_after, $activity_before);
+
+            return Redirect::route(strtolower($this->controller_name) . '.index');
+        }
+        return Redirect::route(strtolower($this->controller_name) . '.edit', $id)
+            ->withInput()
+            ->withErrors($validation)
+            ->with('message', 'There were validation errors.');
+    }
+
+    public function store_image($url_file,$sequence = 1)
+    {
+        $url = null;
+        if ($url_file) {
+            $image = $url_file;
+            $imagename = date('ymd') . time() . sprintf('%02d', $sequence) . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('assets/file/result');
+
+            if (!file_exists($destinationPath)) {
+                File::makeDirectory($destinationPath, $mode = 0777, true, true);
+            }
+
+            $image->move($destinationPath, $imagename);
+            $url = request()->getSchemeAndHttpHost() . '/assets/file/result/' . $imagename;
+        }
+
+        return $url;
     }
 
     public function customFilter($data, $newFilters)
