@@ -23,6 +23,22 @@ class Election_results extends RESTful {
         parent::__construct($model, $controller_name);
     }
 
+    public function beforeIndex($data)
+    {
+        $data->select(['election_results.*','district.name as district_name','subdistrict.name as subdistrict_name'])
+            ->leftJoin('district', function ($join) {
+                $join->on('district.id', '=', 'election_results.district_id');
+            })->leftJoin('subdistrict', function ($join) {
+                $join->on('subdistrict.id', '=', 'election_results.subdistrict_id');
+            });
+            
+        $groups_id = \Auth::user()->groups_id ?? null;
+        if($groups_id == 2){
+            $subdistrict_ids = session()->get('subdistrict_ids');
+            $data->whereIn('subdistrict_id',$subdistrict_ids);
+        }
+    }
+
     public function store()
     {
         $input = $this->getParams(request()->all());

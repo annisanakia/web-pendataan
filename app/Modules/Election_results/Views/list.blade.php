@@ -15,10 +15,25 @@
             <thead>
                 <tr>
                     <th width="5%" class="text-center">No</th>
-                    <th width="25%">Kecamatan</th>
-                    <th width="25%">Kelurahan</th>
-                    <th>No TPS</th>
-                    <th width="18%">Total Result</th>
+                    <th width="100px" class="order-link {{ ($sort_field == 'district_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=district_name&sort_type='.(($sort_field == 'district_name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Kecamatan
+                        </a>
+                    </th>
+                    <th width="100px" class="order-link {{ ($sort_field == 'subdistrict_name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=subdistrict_name&sort_type='.(($sort_field == 'subdistrict_name'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Kelurahan
+                        </a>
+                    </th>
+                    <th width="100px" class="order-link {{ ($sort_field == 'no_tps'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=no_tps&sort_type='.(($sort_field == 'no_tps'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            No TPS
+                        </a>
+                    </th>
+                    <th width="100px" class="order-link {{ ($sort_field == 'total_result'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=total_result&sort_type='.(($sort_field == 'total_result'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Total Hasil
+                        </a>
                     <th width="12%" class="text-center">Aksi</th>
                 </tr>
                 <tr>

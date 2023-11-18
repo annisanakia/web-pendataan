@@ -25,6 +25,14 @@ class Authenticate extends Middleware
             Auth::logout();
             return redirect()->guest('login');
         }else{
+            $user_id = \Auth::user()->id ?? null;
+
+            $subdistrict_ids = \Models\users_subdistrict::select(['subdistrict_id'])
+                    ->where('user_id',$user_id)
+                    ->pluck('subdistrict_id')
+                    ->all();
+            $request->session()->put('subdistrict_ids', $subdistrict_ids);
+
             $prefix = request()->route()->getPrefix() != ''? request()->route()->getPrefix() : 'home';
             $prefix = in_array($prefix,['city','district','subdistrict','job_type','volunteer_data'])? 'setting' : $prefix;
             if (!array_key_exists($prefix,menuSideBar()) && $prefix != 'account_setting') {

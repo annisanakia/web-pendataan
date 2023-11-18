@@ -8,7 +8,7 @@
             <th width="27%">Kecamatan</th>
             <th width="27%">Kelurahan</th>
             <th>No TPS</th>
-            <th width="18%">Total Result</th>
+            <th width="18%">Total Hasil</th>
         </tr>
     </thead>
     <tbody>
