@@ -6,7 +6,6 @@ use Models\collection_data as collection_dataModel;
 use Lib\core\RESTful;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
-use File;
 use DateInterval;
 use DateTime;
 use DatePeriod;

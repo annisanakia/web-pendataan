@@ -13,6 +13,7 @@ return [
         'Reference_data',
         'Collection_data',
         'Election_results',
-        'Report_data'
+        'Report_data',
+        'Report_result'
     ]
 ];

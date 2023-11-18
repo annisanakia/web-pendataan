@@ -50,6 +50,10 @@ function menuSidebar()
                 'name' => 'Laporan Pendataan',
                 'icon' => 'fa-solid fa-chart-simple'
             ],
+            'report_result' => [
+                'name' => 'Laporan Hasil Pemilu',
+                'icon' => 'fa-solid fa-chart-line'
+            ]
         ],
         'COR' => [
             'home' => [
@@ -66,6 +70,10 @@ function menuSidebar()
             ],
             'report_data' => [
                 'name' => 'Laporan Pendataan',
+                'icon' => 'fa-solid fa-chart-simple'
+            ],
+            'report_result' => [
+                'name' => 'Laporan Hasil Pemilu',
                 'icon' => 'fa-solid fa-chart-simple'
             ]
         ]
