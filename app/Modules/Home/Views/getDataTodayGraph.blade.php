@@ -14,7 +14,7 @@
         labels: {!! json_encode($district_names) !!},
         datasets: [
         {
-            label: "Data Target",
+            label: "Data Hari Ini",
             backgroundColor: "rgba(152,85,194,1)",
             borderColor: "rgba(152,85,194,1)",
             data: {!! json_encode($dataByToday) !!},
