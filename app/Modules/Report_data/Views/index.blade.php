@@ -18,7 +18,7 @@
                             <div class="col-sm-6">
                                 <div class="mb-3">
                                     <label class="col-form-label">Model Laporan</label>
-                                    <select name="model" class="form-select {{ $errors->has('model')? 'is-invalid' : '' }}">
+                                    <select name="model" class="form-control selectpicker {{ $errors->has('model')? 'is-invalid' : '' }}" data-size="7" data-live-search="true">
                                         <option value="1">Berdasarkan NIK</option>
                                         <option value="2">Berdasarkan Kecamatan</option>
                                         <option value="3">Berdasarkan Kelurahan</option>
@@ -27,6 +27,7 @@
                                         <option value="6">Berdasarkan Jenis Kelamin</option>
                                         <option value="7">Berdasarkan Pekerjaan</option>
                                         <option value="8">Berdasarkan Umur</option>
+                                        <option value="9">Berdasarkan Relawan Data</option>
                                     </select>
                                     {!!$errors->first('model', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
