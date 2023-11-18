@@ -10,7 +10,9 @@
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
-
+            @if(Session::has('message_error'))
+                <div class="alert alert-danger" id="hideMe">{!! Session::get('message_error') !!}</div>
+            @endif
             <form method="POST" action="{{ route($controller_name.'.update',$data->id) }}" class="form-validation" enctype="multipart/form-data">
                 @csrf
                 <div class="card">

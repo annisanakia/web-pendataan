@@ -28,6 +28,22 @@ class Election_results extends RESTful {
         $input = $this->getParams(request()->all());
         $validation = $this->model->validate($input);
 
+        $data = $this->model->where('city_id',request()->city_id)
+                    ->where('district_id',request()->district_id)
+                    ->where('subdistrict_id',request()->subdistrict_id)
+                    ->where('no_tps',request()->no_tps)
+                    ->first();
+
+        if($data){
+            $district = \Models\district::find(request()->district_id);
+            $subdistrict = \Models\subdistrict::find(request()->subdistrict_id);
+            \Session::flash('message_error', 'Data dengan kecamatan <b>'.($district->name).'</b>, kelurahan <b>'.($subdistrict->name).'</b>, dan no TPS <b>'.request()->no_tps.'</b> telah tersedia.');
+            return Redirect::route(strtolower($this->controller_name) . '.create')
+                ->withInput()
+                ->withErrors($validation)
+                ->with('message', 'There were validation errors.');
+        }
+
         if ($validation->passes()) {
             $data = $this->model->create($input);
 
@@ -58,6 +74,23 @@ class Election_results extends RESTful {
     {
         $input = $this->getParams(request()->all());
         $validation = $this->model->validate($input);
+
+        $data = $this->model->where('city_id',request()->city_id)
+                    ->where('district_id',request()->district_id)
+                    ->where('subdistrict_id',request()->subdistrict_id)
+                    ->where('no_tps',request()->no_tps)
+                    ->where('id','!=',$id)
+                    ->first();
+
+        if($data){
+            $district = \Models\district::find(request()->district_id);
+            $subdistrict = \Models\subdistrict::find(request()->subdistrict_id);
+            \Session::flash('message_error', 'Data dengan kecamatan <b>'.($district->name).'</b>, kelurahan <b>'.($subdistrict->name).'</b>, dan no TPS <b>'.request()->no_tps.'</b> telah tersedia.');
+            return Redirect::route(strtolower($this->controller_name) . '.edit', $id)
+                ->withInput()
+                ->withErrors($validation)
+                ->with('message', 'There were validation errors.');
+        }
 
         if ($validation->passes()) {
             $data = $this->model->find($id);
