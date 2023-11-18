@@ -80,6 +80,15 @@
                                         Tambah Gambar <i class="fa-solid fa-plus px-2"></i>
                                     </button>
                                 </div>
+                                @if($errors->has('url_file.*'))
+                                <div class="col-md-12">
+                                    <div class="alert alert-danger">
+                                        <b>Error Upload Gambar.</b><br>
+                                        {!! $errors->first('url_file.*') !!}.<br>
+                                        Silahkan upload ulang.
+                                    </div>
+                                </div>
+                                @endif
                                 <div class="col-md-6">
                                     <table class="w-100">
                                         @php

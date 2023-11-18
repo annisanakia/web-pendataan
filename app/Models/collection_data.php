@@ -21,7 +21,7 @@ class collection_data extends Model {
         'nik.digits' => 'NIK harus berisikan 16 digit.',
         'whatsapp.digits_between' => 'Nomor whatsapp harus berisikan 10 sampai 13 digit.',
         'photo.mimes' => 'Foto KTP harus bertipe JPEG, JPG, PNG',
-        'photo.max' => 'Ukuran file Foto KTP harus dibawah 2048 kilobytes',
+        'photo.max' => 'Ukuran file Foto KTP harus dibawah 2 mb',
         'nik.*.unique' => 'NIK telah tersedia.',
         'nik.*.digits' => 'NIK harus berisikan 16 digit.',
         'whatsapp.*.digits_between' => 'Nomor whatsapp harus berisikan 10 sampai 13 digit.',

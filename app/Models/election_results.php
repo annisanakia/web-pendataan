@@ -5,6 +5,7 @@ namespace Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Validation\Rules\File;
 
 class election_results extends Model {
 
@@ -15,17 +16,21 @@ class election_results extends Model {
     
     public static $customMessages = array(
         'required' => 'Kolom ini wajib diisi.',
-        // 'nik.unique' => 'NIK telah tersedia.',
+        'url_file.*.mimes' => 'Gambar harus bertipe JPEG, JPG, PNG',
+        'url_file.*.max' => 'Ukuran file gambar harus dibawah 8 mb'
     );
     
     public function validate($data)
     {
         $rules = array(
-            // 'nik' => 'required|unique:election_results,nik,' . ($data['id'] ?? null) . ',id,deleted_at,NULL',
             'no_tps' => 'required',
             'city_id' => 'required',
             'district_id' => 'required',
             'subdistrict_id' => 'required',
+            'url_file.*' => [
+                File::types(['jpeg', 'jpg', 'png'])
+                    ->max(8192)
+            ]
         );
         $v = Validator::make($data, $rules, election_results::$customMessages);
         return $v;
