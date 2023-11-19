@@ -154,6 +154,46 @@ class Report_result extends RESTful {
         return $with;
     }
 
+    public function getListByTPS()
+    {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
+        $subdistrict_id = request()->subdistrict_id;
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
+
+        $datas = $this->model->select(['no_tps','total_result']);
+        if($subdistrict_id != ''){
+            $datas->where('subdistrict_id',$subdistrict_id);
+        }
+        
+        $this->filter($datas, request(), 'collection_data');
+        $max_row = request()->input('max_row') ?? 50;
+        
+        $sort_type = $sort_type > 2? 0 : $sort_type;
+        $order_field = orders()[$sort_type] ?? null;
+        if(in_array($sort_field,['no_tps','total_result']) && $order_field){
+            $datas->orderBy($sort_field, $order_field ?? 'desc');
+        }
+
+        $datas = $datas->orderBy('no_tps','asc')->paginate($max_row);
+        $datas->chunk(100);
+
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListTPSAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListTPSAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+        
+        $with['datas'] = $datas;
+        $with['model'] = request()->model;
+        $with['subdistrict_id'] = request()->subdistrict_id;
+        $with['param'] = request()->all();
+        $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
+        return $with;
+    }
+
     public function getListDistrictAsPdf()
     {
         $template = $this->controller_name . '::getListDistrictAsPdf';
@@ -216,5 +256,37 @@ class Report_result extends RESTful {
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Hasil Pemilu Berdasarkan Kelurahan ('.date('d-m-Y').').xls"');
+    }
+
+    public function getListTPSAsPdf()
+    {
+        $template = $this->controller_name . '::getListTPSAsPdf';
+        $data = $this->getListByTPS();
+        $data['title_head_export'] = 'Hasil Pemilu Berdasarkan TPS';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('A4', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Hasil Pemilu Berdasarkan TPS ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListTPSAsXls()
+    {
+        $template = $this->controller_name . '::getListTPSAsXls';
+        $data = $this->getListByTPS();
+        $data['title_head_export'] = 'Hasil Pemilu Berdasarkan TPS';
+        $data['title_col_sum'] = 3;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Hasil Pemilu Berdasarkan TPS ('.date('d-m-Y').').xls"');
     }
 }
