@@ -22,7 +22,7 @@
         @else
             @foreach($datas as $data)
             <?php
-                $total_data = $data->election_results_data->count();
+                $total_data = $data->election_results_data->sum('total_result');
                 $total += $total_data;
             ?>
             <tr>
