@@ -263,6 +263,11 @@ class Report_data extends RESTful {
         $datas = \Models\subdistrict::select(['*']);
         if(count($subdistrict_ids) > 0){
             $datas->whereIn('id',$subdistrict_ids);
+        }else{
+            if($groups_id == 2){
+                $subdistrict_ids = session()->get('subdistrict_ids');
+                $datas->whereIn('id',$subdistrict_ids);
+            }
         }
 
         $this->filter($datas, request(), 'subdistrict');
@@ -911,7 +916,7 @@ class Report_data extends RESTful {
     {
         $template = $this->controller_name . '::getListSubdistrictAsXls';
         $data = $this->getListBySubdistrict();
-        $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
+        $data['title_head_export'] = 'Rekap Berdasarkan Kelurahan';
         $data['title_col_sum'] = 6;
 
         if (request()->has('print_view')) {
@@ -920,7 +925,7 @@ class Report_data extends RESTful {
 
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Kecamatan ('.date('d-m-Y').').xls"');
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Kelurahan ('.date('d-m-Y').').xls"');
     }
     
     public function getListCoordinatorAsPdf()
