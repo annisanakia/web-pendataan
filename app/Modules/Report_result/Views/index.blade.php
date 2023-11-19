@@ -18,7 +18,7 @@
                             <div class="col-sm-6">
                                 <div class="mb-3">
                                     <label class="col-form-label">Model Laporan</label>
-                                    <select name="model" class="form-control selectpicker {{ $errors->has('model')? 'is-invalid' : '' }}" data-size="7" data-live-search="true">
+                                    <select name="model" class="form-control selectpicker {{ $errors->has('model')? 'is-invalid' : '' }}" data-size="7">
                                         <option value="1">Berdasarkan Kecamatan</option>
                                         <option value="2">Berdasarkan Kelurahan</option>
                                         <option value="3">Berdasarkan TPS</option>
