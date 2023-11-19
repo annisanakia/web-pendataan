@@ -1,5 +1,8 @@
 <form method="GET" action="{{ url($controller_name) }}" accept-charset="UTF-8" class="form-validation-ajax">
 <input type="hidden" name="model" value="{{ $model }}">
+@foreach($subdistrict_ids as $subdistrict_id)
+    <input type="hidden" name="subdistrict_ids[]" value="{{ $subdistrict_id }}">
+@endforeach
 <input type="hidden" name="sort_field" value="{{ $sort_field }}" class="order-input">
 <input type="hidden" name="sort_type" value="{{ $sort_type }}" class="order-input">
 <div class="card mt-4">
@@ -8,7 +11,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar me-1"></i>
-                    Grafik Kecamatan
+                    Grafik Kelurahan
                 </div>
                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
             </div>
@@ -27,7 +30,7 @@
                 <tr>
                     <th width="5%" class="text-center">No</th>
                     <th class="text-center order-link {{ ($sort_field == 'name'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=name&sort_type='.($sort_field == 'name'? $sort_type : 0)+1) }}">
-                        Kecamatan
+                        Kelurahan
                     </th>
                     <th width="28%" class="text-center order-link {{ ($sort_field == 'code'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=code&sort_type='.($sort_field == 'code'? $sort_type : 0)+1) }}">
                         Kode
@@ -46,7 +49,7 @@
             <tbody>
                 @php
                     $i=0;
-                    $dataByDistrict = [];
+                    $dataBySubdistrict = [];
                     $total = 0;
                 @endphp
                 @if(count($datas) <= 0)
@@ -57,7 +60,7 @@
                     @foreach($datas as $data)
                     <?php
                         $total_data = $data->election_results_data->sum('total_result');
-                        $dataByDistrict[] = $total_data;
+                        $dataBySubdistrict[] = $total_data;
                         $total += $total_data;
                     ?>
                     <tr>
@@ -82,9 +85,6 @@
             <span class="result-count">Showing {{$datas->firstItem()}} to {{$datas->lastItem()}} of {{$datas->total()}} entries</span>
             {{ $datas->onEachSide(0)->appends($param)->links('component.pagination')}}        
         </div>
-        <?php
-            // dd($subdistricts,$dataBySubdistrict);
-        ?>
     </div>
 </div>
 
@@ -132,12 +132,12 @@
     var myLineChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: {!! json_encode($districts) !!},
+        labels: {!! json_encode($subdistricts) !!},
         datasets: [{
-        label: "Rekap Kecamatan",
+        label: "Rekap Kelurahan",
         backgroundColor: "rgba(2,117,216,1)",
         borderColor: "rgba(2,117,216,1)",
-        data: {!! json_encode($dataByDistrict) !!},
+        data: {!! json_encode($dataBySubdistrict) !!},
         }],
     },
     options: {
@@ -150,7 +150,7 @@
             display: false
             },
             ticks: {
-            maxTicksLimit: 10
+            maxTicksLimit: 30
             }
         }],
         yAxes: [{

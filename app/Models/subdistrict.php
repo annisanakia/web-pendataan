@@ -48,4 +48,9 @@ class subdistrict extends Model {
     {
         return $this->hasMany('Models\collection_data')->where('status_share',2);
     }
+
+    public function election_results_data()
+    {
+        return $this->hasMany('Models\election_results');
+    }
 }

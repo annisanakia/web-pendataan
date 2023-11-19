@@ -61,8 +61,6 @@ class Report_result extends RESTful {
     {
         $groups_id = \Auth::user()->groups_id ?? null;
 
-        $start_date = request()->start_date;
-        $end_date = request()->end_date;
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
@@ -96,10 +94,59 @@ class Report_result extends RESTful {
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListDistrictAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
 
         $with['model'] = request()->model;
-        $with['start_date'] = request()->start_date;
-        $with['end_date'] = request()->end_date;
         $with['datas'] = $datas;
         $with['districts'] = $districts;
+        $with['param'] = request()->all();
+        $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
+        return $with;
+    }
+
+    public function getListBySubdistrict()
+    {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
+        $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
+
+        $datas = \Models\subdistrict::select(['*'])->with('election_results_data');
+        if(count($subdistrict_ids) > 0){
+            $datas->whereIn('id',$subdistrict_ids);
+        }else{
+            if($groups_id == 2){
+                $subdistrict_ids = session()->get('subdistrict_ids');
+                $datas->whereIn('id',$subdistrict_ids);
+            }
+        }
+
+        $this->filter($datas, request(), 'subdistrict');
+        $max_row = request()->input('max_row') ?? 50;
+        
+        $sort_type = $sort_type > 2? 0 : $sort_type;
+        $order_field = orders()[$sort_type] ?? null;
+        if(in_array($sort_field,['code','name']) && $order_field){
+            $datas->orderBy($sort_field, $order_field ?? 'desc');
+        }
+        if(in_array($sort_field,['election_results_data']) && $order_field){
+            $datas->withSum('election_results_data','total_result')->orderBy('election_results_data_sum_total_result', $order_field ?? 'desc');
+        }
+        
+        $datas = $datas->orderBy('id','desc')->paginate($max_row);
+        $datas->chunk(100);
+
+        $subdistricts = $datas->pluck('name')->all();
+
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSubdistrictAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSubdistrictAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+
+        $with['subdistrict_ids'] = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
+        $with['model'] = request()->model;
+        $with['datas'] = $datas;
+        $with['subdistricts'] = $subdistricts;
         $with['param'] = request()->all();
         $with['actions'] = $actions;
         $with['sort_field'] = $sort_field;
@@ -111,7 +158,7 @@ class Report_result extends RESTful {
     {
         $template = $this->controller_name . '::getListDistrictAsPdf';
         $data = $this->getListByDistrict();
-        $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
+        $data['title_head_export'] = 'Hasil Pemilu Berdasarkan Kecamatan';
 
         $pdf = \PDF::loadView($template, $data)
             ->setPaper('A4', 'portrait');
@@ -120,14 +167,14 @@ class Report_result extends RESTful {
             return view($template, $data);
         }
 
-        return $pdf->download('Rekap Berdasarkan Kecamatan ('.date('d-m-Y').').pdf');
+        return $pdf->download('Hasil Pemilu Berdasarkan Kecamatan ('.date('d-m-Y').').pdf');
     }
 
     public function getListDistrictAsXls()
     {
         $template = $this->controller_name . '::getListDistrictAsXls';
         $data = $this->getListByDistrict();
-        $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
+        $data['title_head_export'] = 'Hasil Pemilu Berdasarkan Kecamatan';
         $data['title_col_sum'] = 4;
 
         if (request()->has('print_view')) {
@@ -136,6 +183,38 @@ class Report_result extends RESTful {
 
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Kecamatan ('.date('d-m-Y').').xls"');
+            ->header('Content-Disposition', 'attachment; filename="' . 'Hasil Pemilu Berdasarkan Kecamatan ('.date('d-m-Y').').xls"');
+    }
+
+    public function getListSubdistrictAsPdf()
+    {
+        $template = $this->controller_name . '::getListSubdistrictAsPdf';
+        $data = $this->getListBySubdistrict();
+        $data['title_head_export'] = 'Hasil Pemilu Berdasarkan Kelurahan';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('A4', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Hasil Pemilu Berdasarkan Kelurahan ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListSubdistrictAsXls()
+    {
+        $template = $this->controller_name . '::getListSubdistrictAsXls';
+        $data = $this->getListBySubdistrict();
+        $data['title_head_export'] = 'Hasil Pemilu Berdasarkan Kelurahan';
+        $data['title_col_sum'] = 4;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Hasil Pemilu Berdasarkan Kelurahan ('.date('d-m-Y').').xls"');
     }
 }
