@@ -83,7 +83,7 @@ class Report_result extends RESTful {
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         if(in_array($sort_field,['election_results_data']) && $order_field){
-            $datas->withCount('election_results_data')->orderBy('election_results_data_count', $order_field ?? 'desc');
+            $datas->withSum('election_results_data','total_result')->orderBy('election_results_data_sum_total_result', $order_field ?? 'desc');
         }
 
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
