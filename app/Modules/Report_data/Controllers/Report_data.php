@@ -25,7 +25,7 @@ class Report_data extends RESTful {
         $groups_id = \Auth::user()->groups_id;
         $subdistrict_ids = \Models\subdistrict::pluck('id')->all();
         if($groups_id == 2){
-            $subdistrict_ids = \Models\users_subdistrict::where('user_id',$user->id ?? null)->pluck('subdistrict_id')->all();
+            $subdistrict_ids = session()->get('subdistrict_ids');
         }
         $with['subdistrict_ids'] = $subdistrict_ids;
         return view($this->controller_name . '::index', $with);

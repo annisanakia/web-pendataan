@@ -353,10 +353,7 @@ class Collection_data extends RESTful {
 
         $excel = \Excel::toArray(new generalImport(), $file);
 
-        $subdistrict_ids = \Models\users_subdistrict::select(['subdistrict_id'])
-                ->where('user_id',$user_id)
-                ->pluck('subdistrict_id')
-                ->all();
+        $subdistrict_ids = session()->get('subdistrict_ids');
 
         $districts = \Models\district::select(['*']);
         if($groups_id == 2){
@@ -456,10 +453,7 @@ class Collection_data extends RESTful {
             return redirect(strtolower($this->controller_name));
         }
 
-        $subdistrict_ids = \Models\users_subdistrict::select(['subdistrict_id'])
-                ->where('user_id',$user_id)
-                ->pluck('subdistrict_id')
-                ->all();
+        $subdistrict_ids = session()->get('subdistrict_ids');
 
         $districts = \Models\district::select(['*']);
         if($groups_id == 2){
