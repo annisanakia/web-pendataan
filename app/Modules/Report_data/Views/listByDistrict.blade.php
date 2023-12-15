@@ -37,9 +37,6 @@
                     <th class="text-center order-link {{ ($sort_field == 'verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=verif&sort_type='.($sort_field == 'verif'? $sort_type : 0)+1) }}">
                         Terverifikasi
                     </th>
-                    <th class="text-center order-link {{ ($sort_field == 'share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=share&sort_type='.($sort_field == 'share'? $sort_type : 0)+1) }}" >
-                        Sudah Dibagikan
-                    </th>
                     <th class="text-center order-link {{ ($sort_field == 'data'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=data&sort_type='.($sort_field == 'data'? $sort_type : 0)+1) }}">
                         Total Data
                     </th>
@@ -48,7 +45,6 @@
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
                     <th><input type="text" name="filter[name]" value="{{ $param['filter']['name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[code]" value="{{ $param['filter']['code'] ?? null }}" class="form-control"></th>
-                    <th></th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -63,7 +59,7 @@
                 @endphp
                 @if(count($datas) <= 0)
                     <tr>
-                        <td colspan="6" class="text-center">Data Tidak Ditemukan</td>
+                        <td colspan="5" class="text-center">Data Tidak Ditemukan</td>
                     </tr>
                 @else
                     @foreach($datas as $data)
@@ -82,7 +78,6 @@
                         <td>{{ $data->name }}</td>
                         <td>{{ $data->code }}</td>
                         <td class="text-center">{{ $verifikasi->count() }}</td>
-                        <td class="text-center">{{ $dibagikan->count() }}</td>
                         <td class="text-center">{{ $collection_data->count() }}</td>
                     </tr>
                     @endforeach
@@ -92,7 +87,6 @@
                 <tr>
                     <th colspan="3" class="text-center">Subtotal</th>
                     <th class="text-center">{{ $total_verifikasi }}</th>
-                    <th class="text-center">{{ $total_dibagikan }}</th>
                     <th class="text-center">{{ $total }}</th>
                 </tr>
             </tfoot>

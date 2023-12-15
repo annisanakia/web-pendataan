@@ -28,7 +28,7 @@
             display: false
             },
             ticks: {
-            maxTicksLimit: 10
+            maxTicksLimit: 30
             }
         }],
         yAxes: [{

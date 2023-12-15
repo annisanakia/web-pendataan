@@ -7,7 +7,6 @@
             <th width="5%" class="text-center">No</th>
             <th>Nama</th>
             <th class="text-center">Terverifikasi</th>
-            <th class="text-center">Sudah Dibagikan</th>
             <th class="text-center">Total Data</th>
         </tr>
     </thead>
@@ -20,7 +19,7 @@
         @endphp
         @if(count($datas) <= 0)
             <tr>
-                <td colspan="5" class="text-center">Data Tidak Ditemukan</td>
+                <td colspan="4" class="text-center">Data Tidak Ditemukan</td>
             </tr>
         @else
             @foreach($datas as $data)
@@ -39,7 +38,6 @@
                 <td class="text-center">{{ ++$i }}</td>
                 <td>{{ $data->name }}</td>
                 <td class="text-center">{{ $verifikasi->count() }}</td>
-                <td class="text-center">{{ $dibagikan->count() }}</td>
                 <td class="text-center">{{ $collection_data->count() }}</td>
             </tr>
             @foreach($subdistricts as $row)
@@ -52,7 +50,6 @@
                     <td class="text-center"></td>
                     <td>{{ $row->subdistrict->name ?? null }}</td>
                     <td class="text-center">{{ $verifikasi->count() }}</td>
-                    <td class="text-center">{{ $dibagikan->count() }}</td>
                     <td class="text-center">{{ $collection_data->count() }}</td>
                 </tr>
             @endforeach
@@ -63,7 +60,6 @@
         <tr>
             <th colspan="2" class="text-center">Subtotal</th>
             <th class="text-center">{{ $total_verifikasi }}</th>
-            <th class="text-center">{{ $total_dibagikan }}</th>
             <th class="text-center">{{ $total }}</th>
         </tr>
     </tfoot>

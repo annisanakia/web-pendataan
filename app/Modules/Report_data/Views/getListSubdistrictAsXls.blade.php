@@ -8,7 +8,6 @@
             <th>Kelurahan</th>
             <th width="28%">Kode</th>
             <th class="text-center">Terverifikasi</th>
-            <th class="text-center">Sudah Dibagikan</th>
             <th class="text-center">Total Data</th>
         </tr>
     </thead>
@@ -19,7 +18,7 @@
         @endphp
         @if(count($datas) <= 0)
             <tr>
-                <td colspan="6" class="text-center">Data Tidak Ditemukan</td>
+                <td colspan="5" class="text-center">Data Tidak Ditemukan</td>
             </tr>
         @else
             @foreach($datas as $data)
@@ -34,7 +33,6 @@
                 <td>{{ $data->name }}</td>
                 <td>{{ $data->code }}</td>
                 <td class="text-center">{{ $verifikasi->count() }}</td>
-                <td class="text-center">{{ $dibagikan->count() }}</td>
                 <td class="text-center">{{ $collection_data->count() }}</td>
             </tr>
             @endforeach
@@ -45,7 +43,6 @@
             <th colspan="3" class="text-center">Subtotal</th>
             <th class="text-center">=SUM(D5:D{{ $j }})</th>
             <th class="text-center">=SUM(E5:E{{ $j }})</th>
-            <th class="text-center">=SUM(F5:F{{ $j }})</th>
         </tr>
     </tfoot>
 </table>
