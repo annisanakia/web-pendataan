@@ -50,7 +50,6 @@
                     $i=0;
                     $dataByCoordinators = [];
                     $total_verifikasi = 0;
-                    $total_dibagikan = 0;
                     $total = 0;
                 @endphp
                 @if(count($datas) <= 0)
@@ -60,13 +59,11 @@
                 @else
                     @foreach($datas as $data)
                     <?php
-                        $collection_data = $collection_datas->where('coordinator_id',$data->id);
+                        $collection_data = $data->collections_data;
                         $verifikasi = $collection_data->where('status',2);
-                        $dibagikan = $collection_data->where('status_share',2);
                         $dataByCoordinators[] = $collection_data->count();
 
                         $total_verifikasi += $verifikasi->count();
-                        $total_dibagikan += $dibagikan->count();
                         $total += $collection_data->count();
                     ?>
                     <tr>
@@ -77,7 +74,7 @@
                     </tr>
                     @foreach($data->users_subdistrict as $row)
                         <?php
-                            $collection_data = $collection_datas->where('coordinator_id',$data->id)->where('subdistrict_id',$row->subdistrict_id);
+                            $collection_data = $data->collections_data->where('subdistrict_id',$row->subdistrict_id);
                             $verifikasi = $collection_data->where('status',2);
                             $dibagikan = $collection_data->where('status_share',2);
                         ?>

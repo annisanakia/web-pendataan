@@ -340,7 +340,8 @@ class Report_data extends RESTful {
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
-        $datas = \app\Models\User::select(['*'])
+        $datas = \app\Models\User::with(['collections_data'])
+                ->select(['*'])
                 ->where('groups_id',2);
         if($groups_id == 2){
             $datas->where('id',$user_id);
@@ -374,20 +375,6 @@ class Report_data extends RESTful {
         $coordinator_ids = $datas->pluck('id')->all();
         $coordinators = $datas->pluck('name')->all();
 
-        $collection_datas = $this->model->select(['*'])
-            ->whereIn('coordinator_id',$coordinator_ids);
-        if($start_date != ''){
-            $collection_datas->whereDate('created_at','>=',$start_date);
-        }
-        if($end_date != ''){
-            $collection_datas->whereDate('created_at','<=',$end_date);
-        }
-        if($groups_id == 2){
-            $collection_datas->where('coordinator_id',$user_id);
-        }
-
-        $collection_datas = $collection_datas->get();
-
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListCoordinatorAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListCoordinatorAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
@@ -398,7 +385,6 @@ class Report_data extends RESTful {
         $with['datas'] = $datas;
         $with['coordinators'] = $coordinators;
         $with['param'] = request()->all();
-        $with['collection_datas'] = $collection_datas;
         $with['actions'] = $actions;
         $with['sort_field'] = $sort_field;
         $with['sort_type'] = $sort_type;
