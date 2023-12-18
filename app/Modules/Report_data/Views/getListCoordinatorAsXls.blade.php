@@ -23,30 +23,36 @@
         @else
             @foreach($datas as $data)
             <?php
-                $collection_data = $collection_datas->where('coordinator_id',$data->id);
-                $verifikasi = $collection_data->where('status',2);
-                $dibagikan = $collection_data->where('status_share',2);
+                $collection_data = $data->collections_data;
+                $verifikasi = $collections_verif[$data->id] ?? 0;
+
+                $collections_subdistrict = \Models\collection_data::select('subdistrict_id', \DB::raw("count(id) as total"))->where('coordinator_id',$data->id)
+                        ->groupBy('subdistrict_id')->get()
+                        ->pluck('total','subdistrict_id')->all();
+                $collections_subdistrict_verif = \Models\collection_data::select('subdistrict_id', \DB::raw("count(id) as total"))->where('coordinator_id',$data->id)
+                        ->where('status',2)->groupBy('subdistrict_id')->get()
+                        ->pluck('total','subdistrict_id')->all();
+
                 $j++;
                 $array_excel[] = $j;
             ?>
             <tr>
                 <td class="text-center">{{ ++$i }}</td>
                 <td>{{ $data->name }}</td>
-                <td class="text-center">{{ $verifikasi->count() }}</td>
+                <td class="text-center">{{ $verifikasi }}</td>
                 <td class="text-center">{{ $collection_data->count() }}</td>
             </tr>
             @foreach($data->users_subdistrict as $row)
                 <?php
-                    $collection_data = $collection_datas->where('coordinator_id',$data->id)->where('subdistrict_id',$row->subdistrict_id);
-                    $verifikasi = $collection_data->where('status',2);
-                    $dibagikan = $collection_data->where('status_share',2);
+                    $collection_data = $collections_subdistrict[$row->subdistrict_id] ?? 0;
+                    $verifikasi = $collections_subdistrict_verif[$row->subdistrict_id] ?? 0;
                     $j++;
                 ?>
                 <tr>
                     <td class="text-center"></td>
                     <td>{{ $row->subdistrict->name ?? null }}</td>
-                    <td class="text-center">{{ $verifikasi->count() }}</td>
-                    <td class="text-center">{{ $collection_data->count() }}</td>
+                    <td class="text-center">{{ $verifikasi }}</td>
+                    <td class="text-center">{{ $collection_data }}</td>
                 </tr>
             @endforeach
             @endforeach

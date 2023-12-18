@@ -874,7 +874,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListDistrictAsXls';
         $data = $this->getListByDistrict();
         $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
-        $data['title_col_sum'] = 6;
+        $data['title_col_sum'] = 5;
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -906,7 +906,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListSubdistrictAsXls';
         $data = $this->getListBySubdistrict();
         $data['title_head_export'] = 'Rekap Berdasarkan Kelurahan';
-        $data['title_col_sum'] = 6;
+        $data['title_col_sum'] = 5;
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -938,7 +938,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListCoordinatorAsXls';
         $data = $this->getListByCoordinator();
         $data['title_head_export'] = 'Rekap Berdasarkan Koordinator';
-        $data['title_col_sum'] = 5;
+        $data['title_col_sum'] = 4;
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -970,7 +970,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListTPSAsXls';
         $data = $this->getListByTPS();
         $data['title_head_export'] = 'Rekap Berdasarkan TPS';
-        $data['title_col_sum'] = 5;
+        $data['title_col_sum'] = 4;
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -1002,7 +1002,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListGenderAsXls';
         $data = $this->getListByGender();
         $data['title_head_export'] = 'Rekap Berdasarkan Jenis Kelamin';
-        $data['title_col_sum'] = 5;
+        $data['title_col_sum'] = 4;
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -1034,7 +1034,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListJobAsXls';
         $data = $this->getListByJob();
         $data['title_head_export'] = 'Rekap Berdasarkan Pekerjaan';
-        $data['title_col_sum'] = 5;
+        $data['title_col_sum'] = 4;
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -1066,7 +1066,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListAgeAsXls';
         $data = $this->getListByAge();
         $data['title_head_export'] = 'Rekap Berdasarkan Umur';
-        $data['title_col_sum'] = 5;
+        $data['title_col_sum'] = 4;
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -1098,7 +1098,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListVolunteerAsXls';
         $data = $this->getListByVolunteer();
         $data['title_head_export'] = 'Rekap Berdasarkan Relawan Data';
-        $data['title_col_sum'] = 5;
+        $data['title_col_sum'] = 4;
 
         if (request()->has('print_view')) {
             return view($template, $data);
