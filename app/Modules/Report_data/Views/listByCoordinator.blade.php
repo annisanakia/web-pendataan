@@ -60,29 +60,35 @@
                     @foreach($datas as $data)
                     <?php
                         $collection_data = $data->collections_data;
-                        $verifikasi = $collection_data->where('status',2);
+                        $verifikasi = $collections_verif[$data->id] ?? 0;
                         $dataByCoordinators[] = $collection_data->count();
 
-                        $total_verifikasi += $verifikasi->count();
+                        $collections_subdistrict = \Models\collection_data::select('subdistrict_id', \DB::raw("count(id) as total"))->where('coordinator_id',$data->id)
+                                ->groupBy('subdistrict_id')->get()
+                                ->pluck('total','subdistrict_id')->all();
+                        $collections_subdistrict_verif = \Models\collection_data::select('subdistrict_id', \DB::raw("count(id) as total"))->where('coordinator_id',$data->id)
+                                ->where('status',2)->groupBy('subdistrict_id')->get()
+                                ->pluck('total','subdistrict_id')->all();
+
+                        $total_verifikasi += $verifikasi;
                         $total += $collection_data->count();
                     ?>
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                         <td>{{ $data->name }}</td>
-                        <td class="text-center">{{ $verifikasi->count() }}</td>
+                        <td class="text-center">{{ $verifikasi }}</td>
                         <td class="text-center">{{ $collection_data->count() }}</td>
                     </tr>
                     @foreach($data->users_subdistrict as $row)
                         <?php
-                            $collection_data = $data->collections_data->where('subdistrict_id',$row->subdistrict_id);
-                            $verifikasi = $collection_data->where('status',2);
-                            $dibagikan = $collection_data->where('status_share',2);
+                            $collection_data = $collections_subdistrict[$row->subdistrict_id] ?? 0;
+                            $verifikasi = $collections_subdistrict_verif[$row->subdistrict_id] ?? 0;
                         ?>
                         <tr>
                             <td class="text-center"></td>
                             <td>{{ $row->subdistrict->name ?? null }}</td>
-                            <td class="text-center">{{ $verifikasi->count() }}</td>
-                            <td class="text-center">{{ $collection_data->count() }}</td>
+                            <td class="text-center">{{ $verifikasi }}</td>
+                            <td class="text-center">{{ $collection_data }}</td>
                         </tr>
                     @endforeach
                     @endforeach

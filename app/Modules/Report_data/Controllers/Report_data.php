@@ -374,6 +374,8 @@ class Report_data extends RESTful {
 
         $coordinator_ids = $datas->pluck('id')->all();
         $coordinators = $datas->pluck('name')->all();
+        
+        $collections_verif = \Models\collection_data::select('coordinator_id', \DB::raw("count(id) as total"))->where('status',2)->groupBy('coordinator_id')->get()->pluck('total','coordinator_id')->all();
 
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListCoordinatorAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
@@ -388,6 +390,7 @@ class Report_data extends RESTful {
         $with['actions'] = $actions;
         $with['sort_field'] = $sort_field;
         $with['sort_type'] = $sort_type;
+        $with['collections_verif'] = $collections_verif;
         return $with;
     }
 
