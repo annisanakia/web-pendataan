@@ -260,7 +260,8 @@ class Report_data extends RESTful {
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
-        $datas = \Models\subdistrict::select(['*']);
+        $datas = \Models\subdistrict::with(['collections_data'])
+                ->select(['*']);
         if(count($subdistrict_ids) > 0){
             $datas->whereIn('id',$subdistrict_ids);
         }else{
@@ -298,19 +299,20 @@ class Report_data extends RESTful {
         $subdistrict_ids = $datas->pluck('id')->all();
         $subdistricts = $datas->pluck('name')->all();
 
-        $collection_datas = $this->model->select(['*'])
-            ->whereIn('subdistrict_id',$subdistrict_ids);
+        $collections_verif = \Models\collection_data::select('subdistrict_id', \DB::raw("count(id) as total"))
+                ->whereIn('subdistrict_id',$subdistrict_ids);
         if($start_date != ''){
-            $collection_datas->whereDate('created_at','>=',$start_date);
+            $collections_verif->whereDate('created_at','>=',$start_date);
         }
         if($end_date != ''){
-            $collection_datas->whereDate('created_at','<=',$end_date);
+            $collections_verif->whereDate('created_at','<=',$end_date);
         }
         if($groups_id == 2){
-            $collection_datas->where('coordinator_id',$user_id);
+            $collections_verif->where('coordinator_id',$user_id);
         }
-
-        $collection_datas = $collection_datas->get();
+        $collections_verif = $collections_verif->where('status',2)
+                ->groupBy('subdistrict_id')->get()
+                ->pluck('total','subdistrict_id')->all();
 
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSubdistrictAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
@@ -323,7 +325,7 @@ class Report_data extends RESTful {
         $with['datas'] = $datas;
         $with['subdistricts'] = $subdistricts;
         $with['param'] = request()->all();
-        $with['collection_datas'] = $collection_datas;
+        $with['collections_verif'] = $collections_verif;
         $with['actions'] = $actions;
         $with['sort_field'] = $sort_field;
         $with['sort_type'] = $sort_type;
@@ -375,7 +377,19 @@ class Report_data extends RESTful {
         $coordinator_ids = $datas->pluck('id')->all();
         $coordinators = $datas->pluck('name')->all();
         
-        $collections_verif = \Models\collection_data::select('coordinator_id', \DB::raw("count(id) as total"))->where('status',2)->groupBy('coordinator_id')->get()->pluck('total','coordinator_id')->all();
+        $collections_verif = \Models\collection_data::select('coordinator_id', \DB::raw("count(id) as total"));
+        if($start_date != ''){
+            $collections_verif->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $collections_verif->whereDate('created_at','<=',$end_date);
+        }
+        if($groups_id == 2){
+            $collections_verif->where('coordinator_id',$user_id);
+        }
+        $collections_verif = $collections_verif->where('status',2)
+                ->groupBy('coordinator_id')->get()
+                ->pluck('total','coordinator_id')->all();
 
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListCoordinatorAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');

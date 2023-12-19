@@ -23,16 +23,15 @@
         @else
             @foreach($datas as $data)
             <?php
-                $collection_data = $collection_datas->where('subdistrict_id',$data->id);
-                $verifikasi = $collection_data->where('status',2);
-                $dibagikan = $collection_data->where('status_share',2);
+                $collection_data = $data->collections_data;
+                $verifikasi = $collections_verif[$data->id] ?? 0;
                 $j++;
             ?>
             <tr>
-                <td class="text-center">{{ ++$i }}</td>
+                <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                 <td>{{ $data->name }}</td>
                 <td>{{ $data->code }}</td>
-                <td class="text-center">{{ $verifikasi->count() }}</td>
+                <td class="text-center">{{ $verifikasi }}</td>
                 <td class="text-center">{{ $collection_data->count() }}</td>
             </tr>
             @endforeach
