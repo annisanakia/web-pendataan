@@ -24,18 +24,18 @@
         @else
             @foreach($datas as $data)
             <?php
-                $collection_data = $data->collections_data;
+                $collection_data = $collections_data[$data->id] ?? 0;
                 $verifikasi = $collections_verif[$data->id] ?? 0;
 
                 $total_verifikasi += $verifikasi;
-                $total += $collection_data->count();
+                $total += $collection_data;
             ?>
             <tr>
                 <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                 <td>{{ $data->name }}</td>
                 <td>{{ $data->code }}</td>
                 <td class="text-center">{{ $verifikasi }}</td>
-                <td class="text-center">{{ $collection_data->count() }}</td>
+                <td class="text-center">{{ $collection_data }}</td>
             </tr>
             @endforeach
         @endif

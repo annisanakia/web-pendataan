@@ -301,17 +301,24 @@ class Report_data extends RESTful {
 
         $collections_verif = \Models\collection_data::select('subdistrict_id', \DB::raw("count(id) as total"))
                 ->whereIn('subdistrict_id',$subdistrict_ids);
+        $collections_data = \Models\collection_data::select('subdistrict_id', \DB::raw("count(id) as total"))
+                ->whereIn('subdistrict_id',$subdistrict_ids);
         if($start_date != ''){
             $collections_verif->whereDate('created_at','>=',$start_date);
+            $collections_data->whereDate('created_at','>=',$start_date);
         }
         if($end_date != ''){
             $collections_verif->whereDate('created_at','<=',$end_date);
+            $collections_data->whereDate('created_at','<=',$end_date);
         }
         if($groups_id == 2){
             $collections_verif->where('coordinator_id',$user_id);
+            $collections_data->where('coordinator_id',$user_id);
         }
         $collections_verif = $collections_verif->where('status',2)
                 ->groupBy('subdistrict_id')->get()
+                ->pluck('total','subdistrict_id')->all();
+        $collections_data = $collections_data->groupBy('subdistrict_id')->get()
                 ->pluck('total','subdistrict_id')->all();
 
         $this->filter_string = http_build_query(request()->all());
@@ -326,6 +333,7 @@ class Report_data extends RESTful {
         $with['subdistricts'] = $subdistricts;
         $with['param'] = request()->all();
         $with['collections_verif'] = $collections_verif;
+        $with['collections_data'] = $collections_data;
         $with['actions'] = $actions;
         $with['sort_field'] = $sort_field;
         $with['sort_type'] = $sort_type;
@@ -378,17 +386,23 @@ class Report_data extends RESTful {
         $coordinators = $datas->pluck('name')->all();
         
         $collections_verif = \Models\collection_data::select('coordinator_id', \DB::raw("count(id) as total"));
+        $collections_data = \Models\collection_data::select('coordinator_id', \DB::raw("count(id) as total"));
         if($start_date != ''){
             $collections_verif->whereDate('created_at','>=',$start_date);
+            $collections_data->whereDate('created_at','>=',$start_date);
         }
         if($end_date != ''){
             $collections_verif->whereDate('created_at','<=',$end_date);
+            $collections_data->whereDate('created_at','<=',$end_date);
         }
         if($groups_id == 2){
             $collections_verif->where('coordinator_id',$user_id);
+            $collections_data->where('coordinator_id',$user_id);
         }
         $collections_verif = $collections_verif->where('status',2)
                 ->groupBy('coordinator_id')->get()
+                ->pluck('total','coordinator_id')->all();
+        $collections_data = $collections_data->groupBy('coordinator_id')->get()
                 ->pluck('total','coordinator_id')->all();
 
         $this->filter_string = http_build_query(request()->all());
@@ -405,6 +419,7 @@ class Report_data extends RESTful {
         $with['sort_field'] = $sort_field;
         $with['sort_type'] = $sort_type;
         $with['collections_verif'] = $collections_verif;
+        $with['collections_data'] = $collections_data;
         return $with;
     }
 

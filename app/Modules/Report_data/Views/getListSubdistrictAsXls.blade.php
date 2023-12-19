@@ -23,7 +23,7 @@
         @else
             @foreach($datas as $data)
             <?php
-                $collection_data = $data->collections_data;
+                $collection_data = $collections_data[$data->id] ?? 0;
                 $verifikasi = $collections_verif[$data->id] ?? 0;
                 $j++;
             ?>
@@ -32,7 +32,7 @@
                 <td>{{ $data->name }}</td>
                 <td>{{ $data->code }}</td>
                 <td class="text-center">{{ $verifikasi }}</td>
-                <td class="text-center">{{ $collection_data->count() }}</td>
+                <td class="text-center">{{ $collection_data }}</td>
             </tr>
             @endforeach
         @endif
