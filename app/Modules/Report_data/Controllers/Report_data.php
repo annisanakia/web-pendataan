@@ -218,19 +218,27 @@ class Report_data extends RESTful {
         $district_ids = $datas->pluck('id')->all();
         $districts = $datas->pluck('name')->all();
 
-        $collection_datas = $this->model->select(['*'])
-            ->whereIn('district_id',$district_ids);
+        $collections_verif = \Models\collection_data::select('district_id', \DB::raw("count(id) as total"))
+                ->whereIn('district_id',$district_ids);
+        $collections_data = \Models\collection_data::select('district_id', \DB::raw("count(id) as total"))
+                ->whereIn('district_id',$district_ids);
         if($start_date != ''){
-            $collection_datas->whereDate('created_at','>=',$start_date);
+            $collections_verif->whereDate('created_at','>=',$start_date);
+            $collections_data->whereDate('created_at','>=',$start_date);
         }
         if($end_date != ''){
-            $collection_datas->whereDate('created_at','<=',$end_date);
+            $collections_verif->whereDate('created_at','<=',$end_date);
+            $collections_data->whereDate('created_at','<=',$end_date);
         }
         if($groups_id == 2){
-            $collection_datas->where('coordinator_id',$user_id);
+            $collections_verif->where('coordinator_id',$user_id);
+            $collections_data->where('coordinator_id',$user_id);
         }
-
-        $collection_datas = $collection_datas->get();
+        $collections_verif = $collections_verif->where('status',2)
+                ->groupBy('district_id')->get()
+                ->pluck('total','district_id')->all();
+        $collections_data = $collections_data->groupBy('district_id')->get()
+                ->pluck('total','district_id')->all();
 
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListDistrictAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
@@ -242,7 +250,8 @@ class Report_data extends RESTful {
         $with['datas'] = $datas;
         $with['districts'] = $districts;
         $with['param'] = request()->all();
-        $with['collection_datas'] = $collection_datas;
+        $with['collections_verif'] = $collections_verif;
+        $with['collections_data'] = $collections_data;
         $with['actions'] = $actions;
         $with['sort_field'] = $sort_field;
         $with['sort_type'] = $sort_type;
