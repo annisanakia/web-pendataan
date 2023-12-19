@@ -29,7 +29,7 @@
             display: false
             },
             ticks: {
-            maxTicksLimit: 40
+            maxTicksLimit: 50
             }
         }],
         yAxes: [{
