@@ -9,6 +9,7 @@
         @endif
         @if($disabled_add)
             <div class="alert alert-warning">
+                <b>Perhatian!</b><br>
                 Tambah data tidak dapat dilakukan karena data telah mencapai target.
             </div>
         @endif
