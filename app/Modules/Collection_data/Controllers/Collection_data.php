@@ -21,6 +21,7 @@ class Collection_data extends RESTful {
         $this->enable_pdf_button = true;
         $this->enable_xls_button = true;
         $this->enable_import = true;
+        $this->disabled_add = getStatusAdd();
         parent::__construct($model, $controller_name);
     }
 
@@ -40,6 +41,11 @@ class Collection_data extends RESTful {
         if($groups_id == 2){
             $data->where('coordinator_id',$user_id);
         }
+    }
+
+    public function customParam(){
+        $with['disabled_add'] = $this->disabled_add;
+        return $with;
     }
 
     public function edit($id)
@@ -326,6 +332,9 @@ class Collection_data extends RESTful {
 
     public function import()
     {
+        if ($this->disabled_add) {
+            return Redirect::route(strtolower($this->controller_name) . '.index');
+        }
         $with = [];
         return view($this->controller_name . '::import', $with);
     }

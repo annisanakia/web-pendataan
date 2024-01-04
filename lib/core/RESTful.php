@@ -27,6 +27,7 @@ class RESTful extends Controller
     protected $enable_pdf_button = false;
     protected $enable_import = false;
     protected $add_param_to_custom_filters = [];
+    protected $disabled_add = false;
 
     public function __construct($model, $controller_name)
     {
@@ -74,7 +75,7 @@ class RESTful extends Controller
 
         $this->filter_string = http_build_query($request->all());
 
-        if ($this->priv['add_priv'])
+        if ($this->priv['add_priv'] && !$this->disabled_add)
             $this->actions[] = array('name' => 'Tambah Data', 'url' => strtolower($this->controller_name) . '/create', 'class' => 'btn btn-primary', 'icon' => 'fa-solid fa-plus');
         
         $url_xls = '#';
@@ -95,7 +96,7 @@ class RESTful extends Controller
             $this->actions[] = array('name' => '', 'url' => $url_xls, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
         }
 
-        if ($this->enable_import) {
+        if ($this->enable_import && !$this->disabled_add) {
             $this->actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/import', 'class' => 'btn btn-outline-primary', 'icon' => 'fa-solid fa-upload');
         }
 
@@ -189,6 +190,10 @@ class RESTful extends Controller
 
     public function create()
     {   
+        if ($this->disabled_add) {
+            return Redirect::route(strtolower($this->controller_name) . '.index');
+        }
+
         $action[] = array('name' => 'Batal', 'url' => strtolower($this->controller_name), 'class' => 'btn btn-secondary px-3 ms-md-1');
         $action[] = array('name' => 'Simpan', 'type' => 'submit', 'url' => '#', 'class' => 'btn btn-success px-3 ms-md-1');
         $this->setAction($action);

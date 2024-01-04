@@ -7,6 +7,11 @@
         @if(Session::has('message_import'))
             <div class="alert alert-success" id="hideMe">{{ Session::get('message_import') }}</div>
         @endif
+        @if($disabled_add)
+            <div class="alert alert-warning">
+                Tambah data tidak dapat dilakukan karena data telah mencapai target.
+            </div>
+        @endif
         <div class="d-grid gap-2 d-flex justify-content-end mt-4">
             @include('component.actions')
         </div>

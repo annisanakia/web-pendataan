@@ -206,3 +206,12 @@ function orders() {
     return $orders;
 }
 
+function getStatusAdd() {
+    $total_target = \Models\subdistrict::select('target')
+                ->sum('target');
+    $total_data = \Models\collection_data::select('id')
+                ->count();
+                
+    return $total_target <= $total_data;
+}
+
