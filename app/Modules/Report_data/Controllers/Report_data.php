@@ -485,29 +485,27 @@ class Report_data extends RESTful {
         $datas = $datas->groupBy('no_tps')->orderBy('no_tps','asc')->paginate($max_row);
         $datas->chunk(100);
 
-        $collection_datas = \Models\collection_data::select(['*']);
+        $collections_verif = \Models\collection_data::select('no_tps', \DB::raw("count(id) as total"))
+                ->where('subdistrict_id',$subdistrict_id);
+        $collections_data = \Models\collection_data::select('no_tps', \DB::raw("count(id) as total"))
+                ->where('subdistrict_id',$subdistrict_id);
         if($start_date != ''){
-            $collection_datas->whereDate('created_at','>=',$start_date);
+            $collections_verif->whereDate('created_at','>=',$start_date);
+            $collections_data->whereDate('created_at','>=',$start_date);
         }
         if($end_date != ''){
-            $collection_datas->whereDate('created_at','<=',$end_date);
-        }
-        if($subdistrict_id != ''){
-            $collection_datas->where('subdistrict_id',$subdistrict_id);
+            $collections_verif->whereDate('created_at','<=',$end_date);
+            $collections_data->whereDate('created_at','<=',$end_date);
         }
         if($groups_id == 2){
-            $collection_datas->where('coordinator_id',$user_id);
+            $collections_verif->where('coordinator_id',$user_id);
+            $collections_data->where('coordinator_id',$user_id);
         }
-        $this->filter($collection_datas, request(), 'collection_data');
-        $collection_datas = $collection_datas->get();
-
-        $datas_tps = array_values($collection_datas->sortBy('no_tps')->pluck('no_tps','no_tps')->all());
-        $dataByTPS = [];
-        $no_tps = [];
-        foreach($datas_tps as $tps){
-            $dataByTPS[] = $collection_datas->where('no_tps',$tps)->count();
-            $no_tps[] = 'TPS '.$tps;
-        }
+        $collections_verif = $collections_verif->where('status',2)
+                ->groupBy('no_tps')->get()
+                ->pluck('total','no_tps')->all();
+        $collections_data = $collections_data->groupBy('no_tps')->get()
+                ->pluck('total','no_tps')->all();
 
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListTPSAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
@@ -519,12 +517,11 @@ class Report_data extends RESTful {
         $with['end_date'] = request()->end_date;
         $with['subdistrict_id'] = request()->subdistrict_id;
         $with['param'] = request()->all();
-        $with['collection_datas'] = $collection_datas;
-        $with['no_tps'] = $no_tps;
-        $with['dataByTPS'] = $dataByTPS;
         $with['actions'] = $actions;
         $with['sort_field'] = $sort_field;
         $with['sort_type'] = $sort_type;
+        $with['collections_verif'] = $collections_verif;
+        $with['collections_data'] = $collections_data;
         return $with;
     }
 

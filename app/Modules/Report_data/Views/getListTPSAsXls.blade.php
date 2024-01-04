@@ -22,16 +22,15 @@
         @else
             @foreach($datas as $data)
             <?php
-                $collection_data = $collection_datas->where('no_tps',$data->no_tps);
-                $verifikasi = $collection_data->where('status',2);
-                $dibagikan = $collection_data->where('status_share',2);
+                $collection_data = $collections_data[$data->no_tps] ?? 0;
+                $verifikasi = $collections_verif[$data->no_tps] ?? 0;
                 $j++;
             ?>
             <tr>
                 <td class="text-center">{{ ++$i }}</td>
                 <td>{{ $data->no_tps }}</td>
-                <td class="text-center">{{ $verifikasi->count() }}</td>
-                <td class="text-center">{{ $collection_data->count() }}</td>
+                <td class="text-center">{{ $verifikasi }}</td>
+                <td class="text-center">{{ $collection_data }}</td>
             </tr>
             @endforeach
         @endif
