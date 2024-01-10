@@ -166,7 +166,7 @@
         });
     }
 
-    var maxGroup = 10;
+    var maxGroup = 100;
     $(".add-data").click(function(){
         if($('#body-data').find('tr').length < maxGroup){
             $('#template-data tr').clone(false).appendTo('#body-data');
