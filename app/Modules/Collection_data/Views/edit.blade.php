@@ -260,6 +260,20 @@
                             </div>
                         </div>
                     </div>
+                    @if($groups_id == 1)
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Saksi TPS</label>
+                                <select name="is_supervisor" class="form-select {{ $errors->has('is_supervisor')? 'is-invalid' : '' }}">
+                                    <option value="1" {{ 1 == (old('is_supervisor') ?? $data->is_supervisor)? 'selected' : '' }}>Ya</option>
+                                    <option value="0" {{ 0 == (old('is_supervisor') ?? $data->is_supervisor)? 'selected' : '' }}>Tidak</option>
+                                </select>
+                                {!!$errors->first('is_supervisor', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </form>
         </div>
