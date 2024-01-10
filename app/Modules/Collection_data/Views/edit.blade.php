@@ -260,7 +260,6 @@
                             </div>
                         </div>
                     </div>
-                    @if($groups_id == 1)
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
@@ -273,7 +272,6 @@
                             </div>
                         </div>
                     </div>
-                    @endif
                 </div>
             </form>
         </div>

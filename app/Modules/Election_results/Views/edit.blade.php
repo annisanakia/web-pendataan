@@ -72,6 +72,40 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-lg-8 col-sm-12">
+                            <label class="col-form-label">Daftar Saksi TPS</label>
+                            <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th width="20px" class="text-center">No</th>
+                                        <th width="180px" class="text-center">NIK</th>
+                                        <th class="text-center">Nama</th>
+                                        <th class="text-center">No Whatsapp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        $i = 0;
+                                        $supervisors = \Models\collection_data::where('subdistrict_id',$data->subdistrict_id)
+                                                ->where('no_tps',$data->no_tps)
+                                                ->where('is_supervisor',1)
+                                                ->get();
+                                    ?>
+                                    @foreach($supervisors as $supervisor)
+                                    <tr>
+                                        <td class="text-center">{{ ++$i }}</td>
+                                        <td nowrap>{{ $supervisor->nik }}</td>
+                                        <td>{{ $supervisor->name }}</td>
+                                        <td>{{ $supervisor->whatsapp }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-12">
                             <label class="col-form-label">Upload bukti gambar</label>
                             <div class="row">
