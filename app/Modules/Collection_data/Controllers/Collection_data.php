@@ -216,7 +216,7 @@ class Collection_data extends RESTful {
         $data['title_head_export'] = 'Data Pendataan';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('A4', 'portrait');
+            ->setPaper('A4', 'landscape');
 
         if (request()->has('print_view')) {
             return view($template, $data);
