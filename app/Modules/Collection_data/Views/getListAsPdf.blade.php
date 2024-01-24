@@ -1,5 +1,11 @@
 @include('component.header_pdf')
 
+<style>
+    table.list_content {
+        font-size: 13px;
+    }
+</style>
+
 <br>
 <table class="table list_content" width="100%">
     <thead>
@@ -14,12 +20,14 @@
             <th>Kelurahan</th>
             <th>TPS</th>
             <th>Alamat</th>
+            <th>RT</th>
+            <th>RW</th>
         </tr>
     </thead>
     <tbody>
         @if ($datas->count() < 1)
             <tr>
-                <td colspan="10" style="text-align: center">Data Tidak Ditemukan</td>
+                <td colspan="12" style="text-align: center">Data Tidak Ditemukan</td>
             </tr>
         @else
             <?php $i = 0;?>
@@ -35,6 +43,8 @@
                     <td>{{ $data->subdistrict->name ?? null }}</td>
                     <td>{{ $data->no_tps }}</td>
                     <td>{{ $data->address }}</td>
+                    <td>{{ $data->rt }}</td>
+                    <td>{{ $data->rw }}</td>
                 </tr>
             @endforeach
         @endif
