@@ -22,4 +22,15 @@ class Volunteer_data extends RESTful {
     {
         $data->where('code','!=','DLL');
     }
+
+    public function customFilter($data, $newFilters)
+    {
+        foreach ($newFilters as $key => $value) {
+            if ($key == 'coordinator_name') {
+                $data->whereHas('coordinator', function ($builder) use ($value){
+                    $builder->where('name', 'like', '%' . $value . '%');
+                });
+            }
+        }
+    }
 }

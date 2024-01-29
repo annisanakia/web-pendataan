@@ -16,6 +16,7 @@ class volunteer_data extends Model {
     public static $rules = array(
         'code' => 'required',
         'name' => 'required',
+        'coordinator_id' => 'required'
     );
     
     public static $customMessages = array(
@@ -26,6 +27,11 @@ class volunteer_data extends Model {
     {
         $v = Validator::make($data, volunteer_data::$rules, volunteer_data::$customMessages);
         return $v;
+    }
+
+    public function coordinator()
+    {
+        return $this->belongsTo('App\Models\User', 'coordinator_id', 'id');
     }
 
     public function collections_data()
