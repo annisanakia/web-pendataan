@@ -114,6 +114,17 @@
                                     {!!$errors->first('status_share', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
                             </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label class="col-form-label">Saksi TPS</label>
+                                    <select name="is_supervisor" class="form-select {{ $errors->has('is_supervisor')? 'is-invalid' : '' }}">
+                                        <option value="">-- All --</option>
+                                        <option value="1">Ya</option>
+                                        <option value="0">Tidak</option>
+                                    </select>
+                                    {!!$errors->first('is_supervisor', ' <span class="invalid-feedback">:message</span>')!!}
+                                </div>
+                            </div>
                         </div>
                         <div class="d-grid gap-2 d-md-block my-2 text-end">
                             <button type="submit" class="btn btn-primary px-3 btn-submit">

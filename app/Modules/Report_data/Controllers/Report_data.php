@@ -114,6 +114,7 @@ class Report_data extends RESTful {
         $end_date = request()->end_date;
         $status = request()->status;
         $status_share = request()->status_share;
+        $is_supervisor = request()->is_supervisor;
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
@@ -137,6 +138,9 @@ class Report_data extends RESTful {
         }
         if($status_share != ''){
             $datas->where('collection_data.status_share',$status_share);
+        }
+        if(is_numeric($is_supervisor)){
+            $datas->where('collection_data.is_supervisor',$is_supervisor);
         }
         if($groups_id == 2){
             $datas->where('coordinator_id',$user_id);
@@ -166,6 +170,9 @@ class Report_data extends RESTful {
         }
         if($status_share != ''){
             $collection_datas->where('collection_data.status_share',$status_share);
+        }
+        if(is_numeric($is_supervisor)){
+            $collection_datas->where('collection_data.is_supervisor',$is_supervisor);
         }
         if($groups_id == 2){
             $collection_datas->where('coordinator_id',$user_id);
