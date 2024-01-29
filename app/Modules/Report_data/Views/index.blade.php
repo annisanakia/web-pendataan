@@ -28,6 +28,7 @@
                                         <option value="7">Berdasarkan Pekerjaan</option>
                                         <option value="8">Berdasarkan Umur</option>
                                         <option value="9">Berdasarkan Relawan Data</option>
+                                        <option value="10">Berdasarkan Simpatisan TPS</option>
                                     </select>
                                     {!!$errors->first('model', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
@@ -53,6 +54,24 @@
                                         @endforeach
                                     </select>
                                     {!!$errors->first('subdistrict_id', ' <span class="invalid-feedback">:message</span>')!!}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-none" id="simpatisan_tps">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label class="col-form-label">Koordinator</label>
+                                    <select name="coordinator_id" class="form-control selectpicker {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}" data-size="7" data-live-search="true" id="coordinator_id">
+                                        <option value="">-- Pilih --</option>
+                                    </select>
+                                    {!!$errors->first('coordinator_id', ' <span class="invalid-feedback">:message</span>')!!}
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="mb-3">
+                                    <label class="col-form-label">No TPS</label>
+                                    <input type="text" name="no_tps" class="form-control">
+                                    {!!$errors->first('no_tps', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>
                             </div>
                         </div>
@@ -128,12 +147,16 @@
         $('#coordinator_subdistrict').addClass('d-none');
         $('#status').addClass('d-none');
         $('#tps_subdistrict').addClass('d-none');
+        $('#simpatisan_tps').addClass('d-none');
         if(val == 1){
             $('#status').removeClass('d-none');
         }else if(val == 3 || val == 6 || val == 7 || val == 8){
             $('#coordinator_subdistrict').removeClass('d-none');
         }else if(val == 5){
             $('#tps_subdistrict').removeClass('d-none');
+        }else if(val == 10){
+            $('#tps_subdistrict').removeClass('d-none');
+            $('#simpatisan_tps').removeClass('d-none');
         }
     });
     $(".form-validation").submit(function (e) {
@@ -161,6 +184,24 @@
                     'Terjadi Kesalahan Data',
                     'error'
                 )
+            }
+        });
+    }
+    $("#tps_subdistrict select[name=subdistrict_id]").change(function (e) {
+        getCoordinator($(this).val());
+    });
+    function getCoordinator(subdistrict_id){
+        var url = '{{url("report_data/filterCoordinatorBySubdistrict")}}';
+        var data = {
+            subdistrict_id: subdistrict_id,
+            blank: true
+        };
+        $.ajax({
+            url: url,
+            data: data,
+            success: function(e) {
+                $('#coordinator_id').html(e);
+                $('.selectpicker').selectpicker('refresh');
             }
         });
     }

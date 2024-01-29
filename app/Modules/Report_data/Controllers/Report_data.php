@@ -73,10 +73,35 @@ class Report_data extends RESTful {
             // Umur
             $with = $this->getListByAge();
             return view($this->controller_name . '::listByAge', $with);
-        }else{
+        }elseif($model == 9){
             // Relawan Data
             $with = $this->getListByVolunteer();
             return view($this->controller_name . '::listByVolunteer', $with);
+        }else{
+            // Laporan Simpatisan
+            if(request()->subdistrict_id == ''){
+                return '
+                    <div class="alert alert-info text-center mt-4">
+                        Pilih opsi <b>kelurahan</b> terlebih dahulu untuk melihat laporan
+                    </div>
+                ';
+            }
+            if(request()->coordinator_id == ''){
+                return '
+                    <div class="alert alert-info text-center mt-4">
+                        Pilih opsi <b>koordinator</b> terlebih dahulu untuk melihat laporan
+                    </div>
+                ';
+            }
+            if(request()->no_tps == ''){
+                return '
+                    <div class="alert alert-info text-center mt-4">
+                        Pilih opsi <b>no TPS</b> terlebih dahulu untuk melihat laporan
+                    </div>
+                ';
+            }
+            $with = $this->getListBySimpatisan();
+            return view($this->controller_name . '::listBySimpatisan', $with);
         }
     }
 
@@ -1143,5 +1168,188 @@ class Report_data extends RESTful {
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Relawan Data ('.date('d-m-Y').').xls"');
     }
-    
+
+    public function filterCoordinatorBySubdistrict()
+    {
+        $globalTools = new \Lib\core\globalTools();
+
+        $q = request()->subdistrict_id;
+        $id = request()->id;
+
+        $target = 'coordinator_id';
+        $blank = true;
+
+        $datas = \App\Models\User::where('groups_id',2)
+            ->whereHas('users_subdistrict', function($builder) use($q){
+                $builder->where('subdistrict_id',$q);
+            });
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+        if($groups_id == 2){
+            $datas->where('id',$user_id);
+        }   
+        $datas = $datas->orderBy('name','asc')->pluck('name','id')->all();
+
+        return $globalTools->renderList($datas, $target, $id, $blank);
+    }
+
+    // public function filterVolunteerByCoordinator()
+    // {
+    //     $globalTools = new \Lib\core\globalTools();
+
+    //     $q = request()->coordinator_id;
+    //     $id = request()->id;
+
+    //     $target = 'coordinator_id';
+    //     $blank = true;
+
+    //     $datas = \Models\volunteer_data::where('coordinator_id',$q)
+    //         ->orderBy('name','asc')->pluck('name','id')->all();
+
+    //     return $globalTools->renderList($datas, $target, $id, $blank);
+    // }
+
+    public function getListBySimpatisan()
+    {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
+        $start_date = request()->start_date;
+        $end_date = request()->end_date;
+        $subdistrict_id = request()->subdistrict_id;
+        $coordinator_id = request()->coordinator_id;
+        $no_tps = request()->no_tps;
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
+
+        $subdistrict = \Models\subdistrict::find($subdistrict_id);
+        $coordinator = \app\Models\User::find($coordinator_id);
+
+        $datas = $this->model->select(['collection_data.*','subdistrict.name as subdistrict_name','users.name as coordinator_name','volunteer_data.name as volunteer_name']);
+        $datas->leftJoin('subdistrict', function ($join) {
+            $join->on('subdistrict.id', '=', 'collection_data.subdistrict_id');
+        })->leftJoin('users', function ($join) {
+            $join->on('users.id', '=', 'collection_data.coordinator_id');
+        })->leftJoin('volunteer_data', function ($join) {
+            $join->on('volunteer_data.id', '=', 'collection_data.volunteer_data_id');
+        });
+        if($start_date != ''){
+            $datas->whereDate('collection_data.created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $datas->whereDate('collection_data.created_at','<=',$end_date);
+        }
+        if($subdistrict_id != ''){
+            $datas->where('collection_data.subdistrict_id',$subdistrict_id);
+        }
+        if($coordinator_id != ''){
+            $datas->where('collection_data.coordinator_id',$coordinator_id);
+        }
+        if($no_tps != ''){
+            $datas->where('collection_data.no_tps',$no_tps);
+        }
+        if($groups_id == 2){
+            $datas->where('coordinator_id',$user_id);
+        }
+        
+        $sort_type = request()->sort_type > 2? 0 : request()->sort_type;
+        $this->filter($datas, request(), 'collection_data');
+        $this->order($datas, request());
+        $max_row = request()->input('max_row') ?? 50;
+
+        $datas = $datas->orderBy('id','desc')->paginate($max_row);
+        $datas->chunk(100);
+
+        $day = date('w');
+        $start_date = new DateTime($start_date ?? date('Y-m-d', strtotime('-'.($day-1).' days')));
+        $end_date = new DateTime($end_date ?? date('Y-m-d', strtotime('+'.(7-$day).' days')));
+
+        $collection_datas = \Models\collection_data::select(\DB::raw('DATE(created_at) as date'), \DB::raw('count(*) as total'));
+        if($start_date != ''){
+            $collection_datas->whereDate('collection_data.created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $collection_datas->whereDate('collection_data.created_at','<=',$end_date);
+        }
+        if($subdistrict_id != ''){
+            $collection_datas->where('collection_data.subdistrict_id',$subdistrict_id);
+        }
+        if($coordinator_id != ''){
+            $collection_datas->where('collection_data.coordinator_id',$coordinator_id);
+        }
+        if($no_tps != ''){
+            $collection_datas->where('collection_data.no_tps',$no_tps);
+        }
+        if($groups_id == 2){
+            $collection_datas->where('coordinator_id',$user_id);
+        }
+        $collection_datas = $collection_datas->groupBy('date')->get()->pluck('total','date')->all();
+
+        $interval = DateInterval::createFromDateString('1 day');
+        // $end_week = new DateTime(date('Y-m-d', strtotime('+'.(8-$day).' days')));
+        $end_week = request()->end_date ?? date('Y-m-d', strtotime('+'.(7-$day).' days'));
+        $end_week = new DateTime(date('Y-m-d', strtotime($end_week . ' +1 day')));
+        $date_range = new DatePeriod($start_date, $interval, $end_week);
+
+        $dates = [];
+        $dataByDates = [];
+        foreach ($date_range as $dt) {
+            $date = $dt->format('Y-m-d');
+            $dates[] = dateToIndo($date);
+            $dataByDates[] = $collection_datas[$date] ?? 0;
+        }
+
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSimpatisanAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSimpatisanAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+        
+        $with['datas'] = $datas;
+        $with['model'] = request()->model;
+        $with['start_date'] = request()->start_date;
+        $with['end_date'] = request()->end_date;
+        $with['subdistrict_id'] = request()->subdistrict_id;
+        $with['coordinator_id'] = request()->coordinator_id;
+        $with['no_tps'] = request()->no_tps;
+        $with['param'] = request()->all();
+        $with['dates'] = $dates;
+        $with['dataByDates'] = $dataByDates;
+        $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
+        $with['subdistrict'] = $subdistrict;
+        $with['coordinator'] = $coordinator;
+        return $with;
+    }
+
+    public function getListSimpatisanAsPdf()
+    {
+        $template = $this->controller_name . '::getListSimpatisanAsPdf';
+        $data = $this->getListBySimpatisan();
+        $data['title_head_export'] = 'Rekap Data Simpatisan TPS';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('A4', 'landscape');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Rekap Data Simpatisan TPS ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListSimpatisanAsXls()
+    {
+        $template = $this->controller_name . '::getListSimpatisanAsXls';
+        $data = $this->getListBySimpatisan();
+        $data['title_head_export'] = 'Rekap Data Simpatisan TPS';
+        $data['title_col_sum'] = 8;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Data Simpatisan TPS ('.date('d-m-Y').').xls"');
+    }
 }
