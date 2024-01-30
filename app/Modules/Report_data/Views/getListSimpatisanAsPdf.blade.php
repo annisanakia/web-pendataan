@@ -74,7 +74,7 @@
                     <td>{{ strtoupper($data->name) }}</td>
                     <td>{{ $data->whatsapp ?? null }}</td>
                     <td>{{ $data->volunteer_name ?? null }}</td>
-                    <td>RW {{ $data->rt ?? '-' }} | RT {{ $data->rt ?? '-' }}</td>
+                    <td>RW {{ $data->rw ?? '-' }} | RT {{ $data->rt ?? '-' }}</td>
                     <td></td>
                 </tr>
             @endforeach
