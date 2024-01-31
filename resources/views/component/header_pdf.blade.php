@@ -37,6 +37,9 @@
     .text-end{
         text-align:right !important
     }
+    .page-break{
+        page-break-after:always
+    }
 </style>
 <?php
 $user = \Auth::user();

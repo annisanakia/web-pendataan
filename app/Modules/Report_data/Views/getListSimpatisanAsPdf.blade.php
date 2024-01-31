@@ -1,14 +1,44 @@
-@include('component.header_pdf')
-
-<style>
+<style type="text/css">
     @page {
         margin: 25px 25px 50px 25px;
     }
+    h1.bigheader {
+        font-size: 20px;
+        margin: 0px;
+    }
+    h2.bigheader {
+        font-size: 18px;
+        margin: 0px;
+    }
+    .subheader {
+        font-size: 14px;
+        margin: 0px;
+    }
+    table.list_content {
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    table.list_content td,
+    table.list_content th {
+        border: 1px solid black;
+        padding: 2px 4px;
+        vertical-align: top;
+    }
+    .list_content th {
+        background-color: #fcfcfd;
+        text-align: center;
+    }
+    .text-center{
+        text-align:center !important
+    }
+    .text-end{
+        text-align:right !important
+    }
+    .page-break{
+        page-break-after:always
+    }
     .table tbody tr td{
         vertical-align:middle
-    }
-    .table.list_content tr td{
-        text-align:left
     }
     .pagenum:before {
         content: counter(page);
@@ -30,6 +60,17 @@
         </tr>
     </table>
 </div>
+
+<table width="100%">
+    <tr>
+        <td class="text-center">
+            <h1 class="bigheader">{{$title_head_export}}</h1>
+            <p class="subheader">
+                {{ dateToIndo(date('Y-m-d')) }}
+            </p>
+        </td>
+    </tr>
+</table>
 
 <br>
 <table width="100%">
@@ -61,6 +102,9 @@
         </tr>
     </thead>
     <tbody>
+        <?php
+            $groupBykanvaser = [];
+        ?>
         @if ($datas->count() < 1)
             <tr>
                 <td colspan="7" style="text-align: center">Data Tidak Ditemukan</td>
@@ -68,6 +112,9 @@
         @else
             <?php $i = 0;?>
             @foreach ($datas as $data)
+                <?php
+                    $groupBykanvaser[$data->volunteer_name][($data->rw ?? '-').'#'.($data->rt ?? '-')][] =  1;
+                ?>
                 <tr>
                     <td class="text-center">{{ ++$i }}</td>
                     <td>{{ $data->nik }}</td>
@@ -80,4 +127,98 @@
             @endforeach
         @endif
     </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<table width="100%" style="position: absolute;bottom: 170px;">
+    <thead>
+        <tr>
+            <td></td>
+            <td width="200px">
+                Approved
+                <table width="200px" class="table list_content">
+                    <thead>
+                        <tr>
+                            <td height="60px"></td>
+                        </tr>
+                        <tr>
+                            <td height="60px"></td>
+                        </tr>
+                    </thead>
+                </table>
+            </td>
+        </tr>
+    </thead>
+</table>
+
+<div style="background:#fff;position:absolute;bottom:-30px;height:30px;width:100%;"></div>
+
+<br><br>
+<table width="100%">
+    <thead>
+        <tr>
+            <td style="width:140px">
+                <img src="https://i.ibb.co/6Fw583w/satrio.png" style="width:130px">
+            </td>
+            <td style="font-size:25px">
+                <b>Muhammad Satrio<br>Adi Negoro</b>
+                <br>
+                Data Simpatisan TPS
+            </td>
+            <td width="35%" class="text-end" style="font-size:25px">
+                <b>{{ $subdistrict->name ?? 'NA' }} | TPS {{ $no_tps }}</b>
+            </td>
+        </tr>
+    </thead>
+</table>
+
+<br><br>
+<table width="100%">
+    <thead>
+        <tr>
+            <td class="text-end" width="20%">Kota/Kabupaten</td>
+            <td width="2%" class="text-center">:</td>
+            <td>{{ $subdistrict->district->city->name ?? 'NA' }}</td>
+        </tr>
+        <tr>
+            <td class="text-end">Kecamatan</td>
+            <td class="text-center">:</td>
+            <td>{{ $subdistrict->district->name ?? 'NA' }}</td>
+        </tr>
+        <tr>
+            <td class="text-end">TPS</td>
+            <td class="text-center">:</td>
+            <td>{{ $no_tps ?? 'NA' }}</td>
+        </tr>
+    </thead>
+</table>
+
+<br>
+<table width="100%">
+    <thead>
+        <tr>
+            <td width="15%" style="padding-left:20px">Kanvaser TPS :</td>
+            <td></td>
+            <td width="5%"><b>Total :</b></td>
+            <td width="13%"><b>{{ $datas->count() }} Orang</b></td>
+            <td width="48%"><b>RW | RT</b></td>
+        </tr>
+        @foreach($groupBykanvaser as $volunteer_name => $dataGroups)
+            @foreach($dataGroups as $address => $data)
+            <?php
+                $rw_rt = explode('#',$address);
+                $rw = $rw_rt[0];
+                $rt = $rw_rt[1];
+            ?>
+                <tr>
+                    <td></td>
+                    <td>{{ $volunteer_name }}</td>
+                    <td></td>
+                    <td>{{ count($data) }} Simpatisan</td>
+                    <td>RW {{ $rw }} | RT {{ $rt }}</td>
+                </tr>
+            @endforeach
+        @endforeach
+    </thead>
 </table>

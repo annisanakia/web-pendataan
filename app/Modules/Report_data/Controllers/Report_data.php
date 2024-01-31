@@ -1335,7 +1335,8 @@ class Report_data extends RESTful {
         $data['title_head_export'] = 'Rekap Data Simpatisan TPS';
 
         $pdf = \PDF::loadView($template, $data)
-            ->setPaper('A4', 'landscape');
+            ->setPaper('A4', 'landscape')
+            ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
 
         if (request()->has('print_view')) {
             return view($template, $data);
