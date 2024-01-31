@@ -159,9 +159,9 @@
     <thead>
         <tr>
             <td style="width:140px">
-                <img src="https://i.ibb.co/6Fw583w/satrio.png" style="width:130px">
+                <img src="https://i.ibb.co/5vPLSRT/smartrio.png" style="width:130px">
             </td>
-            <td style="font-size:25px">
+            <td style="font-size:27px">
                 <b>Muhammad Satrio<br>Adi Negoro</b>
                 <br>
                 Data Simpatisan TPS
