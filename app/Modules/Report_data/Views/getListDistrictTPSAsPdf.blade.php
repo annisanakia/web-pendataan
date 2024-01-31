@@ -6,8 +6,8 @@
         <tr>
             <th width="5%" class="text-center" rowspan="2">No</th>
             <th rowspan="2">Kecamatan</th>
-            <th rowspan="2">Kelurahan</th>
-            <th width="10%" rowspan="2">No TPS</th>
+            <th rowspan="2">Jumlah Kelurahan</th>
+            <th width="10%" rowspan="2">Jumlah TPS</th>
             <th class="text-center" colspan="2">Jumlah Pemilih</th>
         </tr>
         <tr>
