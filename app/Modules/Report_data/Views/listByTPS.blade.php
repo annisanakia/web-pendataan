@@ -32,6 +32,12 @@
                     <th class="text-center order-link {{ ($sort_field == 'no_tps'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=no_tps&sort_type='.($sort_field == 'no_tps'? $sort_type : 0)+1) }}">
                         No TPS
                     </th>
+                    <th class="text-center order-link {{ ($sort_field == 'rw'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=rw&sort_type='.($sort_field == 'rw'? $sort_type : 0)+1) }}">
+                        RW
+                    </th>
+                    <th class="text-center order-link {{ ($sort_field == 'rt'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=rt&sort_type='.($sort_field == 'rt'? $sort_type : 0)+1) }}">
+                        RT
+                    </th>
                     <th class="text-center order-link {{ ($sort_field == 'verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=verif&sort_type='.($sort_field == 'verif'? $sort_type : 0)+1) }}">
                         Terverifikasi
                     </th>
@@ -42,6 +48,8 @@
                 <tr>
                     <th><button type="submit" class="btn"><i class="fas fa-search"></i></span></button></th>
                     <th><input type="text" name="filter[no_tps]" value="{{ $param['filter']['no_tps'] ?? null }}" class="form-control"></th>
+                    <th><input type="text" name="filter[rw]" value="{{ $param['filter']['rw'] ?? null }}" class="form-control"></th>
+                    <th><input type="text" name="filter[rt]" value="{{ $param['filter']['rt'] ?? null }}" class="form-control"></th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -61,8 +69,8 @@
                 @else
                     @foreach($datas as $data)
                     <?php
-                        $collection_data = $collections_data[$data->no_tps] ?? 0;
-                        $verifikasi = $collections_verif[$data->no_tps] ?? 0;
+                        $collection_data = $collections_data[$data->no_tps.'#'.($data->rw ?? '-').'#'.($data->rt ?? '-')] ?? 0;
+                        $verifikasi = $collections_verif[$data->no_tps.'#'.($data->rw ?? '-').'#'.($data->rt ?? '-')] ?? 0;
                         $dataByTPS[] = $collection_data;
                         $no_tps[] = 'TPS '.$data->no_tps;
 
@@ -72,6 +80,8 @@
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
                         <td>{{ $data->no_tps }}</td>
+                        <td>{{ $data->rw }}</td>
+                        <td>{{ $data->rt }}</td>
                         <td class="text-center">{{ $verifikasi }}</td>
                         <td class="text-center">{{ $collection_data }}</td>
                     </tr>

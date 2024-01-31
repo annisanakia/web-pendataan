@@ -475,7 +475,7 @@ class Report_data extends RESTful {
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
-        $datas = $this->model->select('no_tps', \DB::raw('count(*) as total'));
+        $datas = $this->model->select('no_tps', 'rw', 'rt', \DB::raw('count(*) as total'));
         if($start_date != ''){
             $datas->whereDate('created_at','>=',$start_date);
         }
@@ -514,12 +514,17 @@ class Report_data extends RESTful {
             }])->orderBy('collections_tps_'.$sort_field.'_count', $order_field ?? 'desc');
         }
 
-        $datas = $datas->groupBy('no_tps')->orderBy('no_tps','asc')->paginate($max_row);
+        $datas = $datas->groupBy('no_tps')
+            ->groupBy('rw')
+            ->groupBy('rt')
+            ->orderBy('no_tps','asc')
+            ->orderBy('rw','asc')
+            ->orderBy('rt','asc')->paginate($max_row);
         $datas->chunk(100);
 
-        $collections_verif = \Models\collection_data::select('no_tps', \DB::raw("count(id) as total"))
+        $collections_verif = \Models\collection_data::select('no_tps', 'rw', 'rt', \DB::raw("count(id) as total"), \DB::raw("CONCAT(no_tps, '#', IFNULL(rw, '-'), '#', IFNULL(rt, '-')) as key_data"))
                 ->where('subdistrict_id',$subdistrict_id);
-        $collections_data = \Models\collection_data::select('no_tps', \DB::raw("count(id) as total"))
+        $collections_data = \Models\collection_data::select('no_tps', 'rw', 'rt', \DB::raw("count(id) as total"), \DB::raw("CONCAT(no_tps, '#', IFNULL(rw, '-'), '#', IFNULL(rt, '-')) as key_data"))
                 ->where('subdistrict_id',$subdistrict_id);
         if($start_date != ''){
             $collections_verif->whereDate('created_at','>=',$start_date);
@@ -534,15 +539,21 @@ class Report_data extends RESTful {
             $collections_data->where('coordinator_id',$user_id);
         }
         $collections_verif = $collections_verif->where('status',2)
-                ->groupBy('no_tps')->get()
-                ->pluck('total','no_tps')->all();
-        $collections_data = $collections_data->groupBy('no_tps')->get()
-                ->pluck('total','no_tps')->all();
+                ->groupBy('no_tps')
+                ->groupBy('rw')
+                ->groupBy('rt')->get()
+                ->pluck('total','key_data')->all();
+        $collections_data = $collections_data->groupBy('no_tps')
+                ->groupBy('rw')
+                ->groupBy('rt')->get()
+                ->pluck('total','key_data')->all();
 
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListTPSAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListTPSAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
         
+        $subdistrict = \Models\subdistrict::find($subdistrict_id);
+
         $with['datas'] = $datas;
         $with['model'] = request()->model;
         $with['start_date'] = request()->start_date;
@@ -554,6 +565,7 @@ class Report_data extends RESTful {
         $with['sort_type'] = $sort_type;
         $with['collections_verif'] = $collections_verif;
         $with['collections_data'] = $collections_data;
+        $with['subdistrict'] = $subdistrict;
         return $with;
     }
 
@@ -1037,7 +1049,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListTPSAsXls';
         $data = $this->getListByTPS();
         $data['title_head_export'] = 'Rekap Berdasarkan TPS';
-        $data['title_col_sum'] = 4;
+        $data['title_col_sum'] = 6;
 
         if (request()->has('print_view')) {
             return view($template, $data);
