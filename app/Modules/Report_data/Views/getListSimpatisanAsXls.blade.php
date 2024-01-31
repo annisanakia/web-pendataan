@@ -7,7 +7,9 @@
             <td colspan="8">
                 {{ $subdistrict->district->city->name ?? 'NA' }}, {{ $subdistrict->district->name ?? 'NA' }}<br>
                 {{ $subdistrict->name ?? 'NA' }} | TPS {{ $no_tps }}<br>
-                Koordinator : {{ $coordinator->name ?? 'NA' }}<br>
+                @if(isset($coordinator->name))
+                    Koordinator : {{ $coordinator->name ?? 'NA' }}<br>
+                @endif
                 Jumlah simpatisan : {{ $datas->count() }} orang
             </td>
         </tr>
@@ -23,6 +25,9 @@
             <th>NIK</th>
             <th>Nama Lengkap</th>
             <th>No Telepon</th>
+            @if(!isset($coordinator->name))
+                <th>Koordinator</th>
+            @endif
             <th>Kanvaser</th>
             <th>RW</th>
             <th>RT</th>
@@ -32,7 +37,7 @@
     <tbody>
         @if ($datas->count() < 1)
             <tr>
-                <td colspan="8" style="text-align: center">Data Tidak Ditemukan</td>
+                <td colspan="{{ isset($coordinator->name)? 8 : 9 }}" style="text-align: center">Data Tidak Ditemukan</td>
             </tr>
         @else
             @foreach ($datas as $data)
@@ -41,6 +46,9 @@
                     <td style="mso-number-format: \@;">{{ $data->nik }}</td>
                     <td>{{ strtoupper($data->name) }}</td>
                     <td>{{ $data->whatsapp ?? null }}</td>
+                    @if(!isset($coordinator->name))
+                        <td>{{ $data->coordinator_name ?? null }}</td>
+                    @endif
                     <td>{{ $data->volunteer_name ?? null }}</td>
                     <td>{{ $data->rw ?? '-' }}</td>
                     <td>{{ $data->rt ?? '-' }}</td>

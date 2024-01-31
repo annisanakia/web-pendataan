@@ -33,6 +33,7 @@ class Report_data extends RESTful {
 
     public function getData()
     {
+        $groups_id = \Auth::user()->groups_id;
         $model = request()->model ?? null;
         if($model == 1){
             // Citizens
@@ -86,7 +87,7 @@ class Report_data extends RESTful {
                     </div>
                 ';
             }
-            if(request()->coordinator_id == ''){
+            if(request()->coordinator_id == '' && $groups_id == 2){
                 return '
                     <div class="alert alert-info text-center mt-4">
                         Pilih opsi <b>koordinator</b> terlebih dahulu untuk melihat laporan
@@ -1339,7 +1340,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListSimpatisanAsXls';
         $data = $this->getListBySimpatisan();
         $data['title_head_export'] = 'Rekap Data Simpatisan TPS';
-        $data['title_col_sum'] = 8;
+        $data['title_col_sum'] = ($data['coordinator']->name ?? null)? 8 : 9;
 
         if (request()->has('print_view')) {
             return view($template, $data);

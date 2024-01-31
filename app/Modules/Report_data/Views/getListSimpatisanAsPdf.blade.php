@@ -77,7 +77,9 @@
     <thead>
         <tr>
             <td>
-                Koordinator : {{ $coordinator->name ?? 'NA' }}<br>
+                @if(isset($coordinator->name))
+                    Koordinator : {{ $coordinator->name ?? 'NA' }}<br>
+                @endif
                 Jumlah simpatisan : {{ $datas->count() }} orang
             </td>
             <td width="30%" class="text-end">{{ $subdistrict->district->city->name ?? 'NA' }}<br>{{ $subdistrict->district->name ?? 'NA' }}</td>
@@ -95,7 +97,10 @@
             <th width="2%">No</th>
             <th width="13%">NIK</th>
             <th>Nama Lengkap</th>
-            <th width="15%">No Telepon</th>
+            <th width="12%">No Telepon</th>
+            @if(!isset($coordinator->name))
+                <th>Koordinator</th>
+            @endif
             <th>Kanvaser</th>
             <th width="12%">RW | RT</th>
             <th width="15%">Checklist</th>
@@ -107,7 +112,7 @@
         ?>
         @if ($datas->count() < 1)
             <tr>
-                <td colspan="7" style="text-align: center">Data Tidak Ditemukan</td>
+                <td colspan="{{ isset($coordinator->name)? 7 : 8 }}" style="text-align: center">Data Tidak Ditemukan</td>
             </tr>
         @else
             <?php $i = 0;?>
@@ -120,6 +125,9 @@
                     <td>{{ $data->nik }}</td>
                     <td>{{ strtoupper($data->name) }}</td>
                     <td>{{ $data->whatsapp ?? null }}</td>
+                    @if(!isset($coordinator->name))
+                        <td>{{ $data->coordinator_name ?? null }}</td>
+                    @endif
                     <td>{{ $data->volunteer_name ?? null }}</td>
                     <td>RW {{ $data->rw ?? '-' }} | RT {{ $data->rt ?? '-' }}</td>
                     <td></td>
