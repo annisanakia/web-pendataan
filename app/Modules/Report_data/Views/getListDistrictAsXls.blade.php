@@ -23,14 +23,14 @@
         @else
             @foreach($datas as $data)
             <?php
-                $collection_data = $collections_data[$data->id] ?? 0;
-                $verifikasi = $collections_verif[$data->id] ?? 0;
+                $collection_data = is_numeric($data->total)? $data->total : 0;
+                $verifikasi = is_numeric($data->total_verif)? $data->total_verif : 0;
                 $j++;
             ?>
             <tr>
                 <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
-                <td>{{ $data->name }}</td>
-                <td>{{ $data->code }}</td>
+                <td>{{ $data->district->name ?? null }}</td>
+                <td>{{ $data->district->code ?? null }}</td>
                 <td class="text-center">{{ $verifikasi }}</td>
                 <td class="text-center">{{ $collection_data }}</td>
             </tr>

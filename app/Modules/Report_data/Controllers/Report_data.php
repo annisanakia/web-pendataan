@@ -221,59 +221,106 @@ class Report_data extends RESTful {
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
-        $datas = \Models\district::select(['*']);
-
+        $datas = $this->model->select('district.name as name', 'district.code as code', 'district_id', \DB::raw('count(*) as total'), \DB::raw('sum(case when status = 2 then 1 else 0 end) AS total_verif'))
+            ->with('district')
+            ->has('district')
+            ->leftJoin('district', function ($join) {
+                    $join->on('district.id', '=', 'collection_data.district_id');
+                });;
+        if($start_date != ''){
+            $datas->whereDate('created_at','>=',$start_date);
+        }
+        if($end_date != ''){
+            $datas->whereDate('created_at','<=',$end_date);
+        }
+        if($groups_id == 2){
+            $datas->where('coordinator_id',$user_id);
+        }
+        
         $this->filter($datas, request(), 'district');
         $max_row = request()->input('max_row') ?? 50;
         
         $sort_type = $sort_type > 2? 0 : $sort_type;
         $order_field = orders()[$sort_type] ?? null;
-        if(in_array($sort_field,['code','name']) && $order_field){
+        if(in_array($sort_field,['name','code','total','total_verif']) && $order_field){
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
-        if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date,$groups_id,$user_id){
-                if($start_date != ''){
-                    $query->whereDate('created_at','>=',$start_date);
-                }
-                if($end_date != ''){
-                    $query->whereDate('created_at','<=',$end_date);
-                }
-                if($groups_id == 2){
-                    $query->where('coordinator_id',$user_id);
-                }
-            }])->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
-        }
+        // if(in_array($sort_field,['verif','share','data']) && $order_field){
+        //     $datas->withCount(['collections_tps_'.$sort_field  => function($query) use ($subdistrict_id,$start_date,$end_date,$groups_id,$user_id){
+        //         if($subdistrict_id != ''){
+        //             $query->where('subdistrict_id',$subdistrict_id);
+        //         }
+        //         if($start_date != ''){
+        //             $query->whereDate('created_at','>=',$start_date);
+        //         }
+        //         if($end_date != ''){
+        //             $query->whereDate('created_at','<=',$end_date);
+        //         }
+        //         if($groups_id == 2){
+        //             $query->where('coordinator_id',$user_id);
+        //         }
+        //     }])->orderBy('collections_tps_'.$sort_field.'_count', $order_field ?? 'desc');
+        // }
 
-        $datas = $datas->orderBy('id','desc')->paginate($max_row);
-        $datas->chunk(100);
+        $datas = $datas->groupBy('district_id')
+            ->orderBy('district_id','asc')->paginate($max_row);
 
-        $district_ids = $datas->pluck('id')->all();
-        $districts = $datas->pluck('name')->all();
+        // $datas = \Models\district::select(['collection_data.district_id', \DB::raw('count(*) as total'), \DB::raw('sum(case when status = 2 then 1 else 0 end) AS total_verif')])
+        //     ->leftJoin('collection_data', function ($join) {
+        //         $join->on('collection_data.district_id', '=', 'district.id');
+        //     });
+        // $this->filter($datas, request(), 'district');
+        // $max_row = request()->input('max_row') ?? 50;
+        
+        // $sort_type = $sort_type > 2? 0 : $sort_type;
+        // $order_field = orders()[$sort_type] ?? null;
+        // if(in_array($sort_field,['code','name','total','total_verif']) && $order_field){
+        //     $datas->orderBy($sort_field, $order_field ?? 'desc');
+        // }
+        // if(in_array($sort_field,['verif','share','data']) && $order_field){
+        //     $datas->withCount(['collections_'.$sort_field  => function($query) use ($start_date,$end_date,$groups_id,$user_id){
+        //         if($start_date != ''){
+        //             $query->whereDate('created_at','>=',$start_date);
+        //         }
+        //         if($end_date != ''){
+        //             $query->whereDate('created_at','<=',$end_date);
+        //         }
+        //         if($groups_id == 2){
+        //             $query->where('coordinator_id',$user_id);
+        //         }
+        //     }])->orderBy('collections_'.$sort_field.'_count', $order_field ?? 'desc');
+        // }
 
-        $collections_verif = \Models\collection_data::select('district_id', \DB::raw("count(id) as total"))
-                ->whereIn('district_id',$district_ids);
-        $collections_data = \Models\collection_data::select('district_id', \DB::raw("count(id) as total"))
-                ->whereIn('district_id',$district_ids);
-        if($start_date != ''){
-            $collections_verif->whereDate('created_at','>=',$start_date);
-            $collections_data->whereDate('created_at','>=',$start_date);
-        }
-        if($end_date != ''){
-            $collections_verif->whereDate('created_at','<=',$end_date);
-            $collections_data->whereDate('created_at','<=',$end_date);
-        }
-        if($groups_id == 2){
-            $collections_verif->where('coordinator_id',$user_id);
-            $collections_data->where('coordinator_id',$user_id);
-        }
-        $collections_verif = $collections_verif->where('status',2)
-                ->groupBy('district_id')->get()
-                ->pluck('total','district_id')->all();
-        $collections_data = $collections_data->groupBy('district_id')->get()
-                ->pluck('total','district_id')->all();
+        // $datas = $datas->groupBy('district_id')->orderBy('district.id','desc')->paginate($max_row);
+        // $datas->chunk(100);
+
+        // $district_ids = $datas->pluck('id')->all();
+        // $districts = $datas->pluck('name')->all();
+
+        // $collections_verif = \Models\collection_data::select('district_id', \DB::raw("count(id) as total"))
+        //         ->whereIn('district_id',$district_ids);
+        // $collections_data = \Models\collection_data::select('district_id', \DB::raw("count(id) as total"))
+        //         ->whereIn('district_id',$district_ids);
+        // if($start_date != ''){
+        //     $collections_verif->whereDate('created_at','>=',$start_date);
+        //     $collections_data->whereDate('created_at','>=',$start_date);
+        // }
+        // if($end_date != ''){
+        //     $collections_verif->whereDate('created_at','<=',$end_date);
+        //     $collections_data->whereDate('created_at','<=',$end_date);
+        // }
+        // if($groups_id == 2){
+        //     $collections_verif->where('coordinator_id',$user_id);
+        //     $collections_data->where('coordinator_id',$user_id);
+        // }
+        // $collections_verif = $collections_verif->where('status',2)
+        //         ->groupBy('district_id')->get()
+        //         ->pluck('total','district_id')->all();
+        // $collections_data = $collections_data->groupBy('district_id')->get()
+        //         ->pluck('total','district_id')->all();
 
         $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListDistrictTPSAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'name'=>'Rekap TPS tiap Kecamatan','class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListDistrictAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListDistrictAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
 
@@ -281,10 +328,10 @@ class Report_data extends RESTful {
         $with['start_date'] = request()->start_date;
         $with['end_date'] = request()->end_date;
         $with['datas'] = $datas;
-        $with['districts'] = $districts;
+        // $with['districts'] = $districts;
         $with['param'] = request()->all();
-        $with['collections_verif'] = $collections_verif;
-        $with['collections_data'] = $collections_data;
+        // $with['collections_verif'] = $collections_verif;
+        // $with['collections_data'] = $collections_data;
         $with['actions'] = $actions;
         $with['sort_field'] = $sort_field;
         $with['sort_type'] = $sort_type;
@@ -515,15 +562,12 @@ class Report_data extends RESTful {
         //     }])->orderBy('collections_tps_'.$sort_field.'_count', $order_field ?? 'desc');
         // }
 
-        if(!$order_field){
-            $datas->orderBy('no_tps','asc')
-            ->orderBy('rw','asc')
-            ->orderBy('rt','asc');
-        }
-
         $datas = $datas->groupBy('no_tps')
             ->groupBy('rw')
-            ->groupBy('rt')->paginate($max_row);
+            ->groupBy('rt')
+            ->orderBy('no_tps','asc')
+            ->orderBy('rw','asc')
+            ->orderBy('rt','asc')->paginate($max_row);
         $datas->chunk(100);
 
         $this->filter_string = http_build_query(request()->all());
@@ -1349,5 +1393,30 @@ class Report_data extends RESTful {
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Data Simpatisan TPS ('.date('d-m-Y').').xls"');
+    }
+
+    public function getListDistrictTPSAsPdf()
+    {
+        $template = $this->controller_name . '::getListDistrictTPSAsPdf';
+
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
+        $start_date = request()->start_date;
+        $end_date = request()->end_date;
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
+
+        $data = $this->getListByDistrict();
+        $data['title_head_export'] = 'Rekap Berdasarkan TPS tiap Kecamatan';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('A4', 'landscape');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->stream('Rekap Berdasarkan TPS tiap Kecamatan ('.date('d-m-Y').').pdf');
     }
 }

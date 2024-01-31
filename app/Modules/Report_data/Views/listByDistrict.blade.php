@@ -34,10 +34,10 @@
                     <th width="28%" class="text-center order-link {{ ($sort_field == 'code'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=code&sort_type='.($sort_field == 'code'? $sort_type : 0)+1) }}">
                         Kode
                     </th>
-                    <th class="text-center order-link {{ ($sort_field == 'verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=verif&sort_type='.($sort_field == 'verif'? $sort_type : 0)+1) }}">
+                    <th class="text-center order-link {{ ($sort_field == 'total_verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=total_verif&sort_type='.($sort_field == 'total_verif'? $sort_type : 0)+1) }}">
                         Terverifikasi
                     </th>
-                    <th class="text-center order-link {{ ($sort_field == 'data'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=data&sort_type='.($sort_field == 'data'? $sort_type : 0)+1) }}">
+                    <th class="text-center order-link {{ ($sort_field == 'total'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=total&sort_type='.($sort_field == 'total'? $sort_type : 0)+1) }}">
                         Total Data
                     </th>
                 </tr>
@@ -52,6 +52,7 @@
             <tbody>
                 @php
                     $i=0;
+                    $districts = [];
                     $dataByDistrict = [];
                     $total_verifikasi = 0;
                     $total = 0;
@@ -63,17 +64,18 @@
                 @else
                     @foreach($datas as $data)
                     <?php
-                        $collection_data = $collections_data[$data->id] ?? 0;
-                        $verifikasi = $collections_verif[$data->id] ?? 0;
+                        $collection_data = is_numeric($data->total)? $data->total : 0;
+                        $verifikasi = is_numeric($data->total_verif)? $data->total_verif : 0;
                         $dataByDistrict[] = $collection_data;
+                        $districts[] = $data->district->name ?? null;
 
                         $total_verifikasi += $verifikasi;
                         $total += $collection_data;
                     ?>
                     <tr>
                         <td class="text-center">{{ (($datas->currentPage() - 1 ) * $datas->perPage() ) + ++$i }}</td>
-                        <td>{{ $data->name }}</td>
-                        <td>{{ $data->code }}</td>
+                        <td>{{ $data->district->name ?? null }}</td>
+                        <td>{{ $data->district->code ?? null }}</td>
                         <td class="text-center">{{ $verifikasi }}</td>
                         <td class="text-center">{{ $collection_data }}</td>
                     </tr>

@@ -17,6 +17,7 @@ Route::group(['prefix' => 'report_data', 'namespace' => 'App\Modules\Report_data
     Route::get('/getListAsXls', ['as' => 'report_data.getListAsXls', 'uses' => 'Report_data@getListAsXls']);
     Route::get('/getListDistrictAsPdf', ['as' => 'report_data.getListDistrictAsPdf', 'uses' => 'Report_data@getListDistrictAsPdf']);
     Route::get('/getListDistrictAsXls', ['as' => 'report_data.getListDistrictAsXls', 'uses' => 'Report_data@getListDistrictAsXls']);
+    Route::get('/getListDistrictTPSAsPdf', ['as' => 'report_data.getListDistrictTPSAsPdf', 'uses' => 'Report_data@getListDistrictTPSAsPdf']);
     Route::get('/getListSubdistrictAsPdf', ['as' => 'report_data.getListSubdistrictAsPdf', 'uses' => 'Report_data@getListSubdistrictAsPdf']);
     Route::get('/getListSubdistrictAsXls', ['as' => 'report_data.getListSubdistrictAsXls', 'uses' => 'Report_data@getListSubdistrictAsXls']);
     Route::get('/getListCoordinatorAsPdf', ['as' => 'report_data.getListCoordinatorAsPdf', 'uses' => 'Report_data@getListCoordinatorAsPdf']);
