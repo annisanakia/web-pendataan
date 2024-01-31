@@ -35,8 +35,8 @@
         @else
             @foreach($datas as $data)
             <?php
-                $collection_data = $collections_data[$data->no_tps.'#'.($data->rw ?? '-').'#'.($data->rt ?? '-')] ?? 0;
-                $verifikasi = $collections_verif[$data->no_tps.'#'.($data->rw ?? '-').'#'.($data->rt ?? '-')] ?? 0;
+                $collection_data = is_numeric($data->total)? $data->total : 0;
+                $verifikasi = is_numeric($data->total_verif)? $data->total_verif : 0;
                 $j++;
             ?>
             <tr>

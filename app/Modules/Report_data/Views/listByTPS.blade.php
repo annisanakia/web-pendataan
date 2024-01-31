@@ -38,10 +38,10 @@
                     <th class="text-center order-link {{ ($sort_field == 'rt'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=rt&sort_type='.($sort_field == 'rt'? $sort_type : 0)+1) }}">
                         RT
                     </th>
-                    <th class="text-center order-link {{ ($sort_field == 'verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=verif&sort_type='.($sort_field == 'verif'? $sort_type : 0)+1) }}">
+                    <th class="text-center order-link {{ ($sort_field == 'total_verif'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=total_verif&sort_type='.($sort_field == 'total_verif'? $sort_type : 0)+1) }}">
                         Terverifikasi
                     </th>
-                    <th class="text-center order-link {{ ($sort_field == 'data'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=data&sort_type='.($sort_field == 'data'? $sort_type : 0)+1) }}">
+                    <th class="text-center order-link {{ ($sort_field == 'total'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=total&sort_type='.($sort_field == 'total'? $sort_type : 0)+1) }}">
                         Total Data
                     </th>
                 </tr>
@@ -69,8 +69,8 @@
                 @else
                     @foreach($datas as $data)
                     <?php
-                        $collection_data = $collections_data[$data->no_tps.'#'.($data->rw ?? '-').'#'.($data->rt ?? '-')] ?? 0;
-                        $verifikasi = $collections_verif[$data->no_tps.'#'.($data->rw ?? '-').'#'.($data->rt ?? '-')] ?? 0;
+                        $collection_data = is_numeric($data->total)? $data->total : 0;
+                        $verifikasi = is_numeric($data->total_verif)? $data->total_verif : 0;
                         $dataByTPS[] = $collection_data;
                         $no_tps[] = 'TPS '.$data->no_tps;
 

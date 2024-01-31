@@ -475,7 +475,7 @@ class Report_data extends RESTful {
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
-        $datas = $this->model->select('no_tps', 'rw', 'rt', \DB::raw('count(*) as total'));
+        $datas = $this->model->select('no_tps', 'rw', 'rt', \DB::raw('count(*) as total'), \DB::raw('sum(case when status = 2 then 1 else 0 end) AS total_verif'));
         if($start_date != ''){
             $datas->whereDate('created_at','>=',$start_date);
         }
@@ -494,59 +494,36 @@ class Report_data extends RESTful {
         
         $sort_type = $sort_type > 2? 0 : $sort_type;
         $order_field = orders()[$sort_type] ?? null;
-        if(in_array($sort_field,['no_tps']) && $order_field){
+        if(in_array($sort_field,['no_tps','rw','rt','total','total_verif']) && $order_field){
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
-        if(in_array($sort_field,['verif','share','data']) && $order_field){
-            $datas->withCount(['collections_tps_'.$sort_field  => function($query) use ($subdistrict_id,$start_date,$end_date,$groups_id,$user_id){
-                if($subdistrict_id != ''){
-                    $query->where('subdistrict_id',$subdistrict_id);
-                }
-                if($start_date != ''){
-                    $query->whereDate('created_at','>=',$start_date);
-                }
-                if($end_date != ''){
-                    $query->whereDate('created_at','<=',$end_date);
-                }
-                if($groups_id == 2){
-                    $query->where('coordinator_id',$user_id);
-                }
-            }])->orderBy('collections_tps_'.$sort_field.'_count', $order_field ?? 'desc');
+        // if(in_array($sort_field,['verif','share','data']) && $order_field){
+        //     $datas->withCount(['collections_tps_'.$sort_field  => function($query) use ($subdistrict_id,$start_date,$end_date,$groups_id,$user_id){
+        //         if($subdistrict_id != ''){
+        //             $query->where('subdistrict_id',$subdistrict_id);
+        //         }
+        //         if($start_date != ''){
+        //             $query->whereDate('created_at','>=',$start_date);
+        //         }
+        //         if($end_date != ''){
+        //             $query->whereDate('created_at','<=',$end_date);
+        //         }
+        //         if($groups_id == 2){
+        //             $query->where('coordinator_id',$user_id);
+        //         }
+        //     }])->orderBy('collections_tps_'.$sort_field.'_count', $order_field ?? 'desc');
+        // }
+
+        if(!$order_field){
+            $datas->orderBy('no_tps','asc')
+            ->orderBy('rw','asc')
+            ->orderBy('rt','asc');
         }
 
         $datas = $datas->groupBy('no_tps')
             ->groupBy('rw')
-            ->groupBy('rt')
-            ->orderBy('no_tps','asc')
-            ->orderBy('rw','asc')
-            ->orderBy('rt','asc')->paginate($max_row);
+            ->groupBy('rt')->paginate($max_row);
         $datas->chunk(100);
-
-        $collections_verif = \Models\collection_data::select('no_tps', 'rw', 'rt', \DB::raw("count(id) as total"), \DB::raw("CONCAT(no_tps, '#', IFNULL(rw, '-'), '#', IFNULL(rt, '-')) as key_data"))
-                ->where('subdistrict_id',$subdistrict_id);
-        $collections_data = \Models\collection_data::select('no_tps', 'rw', 'rt', \DB::raw("count(id) as total"), \DB::raw("CONCAT(no_tps, '#', IFNULL(rw, '-'), '#', IFNULL(rt, '-')) as key_data"))
-                ->where('subdistrict_id',$subdistrict_id);
-        if($start_date != ''){
-            $collections_verif->whereDate('created_at','>=',$start_date);
-            $collections_data->whereDate('created_at','>=',$start_date);
-        }
-        if($end_date != ''){
-            $collections_verif->whereDate('created_at','<=',$end_date);
-            $collections_data->whereDate('created_at','<=',$end_date);
-        }
-        if($groups_id == 2){
-            $collections_verif->where('coordinator_id',$user_id);
-            $collections_data->where('coordinator_id',$user_id);
-        }
-        $collections_verif = $collections_verif->where('status',2)
-                ->groupBy('no_tps')
-                ->groupBy('rw')
-                ->groupBy('rt')->get()
-                ->pluck('total','key_data')->all();
-        $collections_data = $collections_data->groupBy('no_tps')
-                ->groupBy('rw')
-                ->groupBy('rt')->get()
-                ->pluck('total','key_data')->all();
 
         $this->filter_string = http_build_query(request()->all());
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListTPSAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
@@ -563,8 +540,8 @@ class Report_data extends RESTful {
         $with['actions'] = $actions;
         $with['sort_field'] = $sort_field;
         $with['sort_type'] = $sort_type;
-        $with['collections_verif'] = $collections_verif;
-        $with['collections_data'] = $collections_data;
+        // $with['collections_verif'] = $collections_verif;
+        // $with['collections_data'] = $collections_data;
         $with['subdistrict'] = $subdistrict;
         return $with;
     }
