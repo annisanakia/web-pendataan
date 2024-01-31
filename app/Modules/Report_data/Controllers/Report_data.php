@@ -1268,7 +1268,7 @@ class Report_data extends RESTful {
             $datas->where('collection_data.no_tps',$no_tps);
         }
         if($groups_id == 2){
-            $datas->where('coordinator_id',$user_id);
+            $datas->where('collection_data.coordinator_id',$user_id);
         }
         
         $sort_type = request()->sort_type > 2? 0 : request()->sort_type;
@@ -1300,7 +1300,7 @@ class Report_data extends RESTful {
             $collection_datas->where('collection_data.no_tps',$no_tps);
         }
         if($groups_id == 2){
-            $collection_datas->where('coordinator_id',$user_id);
+            $collection_datas->where('collection_data.coordinator_id',$user_id);
         }
         $collection_datas = $collection_datas->groupBy('date')->get()->pluck('total','date')->all();
 
