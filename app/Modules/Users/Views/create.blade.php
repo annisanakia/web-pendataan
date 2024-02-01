@@ -128,7 +128,7 @@
     getSubdistrict("{{ old('groups_id') ?? ($data->groups_id ?? null) }}", "{{ old('groups_id') ?? ($data->groups_id ?? null) }}");
     function getSubdistrict(val){
         $('#coordinator_subdistrict').addClass('d-none');
-        if(val == 2){
+        if(val == 2 || val == 3){
             $('#coordinator_subdistrict').removeClass('d-none');
         }
     }
