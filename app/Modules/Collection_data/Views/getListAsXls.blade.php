@@ -52,7 +52,7 @@
                     <td>{{ $data->address }}</td>
                     <td>{{ $data->rt }}</td>
                     <td>{{ $data->rw }}</td>
-                    <td style="{{ $data->status == 1? 'background:#dc3545;color:#fff' : '' }}">{{ $data->status == 2? 'Sudah diverifikasi' : 'Belum diverifikasi' }}</td>
+                    <td style="{{ $data->status == 1? 'background:#dc3545;color:#fff' : '' }}">{{ $data->status == 2? 'Fixed' : 'Belum Fixed' }}</td>
                     <td>{{ $data->status_share == 2? 'Sudah dibagikan' : 'Belum dibagikan' }}</td>
                     <td>{{ $data->coordinator->name ?? null }}</td>
                     <td>{{ $data->volunteer_data->name ?? null }}</td>
