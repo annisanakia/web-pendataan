@@ -159,10 +159,12 @@ function weekOfYear($date) {
 
 function status() {
     $status = [
-        1 => 'Belum diverifikasi',
-        2 => 'Sudah diverifikasi',
-        3 => 'Tidak Terdaftar DPT',
-        4 => 'Luar DPT'
+        1 => 'Belum Fixed',
+        2 => 'Fixed',
+        // 1 => 'Belum diverifikasi',
+        // 2 => 'Sudah diverifikasi',
+        // 3 => 'Tidak Terdaftar DPT',
+        // 4 => 'Luar DPT'
     ];
 
     return $status;
