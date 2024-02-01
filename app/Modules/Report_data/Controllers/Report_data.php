@@ -1266,7 +1266,7 @@ class Report_data extends RESTful {
         $subdistrict = \Models\subdistrict::find($subdistrict_id);
         $coordinator = \app\Models\User::find($coordinator_id);
 
-        $datas = $this->model->select(['collection_data.*','subdistrict.name as subdistrict_name','users.name as coordinator_name','volunteer_data.name as volunteer_name']);
+        $datas = $this->model->select(['collection_data.*','subdistrict.name as subdistrict_name','users.name as coordinator_name', 'users.code as coordinator_code','volunteer_data.name as volunteer_name']);
         $datas->leftJoin('subdistrict', function ($join) {
             $join->on('subdistrict.id', '=', 'collection_data.subdistrict_id');
         })->leftJoin('users', function ($join) {
@@ -1300,6 +1300,12 @@ class Report_data extends RESTful {
 
         $datas = $datas->orderBy('id','desc')->paginate($max_row);
         $datas->chunk(100);
+
+        $volunteer_groups = $datas->groupBy('volunteer_data_id')->map->count()->all();
+        arsort($volunteer_groups);
+        $coordinator_tps_id = array_key_first($volunteer_groups);
+
+        $coordinator_tps = \Models\volunteer_data::find($coordinator_tps_id);
 
         $day = date('w');
         $start_date = new DateTime($start_date ?? date('Y-m-d', strtotime('-'.($day-1).' days')));
@@ -1341,6 +1347,8 @@ class Report_data extends RESTful {
         }
 
         $this->filter_string = http_build_query(request()->all());
+        
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSimpatisanCanvasserAsPdf?' . $this->filter_string, 'name'=>'Rekap Koordinator Simpatisan TPS', 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSimpatisanAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
         $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListSimpatisanAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
         
@@ -1359,6 +1367,7 @@ class Report_data extends RESTful {
         $with['sort_type'] = $sort_type;
         $with['subdistrict'] = $subdistrict;
         $with['coordinator'] = $coordinator;
+        $with['coordinator_tps'] = $coordinator_tps;
         return $with;
     }
 
@@ -1418,5 +1427,22 @@ class Report_data extends RESTful {
         }
 
         return $pdf->stream('Rekap Berdasarkan TPS tiap Kecamatan ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListSimpatisanCanvasserAsPdf()
+    {
+        $template = $this->controller_name . '::getListSimpatisanCanvasserAsPdf';
+        $data = $this->getListBySimpatisan();
+        $data['title_head_export'] = 'Rekap Data Simpatisan TPS';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('A4', 'landscape')
+            ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->stream('Rekap Data Simpatisan TPS ('.date('d-m-Y').').pdf');
     }
 }

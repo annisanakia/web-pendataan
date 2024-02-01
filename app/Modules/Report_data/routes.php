@@ -35,4 +35,5 @@ Route::group(['prefix' => 'report_data', 'namespace' => 'App\Modules\Report_data
     Route::get('/getListSimpatisanAsPdf', ['as' => 'report_data.getListSimpatisanAsPdf', 'uses' => 'Report_data@getListSimpatisanAsPdf']);
     Route::get('/getListSimpatisanAsXls', ['as' => 'report_data.getListSimpatisanAsXls', 'uses' => 'Report_data@getListSimpatisanAsXls']);
     Route::get('/filterCoordinatorBySubdistrict', ['as' => 'report_data.filterCoordinatorBySubdistrict', 'uses' => 'Report_data@filterCoordinatorBySubdistrict']);
+    Route::get('/getListSimpatisanCanvasserAsPdf', ['as' => 'report_data.getListSimpatisanCanvasserAsPdf', 'uses' => 'Report_data@getListSimpatisanCanvasserAsPdf']);
 });

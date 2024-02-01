@@ -23,7 +23,16 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
-                                <label class="col-form-label asterisk">Name</label>
+                                <label class="col-form-label asterisk">Kode</label>
+                                <input name="code" type="text" class="form-control {{ $errors->has('code')? 'is-invalid' : '' }}" value="{{ old('code') ?? $data->code }}">
+                                {!!$errors->first('code', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label asterisk">Nama</label>
                                 <input name="name" type="text" class="form-control {{ $errors->has('name')? 'is-invalid' : '' }}" value="{{ old('name') ?? $data->name }}">
                                 {!!$errors->first('name', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
