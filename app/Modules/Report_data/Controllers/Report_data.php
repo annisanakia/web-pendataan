@@ -1307,6 +1307,10 @@ class Report_data extends RESTful {
 
         $coordinator_tps = \Models\volunteer_data::find($coordinator_tps_id);
 
+        if (request()->has('print_view')) {
+            dd($datas,$datas->groupBy('volunteer_data_id'),$volunteer_groups,$coordinator_tps_id,$coordinator_tps);
+        }
+
         $day = date('w');
         $start_date = new DateTime($start_date ?? date('Y-m-d', strtotime('-'.($day-1).' days')));
         $end_date = new DateTime($end_date ?? date('Y-m-d', strtotime('+'.(7-$day).' days')));

@@ -35,18 +35,6 @@
                                 {!!$errors->first('code', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label class="col-form-label">Koordinator</label>
-                                <select name="coordinator_id" class="form-select {{ $errors->has('coordinator_id')? 'is-invalid' : '' }}">
-                                    <option value="">-- Pilih --</option>
-                                    @foreach(App\Models\User::where('groups_id',2)->get() as $row)
-                                        <option value="{{ $row->id }}" {{ $row->id == (old('coordinator_id') ?? $data->coordinator_id)? 'selected' : '' }}>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                                {!!$errors->first('coordinator_id', ' <span class="invalid-feedback">:message</span>')!!}
-                            </div>
-                        </div>
                     </div>
                 </div>
             </form>
