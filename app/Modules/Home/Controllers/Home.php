@@ -30,22 +30,28 @@ class Home extends Controller {
     public function index()
     {
         $groups_id = \Auth::user()->groups_id ?? null;
-        $districts = \Models\district::all();
-        $collection_datas = \Models\collection_data::all();
 
-        if($groups_id != 2){
-            $withTarget = $this->getDataTargetGraph();
-            $withStatus = $this->getDataStatusGraph();
-            $with = array_merge($withTarget, $withStatus);
+        if($groups_id == 3){
+            $with['groups_id'] = $groups_id;
+            return view($this->controller_name . '::index_coordinator_tps', $with);
+        }else{
+            $districts = \Models\district::all();
+            $collection_datas = \Models\collection_data::all();
+    
+            if($groups_id != 2){
+                $withTarget = $this->getDataTargetGraph();
+                $withStatus = $this->getDataStatusGraph();
+                $with = array_merge($withTarget, $withStatus);
+            }
+            $withTargetToday = $this->getDataTargetGraph(date('Y-m-d'), date('Y-m-d'));
+            $with['dataByToday'] = $withTargetToday['dataByDistrict'];
+            // dd($withTargetToday);
+    
+            $with['groups_id'] = $groups_id;
+            $with['districts'] = $districts;
+            $with['collection_datas'] = $collection_datas;
+            return view($this->controller_name . '::index', $with);
         }
-        $withTargetToday = $this->getDataTargetGraph(date('Y-m-d'), date('Y-m-d'));
-        $with['dataByToday'] = $withTargetToday['dataByDistrict'];
-        // dd($withTargetToday);
-
-        $with['groups_id'] = $groups_id;
-        $with['districts'] = $districts;
-        $with['collection_datas'] = $collection_datas;
-        return view($this->controller_name . '::index', $with);
     }
 
     public function getDataStatusGraph($district_id = null, $start_date = null, $end_date = null)

@@ -76,6 +76,20 @@ function menuSidebar()
                 'name' => 'Laporan Hasil Pemilu',
                 'icon' => 'fa-solid fa-chart-simple'
             ]
+        ],
+        'COR_TPS' => [
+            'home' => [
+                'name' => 'Home',
+                'icon' => 'fa-solid fa-house'
+            ],
+            'election_results' => [
+                'name' => 'Data Hasil Pemilu',
+                'icon' => 'fa-solid fa-clipboard-list'
+            ],
+            'report_result' => [
+                'name' => 'Laporan Hasil Pemilu',
+                'icon' => 'fa-solid fa-chart-simple'
+            ]
         ]
     ];
     return ($menus[$group_code] ?? []);

@@ -33,7 +33,7 @@ class Election_results extends RESTful {
             });
             
         $groups_id = \Auth::user()->groups_id ?? null;
-        if($groups_id == 2){
+        if(in_array($groups_id,[2,3])){
             $subdistrict_ids = session()->get('subdistrict_ids');
             $data->whereIn('subdistrict_id',$subdistrict_ids);
         }

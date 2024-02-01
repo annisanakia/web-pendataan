@@ -48,7 +48,7 @@ class Reference_data extends RESTful {
 
         $user = \Auth::user();
         $datas = \Models\district::where('city_id', $q);
-        if($user->groups_id == 2){
+        if(in_array($user->groups_id,[2,3])){
             $subdistrict_ids = \Models\users_subdistrict::where('user_id',$user->id ?? null)->pluck('subdistrict_id')->all();
             $datas->whereHas('subdistrict', function($builder) use($subdistrict_ids){
                 $builder->whereIn('id',$subdistrict_ids);
@@ -71,7 +71,7 @@ class Reference_data extends RESTful {
 
         $user = \Auth::user();
         $datas = \Models\subdistrict::where('district_id', $q);
-        if($user->groups_id == 2){
+        if(in_array($user->groups_id,[2,3])){
             $subdistrict_ids = \Models\users_subdistrict::where('user_id',$user->id ?? null)->pluck('subdistrict_id')->all();
             $datas->whereIn('id',$subdistrict_ids);
         }
