@@ -16,6 +16,8 @@ class Report_result extends RESTful {
         $model = new election_resultsModel;
         $controller_name = 'Report_result';
         
+        $this->setExceptMiddleware(['quickCount']);
+        
         $this->table_name = 'election_results';
         parent::__construct($model, $controller_name);
     }
@@ -288,5 +290,12 @@ class Report_result extends RESTful {
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
             ->header('Content-Disposition', 'attachment; filename="' . 'Hasil Pemilu Berdasarkan TPS ('.date('d-m-Y').').xls"');
+    }
+
+
+    public function quickCount()
+    {
+        $total_result = \Models\election_results::select('total_result')->sum('total_result');
+        return response()->json(['status' => 'success', 'count' => $total_result], 200);
     }
 }

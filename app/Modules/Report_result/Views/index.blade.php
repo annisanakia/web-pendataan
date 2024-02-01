@@ -10,6 +10,10 @@
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
+                <div class="alert alert-warning text-center">
+                    <h2>Quick Count</h2>
+                    <h4 id="countdown">0</h4>
+                </div>
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Pilih Model</h5>
@@ -115,5 +119,28 @@
             }
         });
     }
+    function quickCount() {
+        console.log('each 1 second...');
+        count = count+1;
+        $.ajax({
+            url: "{{ url($controller_name.'/quickCount') }}",
+            type: 'GET',
+            success: function(data) { 
+                // $('#getData').html(data);
+                $("#countdown").html(data.count);
+            },
+            error: function (e) {
+                swalDeleteButtons.fire(
+                    'Warning !!',
+                    'Terjadi Kesalahan Data',
+                    'error'
+                )
+            }
+        });
+    }
+    var count = 0;
+    var intervalId = window.setInterval(function(){
+            quickCount();
+        }, 1000);
 </script>
 @endsection

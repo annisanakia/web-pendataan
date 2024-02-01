@@ -31,7 +31,7 @@ class Users extends RESTful {
 
             $model = new \Models\users_subdistrict();
             $users_subdistrict_ids = [];
-            if($data->groups_id == 2){
+            if(in_array($data->groups_id,[2,3])){
                 $users_subdistricts = $model->where('user_id',$data->id)->get()->keyBy('subdistrict_id')->all();
                 $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
                 $input_subdistrict['user_id'] = $data->id;
@@ -88,7 +88,7 @@ class Users extends RESTful {
 
             $model = new \Models\users_subdistrict();
             $users_subdistrict_ids = [];
-            if($data->groups_id == 2){
+            if(in_array($data->groups_id,[2,3])){
                 $users_subdistricts = $model->where('user_id',$id)->get()->keyBy('subdistrict_id')->all();
                 $subdistrict_ids = is_array(request()->subdistrict_ids)? request()->subdistrict_ids : [];
                 $input_subdistrict['user_id'] = $id;
