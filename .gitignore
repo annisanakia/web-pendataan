@@ -4,6 +4,7 @@
 # /public/hot
 /public/storage
 /public/error.log
+/public/.htaccess
 # /storage/*.key
 # /vendor
 .env
