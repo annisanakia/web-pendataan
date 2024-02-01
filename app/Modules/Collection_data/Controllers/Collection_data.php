@@ -39,7 +39,7 @@ class Collection_data extends RESTful {
         $user_id = \Auth::user()->id ?? null;
         $groups_id = \Auth::user()->groups_id ?? null;
         if($groups_id == 2){
-            $data->where('coordinator_id',$user_id);
+            $data->where('collection_data.coordinator_id',$user_id);
         }
     }
 
