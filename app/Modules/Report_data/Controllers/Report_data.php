@@ -524,7 +524,7 @@ class Report_data extends RESTful {
         $sort_type = request()->sort_type;
 
         $datas = $this->model->select('no_tps', \DB::raw("count(*) as total, sum(case when status = 2 then 1 else 0 end) AS total_verif"));
-        $datas_report = $this->model->select('no_tps', \DB::raw("TRIM(LEADING '0' FROM rw) as rw, TRIM(LEADING '0' FROM rt) as rt, count(*) as total, sum(case when status = 2 then 1 else 0 end) AS total_verif"));
+        $datas_report = $this->model->select('no_tps', \DB::raw("TRIM(LEADING '0' FROM rw) as data_rw, TRIM(LEADING '0' FROM rt) as data_rt, count(*) as total, sum(case when status = 2 then 1 else 0 end) AS total_verif"));
         if($start_date != ''){
             $datas->whereDate('created_at','>=',$start_date);
             $datas_report->whereDate('created_at','>=',$start_date);
@@ -573,11 +573,11 @@ class Report_data extends RESTful {
             ->orderBy('no_tps','asc')->paginate($max_row);
         $datas_report = $datas_report->whereIn('no_tps',$datas->pluck('no_tps')->all())
             ->groupBy('no_tps')
-            ->groupBy('rw')
-            ->groupBy('rt')
+            ->groupBy('data_rw')
+            ->groupBy('data_rt')
             ->orderBy('no_tps','asc')
-            ->orderBy('rw','asc')
-            ->orderBy('rt','asc')
+            ->orderBy('data_rw','asc')
+            ->orderBy('data_rt','asc')
             ->get();
         $datas->chunk(100);
 
@@ -1075,7 +1075,7 @@ class Report_data extends RESTful {
             return view($template, $data);
         }
 
-        return $pdf->download('Rekap Berdasarkan TPS ('.date('d-m-Y').').pdf');
+        return $pdf->stream('Rekap Berdasarkan TPS ('.date('d-m-Y').').pdf');
     }
 
     public function getListTPSAsXls()
