@@ -95,13 +95,14 @@
     <thead>
         <tr class="ordering">
             <th width="2%">No</th>
-            <th width="15%">NIK</th>
+            <th width="13%">NIK</th>
             <th>Nama Lengkap</th>
-            <th width="15%">No Telepon</th>
+            <th width="12%">No Telepon</th>
             @if(!isset($coordinator->name))
                 <th>Koordinator</th>
             @endif
-            <th width="15%">RW | RT</th>
+            <th>Kanvaser</th>
+            <th width="12%">RW | RT</th>
             <th width="15%">Checklist</th>
         </tr>
     </thead>
@@ -111,7 +112,7 @@
         ?>
         @if ($datas->count() < 1)
             <tr>
-                <td colspan="{{ isset($coordinator->name)? 6 : 7 }}" style="text-align: center">Data Tidak Ditemukan</td>
+                <td colspan="{{ isset($coordinator->name)? 7 : 8 }}" style="text-align: center">Data Tidak Ditemukan</td>
             </tr>
         @else
             <?php $i = 0;?>
@@ -127,6 +128,7 @@
                     @if(!isset($coordinator->name))
                         <td>{{ $data->coordinator_code ?? null }}</td>
                     @endif
+                    <td>{{ $data->volunteer_name ?? null }}</td>
                     <td>RW {{ $data->rw ?? '-' }} | RT {{ $data->rt ?? '-' }}</td>
                     <td></td>
                 </tr>
@@ -203,6 +205,11 @@
 <br>
 <table width="100%">
     <thead>
+        <tr>
+            <td width="15%" style="padding-left:20px">Koordinator TPS :</td>
+            <td>{{ $coordinator_tps->name ?? 'NA' }}</td>
+            <td colspan="3"></td>
+        </tr>
         <tr>
             <td width="15%" style="padding-left:20px">Kanvaser TPS :</td>
             <td></td>

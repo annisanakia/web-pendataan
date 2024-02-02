@@ -1299,6 +1299,7 @@ class Report_data extends RESTful {
 
         $volunteer_groups = $datas->groupBy('volunteer_data_id')->map->count()->all();
         arsort($volunteer_groups);
+        unset($volunteer_groups[""]);
         $coordinator_tps_id = array_key_first($volunteer_groups);
 
         $coordinator_tps = \Models\volunteer_data::find($coordinator_tps_id);

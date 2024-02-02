@@ -206,6 +206,11 @@
 <table width="100%">
     <thead>
         <tr>
+            <td width="15%" style="padding-left:20px">Koordinator TPS :</td>
+            <td>{{ $coordinator_tps->name ?? 'NA' }}</td>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
             <td width="15%" style="padding-left:20px">Kanvaser TPS :</td>
             <td></td>
             <td width="5%"><b>Total :</b></td>
