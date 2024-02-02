@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="alert alert-warning text-center">
-                <h2>Quick Count</h2>
+                <h2>Real Count</h2>
                 <h4 id="countdown">0</h4>
             </div>
         </div>
