@@ -523,8 +523,8 @@ class Report_data extends RESTful {
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
-        $datas = $this->model->select('no_tps', \DB::raw('count(*) as total'), \DB::raw('sum(case when status = 2 then 1 else 0 end) AS total_verif'));
-        $datas_report = $this->model->select('no_tps', 'rw', 'rt', \DB::raw('count(*) as total'), \DB::raw('sum(case when status = 2 then 1 else 0 end) AS total_verif'));
+        $datas = $this->model->select('no_tps', \DB::raw("count(*) as total, sum(case when status = 2 then 1 else 0 end) AS total_verif"));
+        $datas_report = $this->model->select('no_tps', \DB::raw("TRIM(LEADING '0' FROM rw) as rw, TRIM(LEADING '0' FROM rt) as rt, count(*) as total, sum(case when status = 2 then 1 else 0 end) AS total_verif"));
         if($start_date != ''){
             $datas->whereDate('created_at','>=',$start_date);
             $datas_report->whereDate('created_at','>=',$start_date);

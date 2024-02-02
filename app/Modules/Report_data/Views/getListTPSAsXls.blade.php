@@ -42,8 +42,8 @@
             <tr>
                 <td class="text-center">{{ ++$i }}</td>
                 <td>{{ $data->no_tps }}</td>
-                <td>{{ $data->rw }}</td>
-                <td>{{ $data->rt }}</td>
+                <td>{{ $data->rw != ''? sprintf('%02d', $data->rw) : null }}</td>
+                <td>{{ $data->rt != ''? sprintf('%02d', $data->rt) : null }}</td>
                 <td class="text-center">{{ $verifikasi }}</td>
                 <td class="text-center">{{ $collection_data }}</td>
             </tr>
