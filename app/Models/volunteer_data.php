@@ -16,7 +16,7 @@ class volunteer_data extends Model {
     public static $rules = array(
         'code' => 'required',
         'name' => 'required',
-        'coordinator_id' => 'required'
+        // 'coordinator_id' => 'required'
     );
     
     public static $customMessages = array(
