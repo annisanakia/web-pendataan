@@ -523,7 +523,7 @@ class Report_data extends RESTful {
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
-        $datas = $this->model->select('no_tps', 'rw', 'rt', \DB::raw('count(*) as total'), \DB::raw('sum(case when status = 2 then 1 else 0 end) AS total_verif'));
+        $datas = $this->model->select('no_tps', \DB::raw('count(*) as total'), \DB::raw('sum(case when status = 2 then 1 else 0 end) AS total_verif'));
         if($start_date != ''){
             $datas->whereDate('created_at','>=',$start_date);
         }
@@ -542,7 +542,7 @@ class Report_data extends RESTful {
         
         $sort_type = $sort_type > 2? 0 : $sort_type;
         $order_field = orders()[$sort_type] ?? null;
-        if(in_array($sort_field,['no_tps','rw','rt','total','total_verif']) && $order_field){
+        if(in_array($sort_field,['no_tps','total','total_verif']) && $order_field){
             $datas->orderBy($sort_field, $order_field ?? 'desc');
         }
         // if(in_array($sort_field,['verif','share','data']) && $order_field){
@@ -563,11 +563,7 @@ class Report_data extends RESTful {
         // }
 
         $datas = $datas->groupBy('no_tps')
-            ->groupBy('rw')
-            ->groupBy('rt')
-            ->orderBy('no_tps','asc')
-            ->orderBy('rw','asc')
-            ->orderBy('rt','asc')->paginate($max_row);
+            ->orderBy('no_tps','asc')->paginate($max_row);
         $datas->chunk(100);
 
         $this->filter_string = http_build_query(request()->all());
@@ -1071,7 +1067,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListTPSAsXls';
         $data = $this->getListByTPS();
         $data['title_head_export'] = 'Rekap Berdasarkan TPS';
-        $data['title_col_sum'] = 6;
+        $data['title_col_sum'] = 4;
 
         if (request()->has('print_view')) {
             return view($template, $data);

@@ -17,8 +17,6 @@
         <tr style="background: #e5e5e5;">
             <th width="5%" class="text-center">No</th>
             <th>TPS</th>
-            <th>RW</th>
-            <th>RT</th>
             <th class="text-center">Terverifikasi</th>
             <th class="text-center">Total Data</th>
         </tr>
@@ -26,11 +24,11 @@
     <tbody>
         @php
             $i=0;
-            $j=6;
+            $j=7;
         @endphp
         @if(count($datas) <= 0)
             <tr>
-                <td colspan="6" class="text-center">Data Tidak Ditemukan</td>
+                <td colspan="4" class="text-center">Data Tidak Ditemukan</td>
             </tr>
         @else
             @foreach($datas as $data)
@@ -42,8 +40,6 @@
             <tr>
                 <td class="text-center">{{ ++$i }}</td>
                 <td>{{ $data->no_tps }}</td>
-                <td>{{ $data->rw }}</td>
-                <td>{{ $data->rt }}</td>
                 <td class="text-center">{{ $verifikasi }}</td>
                 <td class="text-center">{{ $collection_data }}</td>
             </tr>
@@ -52,9 +48,9 @@
     </tbody>
     <tfoot>
         <tr>
-            <th colspan="4" class="text-center">Subtotal</th>
-            <th class="text-center">=SUM(E5:E{{ $j }})</th>
-            <th class="text-center">=SUM(F5:F{{ $j }})</th>
+            <th colspan="2" class="text-center">Subtotal</th>
+            <th class="text-center">=SUM(C8:C{{ $j }})</th>
+            <th class="text-center">=SUM(D8:D{{ $j }})</th>
         </tr>
     </tfoot>
 </table>
