@@ -9,6 +9,8 @@ Kelurahan : {{ $subdistrict->name ?? null }}
         <tr>
             <th width="5%" class="text-center">No</th>
             <th>TPS</th>
+            <th>RW</th>
+            <th>RT</th>
             <th class="text-center">Terverifikasi</th>
             <th class="text-center">Total Data</th>
         </tr>
@@ -19,12 +21,12 @@ Kelurahan : {{ $subdistrict->name ?? null }}
             $total_verifikasi = 0;
             $total = 0;
         @endphp
-        @if(count($datas) <= 0)
+        @if(count($datas_report) <= 0)
             <tr>
-                <td colspan="4" class="text-center">Data Tidak Ditemukan</td>
+                <td colspan="6" class="text-center">Data Tidak Ditemukan</td>
             </tr>
         @else
-            @foreach($datas as $data)
+            @foreach($datas_report as $data)
             <?php
                 $collection_data = is_numeric($data->total)? $data->total : 0;
                 $verifikasi = is_numeric($data->total_verif)? $data->total_verif : 0;
@@ -35,6 +37,8 @@ Kelurahan : {{ $subdistrict->name ?? null }}
             <tr>
                 <td class="text-center">{{ ++$i }}</td>
                 <td>{{ $data->no_tps }}</td>
+                <td>{{ $data->rw }}</td>
+                <td>{{ $data->rt }}</td>
                 <td class="text-center">{{ $verifikasi }}</td>
                 <td class="text-center">{{ $collection_data }}</td>
             </tr>
@@ -43,7 +47,7 @@ Kelurahan : {{ $subdistrict->name ?? null }}
     </tbody>
     <tfoot>
         <tr>
-            <th colspan="2" class="text-center">Subtotal</th>
+            <th colspan="4" class="text-center">Subtotal</th>
             <th class="text-center">{{ $total_verifikasi }}</th>
             <th class="text-center">{{ $total }}</th>
         </tr>

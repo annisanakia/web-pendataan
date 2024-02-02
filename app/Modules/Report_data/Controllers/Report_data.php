@@ -524,26 +524,33 @@ class Report_data extends RESTful {
         $sort_type = request()->sort_type;
 
         $datas = $this->model->select('no_tps', \DB::raw('count(*) as total'), \DB::raw('sum(case when status = 2 then 1 else 0 end) AS total_verif'));
+        $datas_report = $this->model->select('no_tps', 'rw', 'rt', \DB::raw('count(*) as total'), \DB::raw('sum(case when status = 2 then 1 else 0 end) AS total_verif'));
         if($start_date != ''){
             $datas->whereDate('created_at','>=',$start_date);
+            $datas_report->whereDate('created_at','>=',$start_date);
         }
         if($end_date != ''){
             $datas->whereDate('created_at','<=',$end_date);
+            $datas_report->whereDate('created_at','<=',$end_date);
         }
         if($subdistrict_id != ''){
             $datas->where('subdistrict_id',$subdistrict_id);
+            $datas_report->where('subdistrict_id',$subdistrict_id);
         }
         if($groups_id == 2){
             $datas->where('coordinator_id',$user_id);
+            $datas_report->where('coordinator_id',$user_id);
         }
         
         $this->filter($datas, request(), 'collection_data');
+        $this->filter($datas_report, request(), 'collection_data');
         $max_row = request()->input('max_row') ?? 50;
         
         $sort_type = $sort_type > 2? 0 : $sort_type;
         $order_field = orders()[$sort_type] ?? null;
         if(in_array($sort_field,['no_tps','total','total_verif']) && $order_field){
             $datas->orderBy($sort_field, $order_field ?? 'desc');
+            $datas_report->orderBy($sort_field, $order_field ?? 'desc');
         }
         // if(in_array($sort_field,['verif','share','data']) && $order_field){
         //     $datas->withCount(['collections_tps_'.$sort_field  => function($query) use ($subdistrict_id,$start_date,$end_date,$groups_id,$user_id){
@@ -564,6 +571,14 @@ class Report_data extends RESTful {
 
         $datas = $datas->groupBy('no_tps')
             ->orderBy('no_tps','asc')->paginate($max_row);
+        $datas_report = $datas_report->whereIn('no_tps',$datas->pluck('no_tps')->all())
+            ->groupBy('no_tps')
+            ->groupBy('rw')
+            ->groupBy('rt')
+            ->orderBy('no_tps','asc')
+            ->orderBy('rw','asc')
+            ->orderBy('rt','asc')
+            ->get();
         $datas->chunk(100);
 
         $this->filter_string = http_build_query(request()->all());
@@ -573,6 +588,7 @@ class Report_data extends RESTful {
         $subdistrict = \Models\subdistrict::find($subdistrict_id);
 
         $with['datas'] = $datas;
+        $with['datas_report'] = $datas_report;
         $with['model'] = request()->model;
         $with['start_date'] = request()->start_date;
         $with['end_date'] = request()->end_date;
@@ -1067,7 +1083,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListTPSAsXls';
         $data = $this->getListByTPS();
         $data['title_head_export'] = 'Rekap Berdasarkan TPS';
-        $data['title_col_sum'] = 4;
+        $data['title_col_sum'] = 6;
 
         if (request()->has('print_view')) {
             return view($template, $data);
