@@ -1075,7 +1075,7 @@ class Report_data extends RESTful {
             return view($template, $data);
         }
 
-        return $pdf->stream('Rekap Berdasarkan TPS ('.date('d-m-Y').').pdf');
+        return $pdf->download('Rekap Berdasarkan TPS ('.date('d-m-Y').').pdf');
     }
 
     public function getListTPSAsXls()
