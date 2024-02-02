@@ -99,7 +99,7 @@
             <th>Nama Lengkap</th>
             <th width="12%">No Telepon</th>
             @if(!isset($coordinator->name))
-                <th>Koordinator</th>
+                <th>Kode</th>
             @endif
             <th>Kanvaser</th>
             <th width="12%">RW | RT</th>
