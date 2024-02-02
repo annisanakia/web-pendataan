@@ -1262,7 +1262,7 @@ class Report_data extends RESTful {
         $subdistrict = \Models\subdistrict::find($subdistrict_id);
         $coordinator = \app\Models\User::find($coordinator_id);
 
-        $datas = $this->model->select(['collection_data.*','subdistrict.name as subdistrict_name','users.name as coordinator_name', 'users.code as coordinator_code','volunteer_data.name as volunteer_name']);
+        $datas = $this->model->select(['collection_data.*','subdistrict.name as subdistrict_name','users.id as coordinator_id','users.name as coordinator_name', 'users.code as coordinator_code','volunteer_data.name as volunteer_name']);
         $datas->leftJoin('subdistrict', function ($join) {
             $join->on('subdistrict.id', '=', 'collection_data.subdistrict_id');
         })->leftJoin('users', function ($join) {
@@ -1303,10 +1303,6 @@ class Report_data extends RESTful {
         $coordinator_tps_id = array_key_first($volunteer_groups);
 
         $coordinator_tps = \Models\volunteer_data::find($coordinator_tps_id);
-
-        if (request()->has('print_view')) {
-            dd($datas,$datas->groupBy('volunteer_data_id'),$volunteer_groups,$coordinator_tps_id,$coordinator_tps);
-        }
 
         $day = date('w');
         $start_date = new DateTime($start_date ?? date('Y-m-d', strtotime('-'.($day-1).' days')));
@@ -1444,6 +1440,6 @@ class Report_data extends RESTful {
             return view($template, $data);
         }
 
-        return $pdf->stream('Rekap Data Simpatisan TPS ('.date('d-m-Y').').pdf');
+        return $pdf->download('Rekap Data Simpatisan TPS ('.date('d-m-Y').').pdf');
     }
 }

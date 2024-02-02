@@ -109,6 +109,7 @@
     <tbody>
         <?php
             $groupBykanvaser = [];
+            $coordinators = [];
         ?>
         @if ($datas->count() < 1)
             <tr>
@@ -119,6 +120,7 @@
             @foreach ($datas as $data)
                 <?php
                     $groupBykanvaser[$data->volunteer_name][($data->rw ?? '-').'#'.($data->rt ?? '-')][] =  1;
+                    $coordinators[$data->coordinator_name][] = 1;
                 ?>
                 <tr>
                     <td class="text-center">{{ ++$i }}</td>
@@ -201,10 +203,19 @@
         </tr>
     </thead>
 </table>
-
+<?php
+    unset($coordinators[""]);
+    $coordinators = array_map('count', $coordinators);
+    $coordinators_name = implode(', ', array_keys($coordinators));
+?>
 <br>
 <table width="100%">
     <thead>
+        <tr>
+            <td width="15%" style="padding-left:20px">Koordinator :</td>
+            <td>{{ $coordinators_name }}</td>
+            <td colspan="3"></td>
+        </tr>
         <tr>
             <td width="15%" style="padding-left:20px">Koordinator TPS :</td>
             <td>{{ $coordinator_tps->name ?? 'NA' }}</td>
