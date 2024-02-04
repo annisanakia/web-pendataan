@@ -970,7 +970,7 @@ class Report_data extends RESTful {
     {
         $template = $this->controller_name . '::getListDistrictAsPdf';
         $data = $this->getListByDistrict();
-        $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
+        $data['title_head_export'] = 'Rekap DPT Tingkat Kecamatan';
 
         $pdf = \PDF::loadView($template, $data)
             ->setPaper('A4', 'portrait');
@@ -979,14 +979,14 @@ class Report_data extends RESTful {
             return view($template, $data);
         }
 
-        return $pdf->download('Rekap Berdasarkan Kecamatan ('.date('d-m-Y').').pdf');
+        return $pdf->download('Rekap DPT Tingkat Kecamatan Muhammad Satrio Adinegoro ('.date('d-m-Y').').pdf');
     }
 
     public function getListDistrictAsXls()
     {
         $template = $this->controller_name . '::getListDistrictAsXls';
         $data = $this->getListByDistrict();
-        $data['title_head_export'] = 'Rekap Berdasarkan Kecamatan';
+        $data['title_head_export'] = 'Rekap DPT Tingkat Kecamatan Muhammad Satrio Adinegoro';
         $data['title_col_sum'] = 5;
 
         if (request()->has('print_view')) {
@@ -995,14 +995,14 @@ class Report_data extends RESTful {
 
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Kecamatan ('.date('d-m-Y').').xls"');
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap DPT Tingkat Kecamatan Muhammad Satrio Adinegoro ('.date('d-m-Y').').xls"');
     }
     
     public function getListSubdistrictAsPdf()
     {
         $template = $this->controller_name . '::getListSubdistrictAsPdf';
         $data = $this->getListBySubdistrict();
-        $data['title_head_export'] = 'Rekap Berdasarkan Kelurahan';
+        $data['title_head_export'] = 'Rekap DPT Tingkat Kelurahan';
 
         $pdf = \PDF::loadView($template, $data)
             ->setPaper('A4', 'portrait');
@@ -1011,14 +1011,14 @@ class Report_data extends RESTful {
             return view($template, $data);
         }
 
-        return $pdf->download('Rekap Berdasarkan Kelurahan ('.date('d-m-Y').').pdf');
+        return $pdf->stream('Rekap DPT Tingkat Kelurahan Muhammad Satrio Adinegoro ('.date('d-m-Y').').pdf');
     }
 
     public function getListSubdistrictAsXls()
     {
         $template = $this->controller_name . '::getListSubdistrictAsXls';
         $data = $this->getListBySubdistrict();
-        $data['title_head_export'] = 'Rekap Berdasarkan Kelurahan';
+        $data['title_head_export'] = 'Rekap DPT Tingkat Kelurahan Muhammad Satrio Adinegoro';
         $data['title_col_sum'] = 5;
 
         if (request()->has('print_view')) {
@@ -1027,7 +1027,7 @@ class Report_data extends RESTful {
 
         return response(view($template, $data))
             ->header('Content-Type', 'application/vnd-ms-excel')
-            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap Berdasarkan Kelurahan ('.date('d-m-Y').').xls"');
+            ->header('Content-Disposition', 'attachment; filename="' . 'Rekap DPT Tingkat Kelurahan Muhammad Satrio Adinegoro ('.date('d-m-Y').').xls"');
     }
     
     public function getListCoordinatorAsPdf()
