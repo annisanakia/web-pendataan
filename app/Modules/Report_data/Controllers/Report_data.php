@@ -1011,7 +1011,7 @@ class Report_data extends RESTful {
             return view($template, $data);
         }
 
-        return $pdf->stream('Rekap DPT Tingkat Kelurahan Muhammad Satrio Adinegoro ('.date('d-m-Y').').pdf');
+        return $pdf->download('Rekap DPT Tingkat Kelurahan Muhammad Satrio Adinegoro ('.date('d-m-Y').').pdf');
     }
 
     public function getListSubdistrictAsXls()
