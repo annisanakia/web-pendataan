@@ -27,6 +27,7 @@ class election_results extends Model {
             'city_id' => 'required',
             'district_id' => 'required',
             'subdistrict_id' => 'required',
+            'total_result' => 'required',
             'url_file.*' => [
                 File::types(['jpeg', 'jpg', 'png'])
                     ->max(8192)
