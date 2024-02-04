@@ -85,10 +85,6 @@ function menuSidebar()
             'election_results' => [
                 'name' => 'Data Hasil Pemilu',
                 'icon' => 'fa-solid fa-clipboard-list'
-            ],
-            'report_result' => [
-                'name' => 'Laporan Hasil Pemilu',
-                'icon' => 'fa-solid fa-chart-simple'
             ]
         ]
     ];
