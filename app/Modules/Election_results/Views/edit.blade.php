@@ -72,47 +72,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-8 col-sm-12">
-                            <label class="col-form-label">Daftar Saksi TPS</label>
-                            <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr class="bg-light">
-                                        <th width="20px" class="text-center">No</th>
-                                        <th width="180px" class="text-center">NIK</th>
-                                        <th class="text-center">Nama</th>
-                                        <th class="text-center">No Whatsapp</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                        $i = 0;
-                                        $supervisors = \Models\collection_data::where('subdistrict_id',$data->subdistrict_id)
-                                                ->where('no_tps',$data->no_tps)
-                                                ->where('is_supervisor',1)
-                                                ->get();
-                                    ?>
-                                    @foreach($supervisors as $supervisor)
-                                    <tr>
-                                        <td class="text-center">{{ ++$i }}</td>
-                                        <td nowrap>{{ $supervisor->nik }}</td>
-                                        <td>{{ $supervisor->name }}</td>
-                                        <td>{{ $supervisor->whatsapp }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-12">
                             <label class="col-form-label">Upload bukti gambar</label>
                             <div class="row">
-                                <div class="col-md-12">
-                                    <button class="btn btn-primary add-data mb-3" type="button">
+                                <div class="col-md-12 mb-3">
+                                    <button class="btn btn-primary add-data" type="button">
                                         Tambah Gambar <i class="fa-solid fa-plus px-2"></i>
                                     </button>
+                                    <div class="form-text">Upload file berformat JPEG, JPG, PNG.<br>Maksimal ukuran file 8 Mb.</div>
                                 </div>
                                 @if($errors->has('url_file.*'))
                                 <div class="col-md-12">

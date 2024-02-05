@@ -63,6 +63,7 @@ class Election_results extends RESTful {
         if ($validation->passes()) {
             $data = $this->model->create($input);
 
+            $model_file = new \Models\election_results_file();
             $files = is_array(request()->file('url_file'))? request()->file('url_file') : [];
             $sequence = 0;
             foreach($files as $file){

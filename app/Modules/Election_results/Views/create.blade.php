@@ -75,10 +75,11 @@
                         <div class="col-sm-12">
                             <label class="col-form-label">Upload bukti gambar</label>
                             <div class="row">
-                                <div class="col-md-12">
-                                    <button class="btn btn-primary add-data mb-3" type="button">
+                                <div class="col-md-12 mb-3">
+                                    <button class="btn btn-primary add-data" type="button">
                                         Tambah Gambar <i class="fa-solid fa-plus px-2"></i>
                                     </button>
+                                    <div class="form-text">Upload file berformat JPEG, JPG, PNG.<br>Maksimal ukuran file 8 Mb.</div>
                                 </div>
                                 @if($errors->has('url_file.*'))
                                 <div class="col-md-12">
