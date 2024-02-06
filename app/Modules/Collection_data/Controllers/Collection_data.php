@@ -230,7 +230,7 @@ class Collection_data extends RESTful {
         $template = $this->controller_name . '::getListAsXls';
         $data = $this->getList(request());
         $data['title_head_export'] = 'Data Pendataan';
-        $data['title_col_sum'] = 20;
+        $data['title_col_sum'] = 22;
 
         if (request()->has('print_view')) {
             return view($template, $data);
