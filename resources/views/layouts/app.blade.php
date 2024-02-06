@@ -9,6 +9,7 @@
     <meta content="" name="description">
     <meta content="" name="keywords">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <link rel="canonical" href="https://smartrio.my.id/" />
 
     <!-- Favicons -->
     <link href="{{ asset('assets/images/templates/favicon.png') }}" rel="icon">
