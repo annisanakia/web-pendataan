@@ -18,7 +18,7 @@
         </div>
         <div class="select-max-row d-inline-block mt-2">
             Show 
-            <input type="text" name="max_row" value="{{ $datas->perPage() }}" size="4" maxlength="4" class="text-center"> entries
+            <input type="text" name="max_row" value="{{ $datas->perPage() }}" size="6" maxlength="6" class="text-center"> entries
         </div>
         <!-- Table with stripped rows -->
         <?php

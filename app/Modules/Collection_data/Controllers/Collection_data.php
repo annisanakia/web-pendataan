@@ -14,12 +14,15 @@ class Collection_data extends RESTful {
     public function __construct() {
         $model = new collection_dataModel;
         $controller_name = 'Collection_data';
+        $groups_id = \Auth::user()->groups_id ?? null;
         
         $this->table_name = 'collection_data';
         $this->enable_xls = true;
         $this->enable_pdf = true;
         $this->enable_pdf_button = true;
-        $this->enable_xls_button = true;
+        if($groups_id == 1){
+            $this->enable_xls_button = true;
+        }
         $this->enable_import = true;
         $this->disabled_add = getStatusAdd();
         parent::__construct($model, $controller_name);
