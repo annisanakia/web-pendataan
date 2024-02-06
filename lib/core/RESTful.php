@@ -65,6 +65,8 @@ class RESTful extends Controller
         $sort_type = request()->sort_type;
         $data = $this->model->select(['*']);
 
+        $this->configSetting();
+
         $sort_type = request()->sort_type > 2? 0 : request()->sort_type;
         $table = $this->table_name != '' ? $this->table_name : strtolower($this->controller_name);
         $this->filter($data, $request, $table);
@@ -121,6 +123,9 @@ class RESTful extends Controller
 
         return $with;
     }
+
+    public function configSetting()
+    { }
 
     public function beforeIndex($data)
     { }
