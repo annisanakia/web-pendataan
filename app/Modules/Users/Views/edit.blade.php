@@ -83,6 +83,67 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label class="col-form-label">Tempat, Tanggal Lahir</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <input name="pob" type="text" class="form-control {{ $errors->has('pob')? 'is-invalid' : '' }}" value="{{ old('pob') ?? $data->pob }}">
+                                        {!!$errors->first('pob', ' <span class="invalid-feedback">:message</span>')!!}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <input name="dob" type="date" class="form-control {{ $errors->has('dob')? 'is-invalid' : '' }}" value="{{ old('dob') ?? $data->dob }}">
+                                        {!!$errors->first('dob', ' <span class="invalid-feedback">:message</span>')!!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Alamat</label>
+                                <textarea class="form-control {{ $errors->has('address')? 'is-invalid' : '' }}" rows="3" name="address">{{ old('address') ?? $data->address }}</textarea>
+                                {!!$errors->first('address', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-none" id="coordinator_tps_subdistrict">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Pendidikan Terakhir</label>
+                                <select name="last_education_id" class="form-control selectpicker {{ $errors->has('last_education_id')? 'is-invalid' : '' }}" data-size="7" data-live-search="true" title="-- Pilih --">
+                                    @foreach(\Models\last_education::all() as $row)
+                                        <option value="{{ $row->id }}" {{ $row->id == (old('last_education_id') ?? $data->last_education_id)? 'selected' : '' }}>{{ $row->name }}</option>
+                                    @endforeach
+                                </select>
+                                {!!$errors->first('last_education_id', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="col-form-label asterisk">Kelurahan</label>
+                                        <select name="subdistrict_id" class="form-control selectpicker {{ $errors->has('subdistrict_id')? 'is-invalid' : '' }}" data-size="7" data-live-search="true" title="-- Pilih --">
+                                            @foreach(\Models\subdistrict::all() as $row)
+                                                <option value="{{ $row->id }}" {{ $row->id == (old('subdistrict_id') ?? $data->subdistrict_id)? 'selected' : '' }}>{{ $row->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        {!!$errors->first('subdistrict_id', ' <span class="invalid-feedback">:message</span>')!!}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="col-form-label asterisk">No TPS</label>
+                                        <input name="no_tps" type="text" class="form-control {{ $errors->has('no_tps')? 'is-invalid' : '' }}" value="{{ old('no_tps') ?? $data->no_tps }}">
+                                        {!!$errors->first('no_tps', ' <span class="invalid-feedback">:message</span>')!!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row mb-3">
                         <div class="col-sm-6">
                             <div class="mb-3">
@@ -130,8 +191,11 @@
     getSubdistrict("{{ old('groups_id') ?? ($data->groups_id ?? null) }}", "{{ old('groups_id') ?? ($data->groups_id ?? null) }}");
     function getSubdistrict(val){
         $('#coordinator_subdistrict').addClass('d-none');
-        if(val == 2 || val == 3){
+        $('#coordinator_tps_subdistrict').addClass('d-none');
+        if(val == 2){
             $('#coordinator_subdistrict').removeClass('d-none');
+        } else if (val == 3){
+            $('#coordinator_tps_subdistrict').removeClass('d-none');
         }
     }
 </script>

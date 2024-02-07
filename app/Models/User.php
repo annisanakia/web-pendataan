@@ -28,7 +28,12 @@ class User extends Authenticatable
         'email',
         'phone_no',
         'status',
-        'subdistrict_id'
+        'subdistrict_id',
+        'last_education_id',
+        'pob',
+        'dob',
+        'address',
+        'no_tps',
     ];
 
     /**
@@ -76,6 +81,10 @@ class User extends Authenticatable
         );
         if($data['groups_id'] == 2){
             $rules['subdistrict_ids'] = 'required|array';
+        }
+        if($data['groups_id'] == 3){
+            $rules['subdistrict_id'] = 'required';
+            $rules['no_tps'] = 'required';
         }
         if(!array_key_exists('id',$data)){
             $rules['password'] = 'required|min:6';
