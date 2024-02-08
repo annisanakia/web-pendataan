@@ -48,10 +48,15 @@ class Reference_data extends RESTful {
 
         $user = \Auth::user();
         $datas = \Models\district::where('city_id', $q);
-        if(in_array($user->groups_id,[2,3])){
+        if($user->groups_id == 2){
             $subdistrict_ids = \Models\users_subdistrict::where('user_id',$user->id ?? null)->pluck('subdistrict_id')->all();
             $datas->whereHas('subdistrict', function($builder) use($subdistrict_ids){
                 $builder->whereIn('id',$subdistrict_ids);
+            });
+        }elseif($user->groups_id == 3){
+            $subdistrict_id = $user->subdistrict_id;
+            $datas->whereHas('subdistrict', function($builder) use($subdistrict_id){
+                $builder->where('id',$subdistrict_id);
             });
         }
         $datas = $datas->orderBy('name', 'asc')->get()->pluck('name','id')->all();
@@ -71,9 +76,12 @@ class Reference_data extends RESTful {
 
         $user = \Auth::user();
         $datas = \Models\subdistrict::where('district_id', $q);
-        if(in_array($user->groups_id,[2,3])){
+        if($user->groups_id == 2){
             $subdistrict_ids = \Models\users_subdistrict::where('user_id',$user->id ?? null)->pluck('subdistrict_id')->all();
             $datas->whereIn('id',$subdistrict_ids);
+        }elseif($user->groups_id == 3){
+            $subdistrict_id = $user->subdistrict_id;
+            $datas->where('id',$subdistrict_id);
         }
         $datas = $datas->orderBy('name', 'asc')->get()->pluck('name','id')->all();
 

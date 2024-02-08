@@ -17,4 +17,8 @@ Route::group(['prefix' => 'users', 'namespace' => 'App\Modules\Users\Controllers
     Route::get('/edit/{id}', ['as' => 'users.edit', 'uses' => 'Users@edit']);
     Route::post('/update/{id}', ['as' => 'users.update', 'uses' => 'Users@update']);
     Route::post('/delete/{id}', ['as' => 'users.delete', 'uses' => 'Users@delete']);
+    Route::get('/import', ['as' => 'users.import', 'uses' => 'Users@import']);
+    Route::get('/getTemplateAsXls', ['as' => 'users.getTemplateAsXls', 'uses' => 'Users@getTemplateAsXls']);
+    Route::post('/previewImport', ['as' => 'users.previewImport', 'uses' => 'Users@previewImport']);
+    Route::post('/storeImport', ['as' => 'users.storeImport', 'uses' => 'Users@storeImport']);
 });

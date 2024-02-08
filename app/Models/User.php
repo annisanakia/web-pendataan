@@ -65,7 +65,12 @@ class User extends Authenticatable
         'email.unique' => 'Email telah tersedia.',
         'phone_no.numeric' => 'Nomor telepon harus berupa angka.',
         'phone_no.digits_between' => 'Nomor telepon harus berisikan 10 sampai 13 digit.',
-        'password.min' => 'Masukkan password minimal 6 karakter.'
+        'password.min' => 'Masukkan password minimal 6 karakter.',
+
+        'email.*.email' => 'Format alamat email salah.',
+        'email.*.unique' => 'Email telah tersedia.',
+        'phone_no.*.numeric' => 'Nomor telepon harus berupa angka.',
+        'phone_no.*.digits_between' => 'Nomor harus berisikan 10 sampai 13 digit.',
     );
 
     public function validate($data)
@@ -92,10 +97,31 @@ class User extends Authenticatable
         $v = Validator::make($data, $rules, user::$customMessages);
         return $v;
     }
+    
+    public function validateMultiple($data)
+    {
+        $rules = array(
+            'name.*' => 'required',
+            'groups_id.*' => 'required',
+            'email.*' => 'nullable|email|unique:users,email,null,id,deleted_at,NULL',
+            'phone_no.*' => 'numeric|nullable|digits_between:10,13',
+            'status.*' => 'required',
+            'subdistrict_id.*' => 'required',
+            'no_tps.*' => 'required',
+            'dob.*' => 'required'
+        );
+        $v = Validator::make($data, $rules, user::$customMessages);
+        return $v;
+    }
 
     public function group()
     {
         return $this->belongsTo('Models\groups', 'groups_id', 'id');
+    }
+
+    public function subdistrict()
+    {
+        return $this->belongsTo('Models\subdistrict', 'subdistrict_id', 'id');
     }
 
     public function users_subdistrict()

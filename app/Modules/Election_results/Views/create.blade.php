@@ -2,6 +2,18 @@
 
 @section('content')
 
+<?php
+    $user = Auth::user();
+    $groups_id = $user->groups_id ?? null;
+    $subdistrict_id = null;
+    $district_id = null;
+    $no_tps = null;
+    if($groups_id == 3){
+        $subdistrict_id = $user->subdistrict_id ?? null;
+        $district_id = $user->subdistrict->district_id ?? null;
+        $no_tps = $user->no_tps ?? null;
+    }
+?>
 <div class="container-fluid px-4">
     <h1 class="mt-4">Data Hasil Pemilu</h1>
     <ol class="breadcrumb mb-4">
@@ -59,7 +71,7 @@
                         <div class="col-sm-6">
                             <div class="mb-3">
                                 <label class="col-form-label asterisk">Nomor TPS</label>
-                                <input name="no_tps" type="text" class="form-control {{ $errors->has('no_tps')? 'is-invalid' : '' }}" value="{{ old('no_tps') }}">
+                                <input name="no_tps" type="text" class="form-control {{ $errors->has('no_tps')? 'is-invalid' : '' }} {{ $groups_id == 3? 'bg-body-tertiary' : '' }}" value="{{ old('no_tps') ?? $no_tps }}" {{ $groups_id == 3? 'readonly' : '' }}>
                                 {!!$errors->first('no_tps', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
@@ -131,7 +143,7 @@
         getSubdistrict($(this).val());
     });
 
-    getDistrict("{{ old('city_id') ?? ($data->city_id ?? 1) }}", "{{ old('district_id') ?? ($data->district_id ?? null) }}");
+    getDistrict("{{ old('city_id') ?? ($data->city_id ?? 1) }}", "{{ old('district_id') ?? ($data->district_id ?? $district_id) }}");
     function getDistrict(city_id, id){
         var url = '{{url("reference_data/filterDistrict")}}';
         var data = {
@@ -149,7 +161,7 @@
         });
     }
 
-    getSubdistrict("{{ old('district_id') ?? ($data->district_id ?? null) }}", "{{ old('subdistrict_id') ?? ($data->subdistrict_id ?? null) }}");
+    getSubdistrict("{{ old('district_id') ?? ($data->district_id ?? $district_id) }}", "{{ old('subdistrict_id') ?? ($data->subdistrict_id ?? $subdistrict_id) }}");
     function getSubdistrict(district_id, id){
         var url = '{{url("reference_data/filterSubdistrict")}}';
         var data = {

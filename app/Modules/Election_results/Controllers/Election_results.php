@@ -33,9 +33,13 @@ class Election_results extends RESTful {
             });
             
         $groups_id = \Auth::user()->groups_id ?? null;
-        if(in_array($groups_id,[2,3])){
+        if($groups_id == 2){
             $subdistrict_ids = session()->get('subdistrict_ids');
             $data->whereIn('subdistrict_id',$subdistrict_ids);
+        }elseif($groups_id == 3){
+            $subdistrict_id = \Auth::user()->subdistrict_id;
+            $no_tps = \Auth::user()->no_tps;
+            $data->where('subdistrict_id',$subdistrict_id)->where('no_tps',$no_tps);
         }
     }
 

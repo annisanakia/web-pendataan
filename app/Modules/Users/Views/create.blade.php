@@ -2,6 +2,10 @@
 
 @section('content')
 
+<?php
+    $subdistricts = \Models\subdistrict::select(['id','name','district_id'])->with(['district'])->get()
+        ->groupBy('district_id')->all();
+?>
 <div class="container-fluid px-4">
     <h1 class="mt-4">Daftar Pengguna</h1>
     <ol class="breadcrumb mb-4">
@@ -126,8 +130,12 @@
                                     <div class="mb-3">
                                         <label class="col-form-label asterisk">Kelurahan</label>
                                         <select name="subdistrict_id" class="form-control selectpicker {{ $errors->has('subdistrict_id')? 'is-invalid' : '' }}" data-size="7" data-live-search="true" title="-- Pilih --">
-                                            @foreach(\Models\subdistrict::all() as $row)
-                                                <option value="{{ $row->id }}" {{ $row->id == old('subdistrict_id')? 'selected' : '' }}>{{ $row->name }}</option>
+                                            @foreach($subdistricts as $rows)
+                                                <optgroup label="{{ $rows[0]->district->name ?? 'NA' }}">
+                                                    @foreach($rows as $row)
+                                                        <option value="{{ $row->id }}" {{ $row->id == old('subdistrict_id')? 'selected' : '' }}>{{ $row->name }}</option>
+                                                    @endforeach
+                                                </optgroup>
                                             @endforeach
                                         </select>
                                         {!!$errors->first('subdistrict_id', ' <span class="invalid-feedback">:message</span>')!!}
@@ -162,8 +170,12 @@
                                     $subdistrict_ids = is_array(old('subdistrict_ids'))? old('subdistrict_ids') : [];
                                 ?>
                                 <select name="subdistrict_ids[]" class="form-control selectpicker {{ $errors->has('subdistrict_ids')? 'is-invalid' : '' }}" data-size="7" data-live-search="true" data-actions-box="true" data-selected-text-format="count" title="-- Pilih --" multiple>
-                                    @foreach(\Models\subdistrict::all() as $row)
-                                        <option value="{{ $row->id }}" {{ in_array($row->id,$subdistrict_ids)? 'selected' : '' }}>{{ $row->name }}</option>
+                                    @foreach($subdistricts as $rows)
+                                        <optgroup label="{{ $rows[0]->district->name ?? 'NA' }}">
+                                            @foreach($rows as $row)
+                                                <option value="{{ $row->id }}" {{ in_array($row->id,$subdistrict_ids)? 'selected' : '' }}>{{ $row->name }}</option>
+                                            @endforeach
+                                        </optgroup>
                                     @endforeach
                                 </select>
                                 {!!$errors->first('subdistrict_ids', ' <span class="invalid-feedback">:message</span>')!!}

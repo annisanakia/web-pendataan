@@ -227,3 +227,8 @@ function getStatusAdd() {
     return $total_target <= $total_data;
 }
 
+function getFirstChar($word) {
+    $words = explode(" ", $word);
+                    
+    return $words[0] ?? null;
+}
