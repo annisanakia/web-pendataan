@@ -52,6 +52,9 @@
                     <th width="13%" class="text-center order-link {{ ($sort_field == 'status_share'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=status_share&sort_type='.($sort_field == 'status_share'? $sort_type : 0)+1) }}">
                         Status<br>Dibagikan
                     </th>
+                    <th width="13%" class="text-center order-link {{ ($sort_field == 'status_share_fixed'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=status_share_fixed&sort_type='.($sort_field == 'status_share_fixed'? $sort_type : 0)+1) }}">
+                        Status<br>Pencairan
+                    </th>
                     <th class="text-center order-link {{ ($sort_field == 'created_at'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}" href="{{ url($controller_name.'/getData?sort_field=created_at&sort_type='.($sort_field == 'created_at'? $sort_type : 0)+1) }}">
                         Tanggal<br> Data Masuk
                     </th>
@@ -64,6 +67,7 @@
                     <th><input type="text" name="filter[no_tps]" value="{{ $param['filter']['no_tps'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[coordinator_name]" value="{{ $param['filter']['coordinator_name'] ?? null }}" class="form-control"></th>
                     <th><input type="text" name="filter[volunteer_name]" value="{{ $param['filter']['volunteer_name'] ?? null }}" class="form-control"></th>
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -93,6 +97,11 @@
                         <td nowrap>
                             <a class="btn btn-{{ status_shareColor()[$data->status_share] ?? null }} px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}">
                                 {{ status_share()[$data->status_share] ?? null }}
+                            </a>
+                        </td>
+                        <td nowrap>
+                            <a class="btn btn-{{ status_share_fixedColor()[$data->status_share_fixed] ?? null }} px-2 py-1 f-14px disabled">
+                                {{ status_share_fixed()[$data->status_share_fixed] ?? null }}
                             </a>
                         </td>
                         <td nowrap>{{ dateToIndo($data->created_at ?? null) }}</td>

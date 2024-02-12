@@ -144,3 +144,8 @@
 table thead tr th{
     vertical-align: middle;
 }
+
+.btn.btn-purple{
+    background-color: #ab23ab;
+    color:#fff
+}

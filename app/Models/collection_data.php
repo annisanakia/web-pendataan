@@ -22,6 +22,8 @@ class collection_data extends Model {
         'whatsapp.digits_between' => 'Nomor whatsapp harus berisikan 10 sampai 13 digit.',
         'photo.mimes' => 'Foto KTP harus bertipe JPEG, JPG, PNG',
         'photo.max' => 'Ukuran file Foto KTP harus dibawah 2 mb',
+        'photo_transport.mimes' => 'Foto Penerimaan Transport harus bertipe JPEG, JPG, PNG',
+        'photo_transport.max' => 'Ukuran file Foto Penerimaan Transport harus dibawah 2 mb',
         'nik.*.unique' => 'NIK telah tersedia.',
         'nik.*.digits' => 'NIK harus berisikan 16 digit.',
         'whatsapp.*.digits_between' => 'Nomor whatsapp harus berisikan 10 sampai 13 digit.',
@@ -43,6 +45,10 @@ class collection_data extends Model {
                 File::types(['jpeg', 'jpg', 'png'])
                     ->max(2048)
             ],
+            'photo_transport' => [
+                File::types(['jpeg', 'jpg', 'png'])
+                    ->max(2048)
+            ]
         );
         // $route = \Request::route()->getName();
         // if($route != 'store'){

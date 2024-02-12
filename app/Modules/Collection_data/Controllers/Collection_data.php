@@ -88,9 +88,12 @@ class Collection_data extends RESTful {
         $validation = $this->model->validate($input);
 
         if ($validation->passes()) {
-            unset($input['photo']);
+            unset($input['photo'],$input['photo_transport']);
             if (request()->hasFile('photo')) {
                 $input['photo'] = $this->store_image();
+            }
+            if (request()->hasFile('photo_transport')) {
+                $input['photo_transport'] = $this->store_image('photo_transport');
             }
             $data = $this->model->create($input);
 
@@ -119,9 +122,12 @@ class Collection_data extends RESTful {
         $validation = $this->model->validate($input);
 
         if ($validation->passes()) {
-            unset($input['photo']);
+            unset($input['photo'],$input['photo_transport']);
             if (request()->hasFile('photo')) {
                 $input['photo'] = $this->store_image();
+            }
+            if (request()->hasFile('photo_transport')) {
+                $input['photo_transport'] = $this->store_image('photo_transport');
             }
             $data = $this->model->find($id);
             $activity_before = json_encode($data);
@@ -141,20 +147,21 @@ class Collection_data extends RESTful {
             ->with('message', 'There were validation errors.');
     }
 
-    public function store_image()
+    public function store_image($type = 'photo')
     {
+        $folder = $type == 'photo_transport'? 'transport' : 'ktp';
         $url = null;
-        if (request()->hasFile('photo')) {
-            $image = request()->file('photo');
+        if (request()->hasFile($type)) {
+            $image = request()->file($type);
             $imagename = date('ymd') . time() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('assets/file/ktp');
+            $destinationPath = public_path('assets/file/'.$folder);
 
             if (!file_exists($destinationPath)) {
                 File::makeDirectory($destinationPath, $mode = 0777, true, true);
             }
 
             $image->move($destinationPath, $imagename);
-            $path = request()->getSchemeAndHttpHost() . '/assets/file/ktp/' . $imagename;
+            $path = request()->getSchemeAndHttpHost() . '/assets/file/'.$folder.'/' . $imagename;
             $url = $path;
         }
 
@@ -164,17 +171,19 @@ class Collection_data extends RESTful {
     public function delete_img($id)
     {
         if ($this->priv['delete_priv']) {
+            $type = request()->type;
+            $folder = $type == 'photo_transport'? 'transport' : 'ktp';
             $data = $this->model->find($id);
             $activity_before = json_encode($data);
             if($data){
-                $image_name = $data->photo;
-                $image_path = public_path($data->photo);
+                $image_name = substr($data->$type, strrpos($data->$type, '/') + 1);
+                $image_path = public_path('assets/file/'.$folder.'/'.$image_name);
 
                 if(file_exists($image_path)){
                     unlink($image_path);
                 }
 
-                $data->photo = null;
+                $data->$type = null;
                 $data->save();
             }
         }
@@ -237,7 +246,7 @@ class Collection_data extends RESTful {
         $template = $this->controller_name . '::getListAsXls';
         $data = $this->getList(request());
         $data['title_head_export'] = 'Data Pendataan';
-        $data['title_col_sum'] = 22;
+        $data['title_col_sum'] = 23;
 
         if (request()->has('print_view')) {
             return view($template, $data);
@@ -313,6 +322,23 @@ class Collection_data extends RESTful {
         $data_id = $data->id ?? null;
         $activity_after = json_encode($data);
         $this->lib_activity->addActivity($user_id, $table_name, $id, 'updateStatusShare', date('Y-m-d H:i:s'), $activity_after, $activity_before);
+        return redirect()->back();
+    }
+
+    public function updateStatusShareFixed($id)
+    {
+        $data = $this->model->find($id);
+        $activity_before = json_encode($data);
+        if(request()->status != '' && $data->status_share_fixed == ''){
+            $data->status_share_fixed = request()->status;
+        }
+        $data->save();
+
+        $user_id = \Auth::user()->id ?? null;
+        $table_name = $this->model->getTable() ?? null;
+        $data_id = $data->id ?? null;
+        $activity_after = json_encode($data);
+        $this->lib_activity->addActivity($user_id, $table_name, $id, 'updateStatusShareFixed', date('Y-m-d H:i:s'), $activity_after, $activity_before);
         return redirect()->back();
     }
 

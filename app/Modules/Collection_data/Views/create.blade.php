@@ -233,6 +233,17 @@
                                 {!!$errors->first('status_share', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label class="col-form-label">Status Pencairan</label>
+                                <select name="status_share_fixed" class="form-select {{ $errors->has('status_share_fixed')? 'is-invalid' : '' }}">
+                                    @foreach(status_share_fixed() as $key => $status))
+                                        <option value="{{ $key }}" {{ $key == old('status_share_fixed')? 'selected' : '' }}>{{ $status }}</option>
+                                    @endforeach
+                                </select>
+                                {!!$errors->first('status_share_fixed', ' <span class="invalid-feedback">:message</span>')!!}
+                            </div>
+                        </div>
                     </div>
                     @endif
                     <div class="row">
@@ -274,6 +285,16 @@
                                 {!!$errors->first('is_supervisor', ' <span class="invalid-feedback">:message</span>')!!}
                             </div>
                         </div>
+                        @if($groups_id == 1)
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label class="col-form-label">Foto Penerimaan Transport</label>
+                                    <input name="photo_transport" class="form-control {{ $errors->has('photo_transport')? 'is-invalid' : '' }}" type="file">
+                                    <div class="form-text">Upload file berformat JPEG, JPG, PNG.<br>Maksimal ukuran file 2 Mb.</div>
+                                    {!!$errors->first('photo_transport', ' <span class="invalid-feedback">:message</span>')!!}
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </form>

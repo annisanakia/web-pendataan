@@ -75,6 +75,11 @@
                             Status<br>Dibagikan
                         </a>
                     </th>
+                    <th width="100px" class="order-link {{ ($sort_field == 'status_share_fixed'? 'sort-'.(orders()[$sort_type] ?? null) : null) }}">
+                        <a href="{{ url($controller_name.'?sort_field=status_share_fixed&sort_type='.(($sort_field == 'status_share_fixed'? $sort_type : 0)+1).'&'.http_build_query($url_param)) }}">
+                            Status<br>Pencairan
+                        </a>
+                    </th>
                     <th width="100px" class="text-center">Aksi</th>
                 </tr>
                 <tr>
@@ -99,6 +104,14 @@
                             <option value="" selected>-- Pilih --</option>
                             @foreach(status_share() as $key => $status)
                                 <option value="{{ $key }}" {{ $key == ($param['filter']['status_share'] ?? null)? 'selected' : '' }}>{{ $status }}</option>
+                            @endforeach
+                        </select>
+                    </th>
+                    <th>
+                        <select name="filter[status_share_fixed]" class="form-select">
+                            <option value="" selected>-- Pilih --</option>
+                            @foreach(status_share_fixed() as $key => $status)
+                                <option value="{{ $key }}" {{ $key == ($param['filter']['status_share_fixed'] ?? null)? 'selected' : '' }}>{{ $status }}</option>
                             @endforeach
                         </select>
                     </th>
@@ -147,6 +160,20 @@
                             @else
                                 <a class="btn btn-{{ status_shareColor()[$data->status_share] ?? null }} px-2 py-1 f-14px {{ $data->status != 2? 'disabled' : '' }}">
                                     {{ status_share()[$data->status_share] ?? null }}
+                                </a>
+                            @endif
+                        </td>
+                        <td nowrap>
+                            @if($data->status_share_fixed == '' && $groups_id == 1)
+                                <select class="form-select btn btn-secondary px-2 py-1 f-14px updateStatus" data-url="{{ url($controller_name.'/updateStatusShareFixed/'.$data->id) }}">
+                                    <option value="" >Set Status</option>
+                                    @foreach(status_share_fixed() as $key => $status))
+                                        <option value="{{ $key }}" {{ $key == $data->status_share_fixed? 'selected' : '' }}>{{ $status }}</option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <a class="btn btn-{{ status_share_fixedColor()[$data->status_share_fixed] ?? null }} px-2 py-1 f-14px">
+                                    {{ status_share_fixed()[$data->status_share_fixed] ?? null }}
                                 </a>
                             @endif
                         </td>

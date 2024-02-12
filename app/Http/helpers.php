@@ -209,6 +209,28 @@ function status_shareColor() {
     return $status;
 }
 
+function status_share_fixed() {
+    $status = [
+        'NO' => 'No',
+        'C1' => 'C1',
+        'C2' => 'C2',
+        'C3' => 'C3'
+    ];
+
+    return $status;
+}
+
+function status_share_fixedColor() {
+    $status = [
+        'NO' => 'danger',
+        'C1' => 'success',
+        'C2' => 'primary',
+        'C3' => 'purple'
+    ];
+
+    return $status;
+}
+
 function orders() {
     $orders = [
         1 => 'asc',

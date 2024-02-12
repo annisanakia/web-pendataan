@@ -23,6 +23,7 @@
             <th>RW</th>
             <th>Status</th>
             <th>Status Dibagikan</th>
+            <th>Status Pencairan</th>
             <th>Koordinator</th>
             <th>Relawan Data</th>
             <th>Saksi TPS</th>
@@ -31,7 +32,7 @@
     <tbody>
         @if ($datas->count() < 1)
             <tr>
-                <td colspan="22" style="text-align: center">Data Tidak Ditemukan</td>
+                <td colspan="23" style="text-align: center">Data Tidak Ditemukan</td>
             </tr>
         @else
             @foreach ($datas as $data)
@@ -55,6 +56,7 @@
                     <td>{{ $data->rw }}</td>
                     <td style="{{ $data->status == 1? 'background:#dc3545;color:#fff' : '' }}">{{ $data->status == 2? 'Fixed' : 'Belum Fixed' }}</td>
                     <td>{{ $data->status_share == 2? 'Sudah dibagikan' : 'Belum dibagikan' }}</td>
+                    <td>{{ status_share_fixed()[$data->status_share_fixed] ?? null }}</td>
                     <td>{{ $data->coordinator->name ?? null }}</td>
                     <td>{{ $data->volunteer_data->name ?? null }}</td>
                     <td>{{ $data->is_supervisor == 1? 'Ya' : 'Tidak' }}</td>

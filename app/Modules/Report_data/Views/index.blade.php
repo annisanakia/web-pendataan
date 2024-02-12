@@ -116,6 +116,18 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="mb-3">
+                                    <label class="col-form-label">Status Pencairan</label>
+                                    <select name="status_share_fixed" class="form-select {{ $errors->has('status_share_fixed')? 'is-invalid' : '' }}">
+                                        <option value="">-- All --</option>
+                                        @foreach(status_share_fixed() as $key => $status))
+                                            <option value="{{ $key }}" {{ $key == old('status_share_fixed')? 'selected' : '' }}>{{ $status }}</option>
+                                        @endforeach
+                                    </select>
+                                    {!!$errors->first('status_share_fixed', ' <span class="invalid-feedback">:message</span>')!!}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
                                     <label class="col-form-label">Saksi TPS</label>
                                     <select name="is_supervisor" class="form-select {{ $errors->has('is_supervisor')? 'is-invalid' : '' }}">
                                         <option value="">-- All --</option>

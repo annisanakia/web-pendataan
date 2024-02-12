@@ -115,6 +115,7 @@ class Report_data extends RESTful {
         $end_date = request()->end_date;
         $status = request()->status;
         $status_share = request()->status_share;
+        $status_share_fixed = request()->status_share_fixed;
         $is_supervisor = request()->is_supervisor;
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
@@ -139,6 +140,9 @@ class Report_data extends RESTful {
         }
         if($status_share != ''){
             $datas->where('collection_data.status_share',$status_share);
+        }
+        if($status_share_fixed != ''){
+            $datas->where('collection_data.status_share_fixed',$status_share_fixed);
         }
         if(is_numeric($is_supervisor)){
             $datas->where('collection_data.is_supervisor',$is_supervisor);
@@ -171,6 +175,9 @@ class Report_data extends RESTful {
         }
         if($status_share != ''){
             $collection_datas->where('collection_data.status_share',$status_share);
+        }
+        if($status_share_fixed != ''){
+            $collection_datas->where('collection_data.status_share_fixed',$status_share_fixed);
         }
         if(is_numeric($is_supervisor)){
             $collection_datas->where('collection_data.is_supervisor',$is_supervisor);
@@ -955,7 +962,7 @@ class Report_data extends RESTful {
         $template = $this->controller_name . '::getListAsXls';
         $data = $this->getListByCitizens();
         $data['title_head_export'] = 'Rekap Berdasarkan NIK';
-        $data['title_col_sum'] = 20;
+        $data['title_col_sum'] = 22;
 
         if (request()->has('print_view')) {
             return view($template, $data);
