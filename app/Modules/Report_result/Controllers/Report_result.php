@@ -295,7 +295,20 @@ class Report_result extends RESTful {
 
     public function quickCount()
     {
-        $total_result = \Models\election_results::select('total_result')->sum('total_result');
+        $data = \Models\election_results::select('total_result');
+        
+        $groups_id = \Auth::user()->groups_id ?? null;
+        if($groups_id == 2){
+            $subdistrict_ids = session()->get('subdistrict_ids');
+            $data->whereIn('subdistrict_id',$subdistrict_ids);
+        }elseif($groups_id == 3){
+            $subdistrict_id = \Auth::user()->subdistrict_id;
+            $no_tps = \Auth::user()->no_tps;
+            $data->where('subdistrict_id',$subdistrict_id)->where('no_tps',$no_tps);
+        }
+
+        $total_result = $data->sum('total_result');
+
         return response()->json(['status' => 'success', 'count' => $total_result], 200);
     }
 }
