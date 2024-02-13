@@ -71,7 +71,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="3" class="text-center">Subtotal</th>
+                    <th colspan="3" class="text-end">Subtotal</th>
                     <th class="text-center">{{ $total }}</th>
                 </tr>
             </tfoot>

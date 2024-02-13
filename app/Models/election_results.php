@@ -56,4 +56,9 @@ class election_results extends Model {
     {
         return $this->hasMany('Models\election_results_file')->orderBy('id','desc');
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
 }

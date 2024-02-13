@@ -45,8 +45,11 @@ class Election_results extends RESTful {
 
     public function store()
     {
+        $user_id = \Auth::user()->id ?? null;
         $input = $this->getParams(request()->all());
         $validation = $this->model->validate($input);
+
+        $input['user_id'] = $user_id;
 
         $data = $this->model->where('city_id',request()->city_id)
                     ->where('district_id',request()->district_id)
@@ -70,13 +73,12 @@ class Election_results extends RESTful {
             $model_file = new \Models\election_results_file();
             $files = is_array(request()->file('url_file'))? request()->file('url_file') : [];
             $sequence = 0;
+            unset($input['user_id']);
             foreach($files as $file){
                 $input['election_results_id'] = $data->id;
                 $input['url_file'] = $this->store_image($file,++$sequence);
                 $election_results_file = $model_file->create($input);
             }
-
-            $user_id = \Auth::user()->id ?? null;
             $table_name = $this->model->getTable() ?? null;
             $data_id = $data->id ?? null;
             $activity_after = json_encode($data);

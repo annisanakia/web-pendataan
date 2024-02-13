@@ -26,6 +26,7 @@
                                         <option value="1">Berdasarkan Kecamatan</option>
                                         <option value="2">Berdasarkan Kelurahan</option>
                                         <option value="3">Berdasarkan TPS</option>
+                                        <option value="4">Berdasarkan Koordinator</option>
                                     </select>
                                     {!!$errors->first('model', ' <span class="invalid-feedback">:message</span>')!!}
                                 </div>

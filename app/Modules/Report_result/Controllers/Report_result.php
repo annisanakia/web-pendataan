@@ -45,7 +45,7 @@ class Report_result extends RESTful {
             // Kelurahan
             $with = $this->getListBySubdistrict();
             return view($this->controller_name . '::listBySubdistrict', $with);
-        }else{
+        }elseif($model == 3){
             // TPS
             if(request()->subdistrict_id == ''){
                 return '
@@ -56,6 +56,10 @@ class Report_result extends RESTful {
             }
             $with = $this->getListByTPS();
             return view($this->controller_name . '::listByTPS', $with);
+        }else{
+            // koordinator TPS
+            $with = $this->getListByCoordinator();
+            return view($this->controller_name . '::listByCoordinator', $with);
         }
     }
 
@@ -196,6 +200,77 @@ class Report_result extends RESTful {
         return $with;
     }
 
+    public function getListByCoordinator()
+    {
+        $user_id = \Auth::user()->id ?? null;
+        $groups_id = \Auth::user()->groups_id ?? null;
+
+        $sort_field = request()->sort_field;
+        $sort_type = request()->sort_type;
+
+        $datas = $this->model->select(
+                [
+                    'user_id','total_result','users.name as user_name',
+                    'election_results.no_tps','district.name as district_name',
+                    'subdistrict.name as subdistrict_name'
+                ]
+            )
+            ->leftJoin('users', function ($join) {
+                $join->on('users.id', '=', 'election_results.user_id');
+            })
+            ->leftJoin('district', function ($join) {
+                $join->on('district.id', '=', 'election_results.district_id');
+            })
+            ->leftJoin('subdistrict', function ($join) {
+                $join->on('subdistrict.id', '=', 'election_results.subdistrict_id');
+            })
+            ->where('users.deleted_at',NULL);
+        
+        $this->filter($datas, request(), 'election_results');
+        $max_row = request()->input('max_row') ?? 50;
+        
+        $sort_type = $sort_type > 2? 0 : $sort_type;
+        $order_field = orders()[$sort_type] ?? null;
+        if(in_array($sort_field,['user_name','district_name','subdistrict_name','no_tps','total_result']) && $order_field){
+            $datas->orderBy($sort_field, $order_field ?? 'desc');
+        }
+
+        $datas = $datas->orderBy('user_name','asc')->paginate($max_row);
+        $datas->chunk(100);
+
+        $this->filter_string = http_build_query(request()->all());
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListCoordinatorAsPdf?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-danger', 'icon' => 'fa-solid fa-file-pdf');
+        $actions[] = array('name' => '', 'url' => strtolower($this->controller_name) . '/getListCoordinatorAsXls?' . $this->filter_string, 'attr' => 'target="_blank"', 'class' => 'btn btn-outline-success', 'icon' => 'fa-solid fa-file-excel');
+        
+        $with['datas'] = $datas;
+        $with['model'] = request()->model;
+        $with['subdistrict_id'] = request()->subdistrict_id;
+        $with['param'] = request()->all();
+        $with['actions'] = $actions;
+        $with['sort_field'] = $sort_field;
+        $with['sort_type'] = $sort_type;
+        return $with;
+    }
+
+    public function customFilter($data, $newFilters)
+    {
+        foreach ($newFilters as $key => $value) {
+            if ($key == 'user_name') {
+                $data->whereHas('user', function ($builder) use ($value){
+                    $builder->where('name', 'like', '%' . $value . '%');
+                });
+            }elseif ($key == 'district_name') {
+                $data->whereHas('district', function ($builder) use ($value){
+                    $builder->where('name', 'like', '%' . $value . '%');
+                });
+            }elseif ($key == 'subdistrict_name') {
+                $data->whereHas('subdistrict', function ($builder) use ($value){
+                    $builder->where('name', 'like', '%' . $value . '%');
+                });
+            }
+        }
+    }
+
     public function getListDistrictAsPdf()
     {
         $template = $this->controller_name . '::getListDistrictAsPdf';
@@ -292,6 +367,37 @@ class Report_result extends RESTful {
             ->header('Content-Disposition', 'attachment; filename="' . 'Hasil Pemilu Berdasarkan TPS ('.date('d-m-Y').').xls"');
     }
 
+    public function getListCoordinatorAsPdf()
+    {
+        $template = $this->controller_name . '::getListCoordinatorAsPdf';
+        $data = $this->getListByCoordinator();
+        $data['title_head_export'] = 'Hasil Pemilu Berdasarkan Koordinator';
+
+        $pdf = \PDF::loadView($template, $data)
+            ->setPaper('A4', 'portrait');
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return $pdf->download('Hasil Pemilu Berdasarkan Koordinator ('.date('d-m-Y').').pdf');
+    }
+
+    public function getListCoordinatorAsXls()
+    {
+        $template = $this->controller_name . '::getListCoordinatorAsXls';
+        $data = $this->getListByCoordinator();
+        $data['title_head_export'] = 'Hasil Pemilu Berdasarkan Koordinator';
+        $data['title_col_sum'] = 6;
+
+        if (request()->has('print_view')) {
+            return view($template, $data);
+        }
+
+        return response(view($template, $data))
+            ->header('Content-Type', 'application/vnd-ms-excel')
+            ->header('Content-Disposition', 'attachment; filename="' . 'Hasil Pemilu Berdasarkan Koordinator ('.date('d-m-Y').').xls"');
+    }
 
     public function quickCount()
     {
