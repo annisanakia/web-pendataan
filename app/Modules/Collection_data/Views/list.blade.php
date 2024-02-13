@@ -164,7 +164,7 @@
                             @endif
                         </td>
                         <td nowrap>
-                            @if($data->status_share_fixed == '' && $groups_id == 1)
+                            @if($data->status_share_fixed == '' || $data->status_share_fixed == 'NO')
                                 <select class="form-select btn btn-secondary px-2 py-1 f-14px updateStatus" data-url="{{ url($controller_name.'/updateStatusShareFixed/'.$data->id) }}">
                                     <option value="" >Set Status</option>
                                     @foreach(status_share_fixed() as $key => $status))
