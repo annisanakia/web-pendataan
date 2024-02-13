@@ -10,6 +10,9 @@
             <input type="text" name="max_row" value="{{ $datas->perPage() }}" size="4" maxlength="4" class="text-center"> entries
         </div>
         <!-- Table with stripped rows -->
+        <?php
+            $groups_id = Auth::user()->groups_id ?? null;
+        ?>
         <div class="table-responsive">
         <table class="table table-striped mt-3">
             <thead>
@@ -63,9 +66,11 @@
                             <a class="btn btn-primary px-2 py-1" href="{{ url($controller_name.'/edit/'.$data->id) }}">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>
-                            <a class="btn btn-danger px-2 py-1 delete" data-name="{{ $data->name }}" href="{{ url($controller_name.'/delete/'.$data->id) }}">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
+                            @if($groups_id != 3)
+                                <a class="btn btn-danger px-2 py-1 delete" data-name="{{ $data->name }}" href="{{ url($controller_name.'/delete/'.$data->id) }}">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
