@@ -16,4 +16,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', ['uses' => '\App\Modules\Home\Controllers\Home@index']);
 Route::get('/form', ['as' => 'form', 'uses' => '\App\Modules\Home\Controllers\Home@form']);
 Route::post('/store', ['as' => 'store', 'uses' => '\App\Modules\Home\Controllers\Home@store']);
-Route::get('/monitoring', ['as' => 'monitoring', 'uses' => '\App\Modules\Home\Controllers\Home@monitoring']);
+// Route::get('/monitoring', ['as' => 'monitoring', 'uses' => '\App\Modules\Home\Controllers\Home@monitoring']);
