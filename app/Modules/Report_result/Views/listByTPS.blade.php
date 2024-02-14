@@ -54,7 +54,7 @@
                 @else
                     @foreach($datas as $data)
                     <?php
-                        $total_data = $data->total_result;
+                        $total_data = $data->total_result ?? 0;
                         $no_tps[] = $data->no_tps;
                         $dataByTPS[] = $total_data;
                         $total += $total_data;

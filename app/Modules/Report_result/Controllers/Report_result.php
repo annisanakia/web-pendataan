@@ -169,9 +169,14 @@ class Report_result extends RESTful {
         $sort_field = request()->sort_field;
         $sort_type = request()->sort_type;
 
-        $datas = $this->model->select(['no_tps','total_result']);
+        $datas = $this->model->select('collection_data.no_tps', 'election_results.total_result')
+            ->rightJoin('collection_data', function ($join) {
+                $join->on('collection_data.no_tps', '=', 'election_results.no_tps')
+                    ->on('collection_data.subdistrict_id', '=', 'election_results.subdistrict_id');
+            });
+        
         if($subdistrict_id != ''){
-            $datas->where('subdistrict_id',$subdistrict_id);
+            $datas->where('collection_data.subdistrict_id',$subdistrict_id);
         }
         
         $this->filter($datas, request(), 'collection_data');
@@ -180,10 +185,16 @@ class Report_result extends RESTful {
         $sort_type = $sort_type > 2? 0 : $sort_type;
         $order_field = orders()[$sort_type] ?? null;
         if(in_array($sort_field,['no_tps','total_result']) && $order_field){
-            $datas->orderBy($sort_field, $order_field ?? 'desc');
+            if($sort_field == 'no_tps'){
+                $datas->orderBy('collection_data.'.$sort_field, $order_field ?? 'desc');
+            }else{
+                $datas->orderBy('election_results.'.$sort_field, $order_field ?? 'desc');
+            }
         }
 
-        $datas = $datas->orderBy('no_tps','asc')->paginate($max_row);
+        $datas = $datas->groupBy('collection_data.no_tps')
+            ->groupBy('election_results.total_result')
+            ->orderBy('collection_data.no_tps','asc')->paginate($max_row);
         $datas->chunk(100);
 
         $this->filter_string = http_build_query(request()->all());
