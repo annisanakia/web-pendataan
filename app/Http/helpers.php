@@ -46,6 +46,10 @@ function menuSidebar()
                 'name' => 'Data Pendataan',
                 'icon' => 'fa-solid fa-file-pen'
             ],
+            'election_results' => [
+                'name' => 'Data Hasil Pemilu',
+                'icon' => 'fa-solid fa-clipboard-list'
+            ],
             'report_data' => [
                 'name' => 'Laporan Pendataan',
                 'icon' => 'fa-solid fa-chart-simple'
